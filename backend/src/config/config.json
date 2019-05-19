@@ -1,0 +1,5 @@
+{
+    "portHttp": 3001,
+    "portHttps": 8443,
+    "mongodb": "mongodb://localhost:27017/wundernode"
+}
