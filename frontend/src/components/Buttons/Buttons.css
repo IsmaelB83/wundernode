@@ -1,0 +1,19 @@
+/* Botón */
+.boton--light { 
+    border: none;
+    background-color: transparent;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.boton--white i       { color: #f7f7f7; }
+.boton--white i:hover { color: #f7f7f7; }
+
+.boton--grey i       { color: #818181; }
+.boton--grey i:hover { color: #356573; }
+
+
+.boton--md {
+    padding: 4px 10px;
+    border-radius: 5px;
+}

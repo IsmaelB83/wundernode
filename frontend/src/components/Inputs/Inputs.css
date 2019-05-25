@@ -1,0 +1,23 @@
+.inputGroup {
+    position: relative;
+    width: 100%;
+}
+
+.inputGroup button {
+    position: absolute;   
+    top: 0;
+    right: 0;
+    color: white;
+}
+
+.inputGroup input {
+    width: 100%;
+    margin-left: 10px;
+    border: none;
+    background-color: transparent;
+    color: white;
+}
+
+.inputGroup input::placeholder {
+    color: white;
+}

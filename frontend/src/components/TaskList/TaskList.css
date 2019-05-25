@@ -1,0 +1,29 @@
+.taskslist {
+    padding: 0;
+}
+
+.taskslist ul {
+    padding: 0;
+    list-style-type: none;
+    font-size: 16px;
+    color: black;
+}
+
+.taskslist li {
+    padding: 10px 10px  ;
+}
+
+.taskslist li button {
+    background-color: transparent;
+    border: none;
+}
+
+.taskslist .list--active {
+    background-color: #E0EEFA;
+}
+
+.taskslist i {
+    margin-right: 10px;
+    font-size: 20px;
+    color:  lightgrey;
+}

@@ -5,7 +5,7 @@ import * as serviceWorker from './assets/js/serviceWorker';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'; 
 /* Import own modules */
-import Home from './containers/Home/Home';
+import MainPage from './containers/MainPage/MainPage';
 import { store } from './Store';
 /* Import css */
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,7 +16,7 @@ import './assets/css/index.css';
 let reactComp = <Provider store={store}>
                     <Router>
                         <Switch>
-                            <Route path='/' exact component={Home} />
+                            <Route path='/' exact component={MainPage} />
                         </Switch>
                     </Router>
                 </Provider>;

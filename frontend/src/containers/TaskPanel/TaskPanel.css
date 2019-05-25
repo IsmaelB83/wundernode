@@ -1,0 +1,65 @@
+/* List header */
+.list-toolbar {
+    background-color: #2F6676;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 45px;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+/* Scrollable panel */
+.task-scroll {
+    padding: 15px;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+/* Toolbar in top */
+.list-toolbar .title {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 300;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0;
+}
+
+.actionBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.actionBar i {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 14px;
+    margin: 0 5px;
+}
+
+.actionBar i span {
+    margin-top: 4px;
+    font-weight: 400;
+    font-size: 10px;
+    font-family: 'Lato';
+}
+
+/* Tasks list */
+.heading {
+    padding: 3px 10px;
+    text-transform: uppercase;
+    display: inline-block;
+    border-radius: 3px;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 1px;
+    font-weight: 400;
+    color: white !important;
+}
+
+.heading--normal {
+    background-color: #285e6e;
+    line-height: 16px;
+    font-size: 11px;
+}

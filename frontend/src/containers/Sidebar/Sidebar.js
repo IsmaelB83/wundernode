@@ -2,23 +2,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 /* Import own modules */
-
+import TaskList from '../../components/TaskList/TaskList';
+import UserBar from '../../components/UserBar/UserBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 /* Import css */
-import './Home.css';
+import './Sidebar.css';
 
 
-class HomeAux extends React.Component {
+class SidebarAux extends React.Component {
     
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            mail: ''
         };
     }
     
     componentDidMount() {
-        fetch('/list')
+        /* fetch('/list')
         .then(response => {
             response.json()
             .then(result => {
@@ -30,16 +30,18 @@ class HomeAux extends React.Component {
         })
         .catch(error => {
             console.log(error);
-        });
+        }); */
     }
 
     render() {
         return (
-            <div>
-                <h1>Lista de la compra</h1>
-                <p>Lista de la compra</p>
-                <p>Nombre: {this.state.name}</p>
-                <p>Mail: {this.state.mail}</p>
+            <div className="sidebar" role="navigation">
+                <SearchBar/>
+                <UserBar/>
+                <TaskList/>
+                <div className="createbutton">
+                    <button><i class="fa fa-plus"></i>Create List</button>
+                </div>
             </div>
         );
     }
@@ -50,5 +52,5 @@ const mapState = (state) => {
     return { 
     };
 };
-const Home = connect(mapState, null)(HomeAux);
-export default Home;
+const Sidebar = connect(mapState, null)(SidebarAux);
+export default Sidebar;

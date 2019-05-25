@@ -1,0 +1,40 @@
+.addTask {
+    position: relative;
+    color: #A7BDC4 !important;
+}
+
+.addTask .input--button {
+    padding-left: 45px;
+}
+
+.addTask .input--button::placeholder {
+    color: #A7BDC4;
+}
+
+.addTask .addTask-btn {
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    margin: 0;
+    font-size: 16px;
+    color: #A7BDC4;
+}
+
+.addTask input {
+    background-color: #285E6E;
+    border: none;
+    padding: 10px;
+    color: #f7f7f7;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.addTask-actions {
+    position: absolute;
+    top: 2px;
+    display: block;
+}
+
+.addTask-actions--right {
+    right: 5px;
+}

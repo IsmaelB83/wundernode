@@ -1,0 +1,12 @@
+.wrapper {
+    height: 100vh;   
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(50px, 280px) 1fr;
+    background-image: linear-gradient(to bottom, 
+                        #0F4454 15%, 
+                        #194C5D 25%, 
+                        #4C7885 45%, 
+                        #A1C0C5 60%, 
+                        #f5f5f5 100%);
+}

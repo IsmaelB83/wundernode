@@ -1,0 +1,18 @@
+.search {
+    padding: 10px 15px 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: white;
+    background-color: #0F4454;
+    height: 45px;
+    overflow: hidden;
+}
+
+.search-input {
+    margin: 0 5px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+}

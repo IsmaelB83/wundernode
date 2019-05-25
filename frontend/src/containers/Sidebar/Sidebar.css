@@ -1,0 +1,28 @@
+/* Left */
+.sidebar {
+    height: 100%;
+    background-color: #F7F7F7;
+    display: grid;
+    grid-template-rows: auto auto 1fr 90px;
+}
+
+.createbutton {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.createbutton button {
+    position: relative;
+    border: none;
+    background-color: transparent; 
+    text-align: left;
+    padding: 9px 50px;
+    color: #328ad6;
+    font-weight: 400;
+}
+
+.createbutton button i {
+    position: absolute;
+    left: 20px;
+    top: 12px;
+    font-size: 18px;
+}
