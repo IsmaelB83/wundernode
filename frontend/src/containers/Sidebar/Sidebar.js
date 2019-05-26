@@ -40,7 +40,7 @@ class SidebarAux extends React.Component {
                 <UserBar/>
                 <TaskList/>
                 <div className="createbutton">
-                    <button><i class="fa fa-plus"></i>Create List</button>
+                    <button><i className="fa fa-plus"></i>Create List</button>
                 </div>
             </div>
         );

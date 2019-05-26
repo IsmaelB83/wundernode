@@ -1,29 +1,42 @@
-.taskslist {
-    padding: 0;
-}
-
-.taskslist ul {
+/* Estilos de la lista */
+.tasksList {
     padding: 0;
     list-style-type: none;
-    font-size: 16px;
-    color: black;
+    font-size: 15px;
+    font-weight: 400;
+    white-space: nowrap;
+    color: #262626;
+    letter-spacing: .3px;
 }
 
-.taskslist li {
-    padding: 10px 10px  ;
+.tasksList li {
+    padding: 10px 20px;
 }
 
-.taskslist li button {
-    background-color: transparent;
-    border: none;
-}
-
-.taskslist .list--active {
+/* Estados de la lista */
+.tasksList--active {
     background-color: #E0EEFA;
 }
 
-.taskslist i {
+/* Estilos de cada task */
+.taskList-item {
+    line-height: 23px;
+    color: black;
+}
+
+.taskList-icon {
+    height: 20px;
+    width: 25px;
     margin-right: 10px;
     font-size: 20px;
     color:  lightgrey;
+}
+
+/* Estados de cada task */
+.taskList-item--blue .taskList-icon {
+    color: #2b8dec;
+}
+
+.taskList-item--red .taskList-icon {
+    color: #d74e48;
 }

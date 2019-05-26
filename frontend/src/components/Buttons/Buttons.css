@@ -1,19 +1,37 @@
 /* Botón */
-.boton--light { 
+.botonLight { 
     border: none;
     background-color: transparent;
     text-transform: uppercase;
     display: inline-block;
 }
 
+/* Button type heading */
+.botonHeading {
+    padding: 3px 10px;
+    text-transform: uppercase;
+    display: inline-block;
+    border-radius: 3px;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 1px;
+    font-weight: 400;
+    color: white !important;
+    line-height: 16px;
+    font-size: 11px;
+}
+
+
+/* Tamaños */ 
+.boton--md {
+    padding: 4px 10px;
+    border-radius: 5px;
+}
+
+/* Colores */
 .boton--white i       { color: #f7f7f7; }
 .boton--white i:hover { color: #f7f7f7; }
 
 .boton--grey i       { color: #818181; }
 .boton--grey i:hover { color: #356573; }
 
-
-.boton--md {
-    padding: 4px 10px;
-    border-radius: 5px;
-}
+.boton--blue         { background-color: #285e6e; }

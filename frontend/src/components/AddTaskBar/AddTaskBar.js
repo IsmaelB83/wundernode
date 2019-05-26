@@ -1,19 +1,35 @@
 /* Import node modules */
 import React from 'react';
 /* Import own modules */
+import ButtonLight from '../Buttons/ButtonLight'
+/* Import css */
 import './AddTaskBar.css';
 
 export default class AddTaskBar extends React.Component {
   
+    constructor(props) {
+        super(props);
+        this.state = {
+            focus: false
+        }
+    }
+
     render() {
         return (
-            <div className="addTask">
-                <button className="btn boton--light addTask-btn"><i class="fa fa-plus"></i></button>
-                <div className="addTask-actions addTask-actions--right">
-                    <button className="btn boton--light"><i class="far fa-calendar-alt"></i></button>
-                    <button className="btn boton--light"><i class="far fa-star"></i></button>
+            <div className='addTask'>
+                <div className='addTask-actions--left'>
+                    <ButtonLight className='btn' color='white' icon={this.state.focus?'fas fa-microphone':'fa fa-plus'}/>
                 </div>
-                <input className="input--button" placeholder="Add a to-do..."></input>
+                <div className='addTask-actions--right'>
+                    <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt'/>
+                    <ButtonLight className='btn' color='white' icon='fa fa-star'/>
+                </div>
+                <input  className='addTask-input' 
+                        placeholder='Add a to-do...' 
+                        onFocus={()=>{this.setState({focus:true})}}
+                        onBlur={()=>{this.setState({focus:false})}}
+                >
+                </input>
             </div>
         );
     };

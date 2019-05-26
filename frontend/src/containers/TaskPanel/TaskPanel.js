@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 /* Import own modules */
+import ButtonHeading from '../../components/Buttons/ButtonHeading';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import AddTaskBar from '../../components/AddTaskBar/AddTaskBar';
 import TodoList from '../../components/TodoList/TodoList';
@@ -22,14 +23,14 @@ class TaskPanelAux extends React.Component {
 
     render() {
         return (
-            <div className="task">
+            <div className='task'>
                 <ToolBar/>
-                <div className="task-scroll">
+                <div className='taskScWrapper'>
                     <AddTaskBar/>
-                    <div className="showCompleted">
-                        <TodoList id="tasksPending" completed={false}/>
-                        <a href="/" className="heading heading--normal mt-2">Show completed to-dos</a>
-                        <TodoList id="tasksDone" completed={true}/>
+                    <div className='showCompleted'>
+                        <TodoList id='todosPending' completed={false}/>
+                        <ButtonHeading/>
+                        <TodoList id='todosDone' completed={true}/>
                     </div>
                 </div>
             </div>

@@ -3,15 +3,21 @@
     color: #A7BDC4 !important;
 }
 
-.addTask .input--button {
-    padding-left: 45px;
+.addTask-input {
+    padding: 10px 10px 10px 45px;
+    background-color: #285E6E;
+    border: none;
+    color: #f7f7f7;
+    width: 100%;
+    border-radius: 5px;
 }
 
-.addTask .input--button::placeholder {
+.addTask-input::placeholder {
     color: #A7BDC4;
 }
 
-.addTask .addTask-btn {
+/* Posicionamiento de los botones dentro del input*/
+.addTask-actions--left {
     position: absolute;
     top: 2px;
     left: 6px;
@@ -20,21 +26,9 @@
     color: #A7BDC4;
 }
 
-.addTask input {
-    background-color: #285E6E;
-    border: none;
-    padding: 10px;
-    color: #f7f7f7;
-    width: 100%;
-    border-radius: 5px;
-}
-
-.addTask-actions {
+.addTask-actions--right {
     position: absolute;
     top: 2px;
-    display: block;
-}
-
-.addTask-actions--right {
     right: 5px;
+    display: block;
 }

@@ -1,6 +1,8 @@
 /* Import node modules */
 import React from 'react';
 /* Import own modules */
+import ButtonLight from '../Buttons/ButtonLight'
+/* Import css */
 import './ToolBar.css';
 
 export default class ToolBar extends React.Component {
@@ -8,17 +10,11 @@ export default class ToolBar extends React.Component {
     render() {
         return (
             <div className="list-toolbar">
-                <h1 className="title">Lista compra carrefour</h1>
-                <div className="actionBar">
-                    <button className="btn boton--light boton--md">
-                        <i className="fas fa-user-plus"><span>Share</span></i>
-                    </button>
-                    <button className="btn boton--light boton--md">
-                        <i className="fas fa-sort"><span>Sort</span></i>
-                    </button>
-                    <button className="btn boton--light boton--md">
-                        <i className="fas fa-ellipsis-h"><span>More</span></i>
-                    </button>
+                <h1 className="list-title">Lista compra carrefour</h1>
+                <div className="list-actions">
+                    <ButtonLight className='boton-md' color='white' icon='fas fa-user-plus' span='Share'/>
+                    <ButtonLight className='boton-md' color='white' icon='fas fa-sort' span='Sort'/>
+                    <ButtonLight className='boton-md' color='white' icon='fas fa-ellipsis-h' span='More'/>
                 </div>
             </div>
         );
