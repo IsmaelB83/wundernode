@@ -1,14 +1,12 @@
 const express = require('express');
-const { UserCtrl } = require('../controllers');
+const { UserCtrl, TaskCtrl } = require('../controllers');
 
 module.exports = () => {
     const router = express.Router();
-    router.get('/list', (req, res, next) => {
-        res.json({
-            name: 'Ismael Bernal',
-            mail: 'ismaelbernal83@gmail.com'
-        })
-    });
+    router.get('/task/all', TaskCtrl.all);
+    router.get('/task/:id', TaskCtrl.getById);
+    router.post('/task/', TaskCtrl.create);
+    router.put('/task/:id', TaskCtrl.updateById);
     // Rutas de cuentas de usuario
     router.post('/user/', UserCtrl.create);
     router.post('/user/reset/', UserCtrl.sendToken);
