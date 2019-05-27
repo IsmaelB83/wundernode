@@ -1,4 +1,5 @@
 module.exports = {
-    UserCtrl: require('./users'),
-    TaskCtrl: require('./task')
+    UserCtrl: require('./User'),
+    TaskListCtrl: require('./TaskList'),
+    TaskCtrl: require('./Task')
 }

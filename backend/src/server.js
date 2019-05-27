@@ -30,7 +30,7 @@ module.exports = function(app) {
     app.use(cookieParser());
     app.use(session({
         secret: 'secret-key',
-        reserve: false,
+        resave: true,
         saveUninitialized: false
     }));
     app.use(passport.initialize());
