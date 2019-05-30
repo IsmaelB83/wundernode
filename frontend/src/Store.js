@@ -3,18 +3,29 @@ import { createStore } from 'redux';
 
 // App initial state
 const initialState = {
-    lists: [],
-    loading: true,
+    taskLists: [],
+    tasks: [],
+    loadingLists: true,
+    loadingTasks: true,
 }
 
 // Actions
 export const actions = {
-    setLists: (lists) => {
+    setTaskLists: (taskLists) => {
         return {
-            type: 'SET_LISTS',
+            type: 'SET_TASKLISTS',
             payload: { 
-                lists: lists,
-                loading: false,
+                taskLists: taskLists,
+                loadingLists: false,
+            }
+        }
+    },
+    setTasksOfList: (tasks) => {
+        return {
+            type: 'SET_TASKSOFLIST',
+            payload: { 
+                tasks: tasks,
+                loadingTasks: false,
             }
         }
     }
@@ -24,13 +35,22 @@ export const actions = {
 function charReducer(state, action) {
     let newState = {};
     switch (action.type) {
-        case "SET_LISTS":
+        case "SET_TASKLISTS":
             newState = {...state};
-            newState.lists = action.payload.lists;
-            if (!action.payload.lists || action.payload.lists.length < 1) {
-                newState.loading = true;
+            newState.taskLists = action.payload.taskLists;
+            if (!action.payload.taskLists || action.payload.taskLists.length < 1) {
+                newState.loadingLists = true;
             } else {
-                newState.loading = action.payload.loading;
+                newState.loadingLists = action.payload.loading;
+            }
+            return newState;
+        case "SET_TASKSOFLIST":
+            newState = {...state};
+            newState.tasks = action.payload.tasks;
+            if (!action.payload.tasks || action.payload.tasks.length < 1) {
+                newState.loadingTasks = true;
+            } else {
+                newState.loadingTasks = action.payload.loading;
             }
             return newState;
         default:

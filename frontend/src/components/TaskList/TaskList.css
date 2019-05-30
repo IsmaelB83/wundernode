@@ -11,6 +11,7 @@
 
 .tasksList li {
     padding: 10px 20px;
+    cursor: pointer;
 }
 
 /* Estados de la lista */
@@ -22,6 +23,7 @@
 .taskList-item {
     line-height: 23px;
     color: black;
+    display: block;
 }
 
 .taskList-icon {

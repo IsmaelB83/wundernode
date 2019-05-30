@@ -11,28 +11,6 @@ import './Sidebar.css';
 
 class SidebarAux extends React.Component {
     
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-    
-    componentDidMount() {
-        /* fetch('/list')
-        .then(response => {
-            response.json()
-            .then(result => {
-                this.setState({
-                    name: result.name,
-                    mail: result.mail
-                })
-            })
-        })
-        .catch(error => {
-            console.log(error);
-        }); */
-    }
-
     render() {
         return (
             <div className="sidebar" role="navigation">
@@ -53,4 +31,4 @@ const mapState = (state) => {
     };
 };
 const Sidebar = connect(mapState, null)(SidebarAux);
-export default Sidebar;
+export default SidebarAux;

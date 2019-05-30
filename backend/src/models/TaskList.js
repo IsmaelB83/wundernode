@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const TaskSchema = require('./Task').schema;
-
 // TaskList
 const TaskListSchema = new Schema(
-    {   description: { type: String },
+    {   
+        description: { type: String },
         members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-        tasks: [TaskSchema],
+        tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
         active: { type: Boolean },
+        icon: { type: String },
+        color: { type: String }
     },
     {
         timestamps: true,

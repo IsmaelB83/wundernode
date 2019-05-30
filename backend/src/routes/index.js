@@ -22,6 +22,7 @@ module.exports = () => {
     // Rutas de tasks
     router.get('/tasklist/task/:id', TaskCtrl.all);
     router.post('/tasklist/task/', TaskCtrl.create);
+    router.put('/tasklist/task/:id', TaskCtrl.modify);
 
     return router;
 }

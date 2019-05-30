@@ -8,35 +8,13 @@ import TaskPanel from '../TaskPanel/TaskPanel';
 import './MainPage.css';
 
 
-class MainPage extends React.Component {
+class MainPageAux extends React.Component {
     
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-    
-    componentDidMount() {
-        fetch('/list')
-        .then(response => {
-            response.json()
-            .then(result => {
-                this.setState({
-                    name: result.name,
-                    mail: result.mail
-                })
-            })
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }
-
     render() {
         return (
             <div className="wrapper"> 
                 <Sidebar/>
-                <TaskPanel/>                
+                <TaskPanel/>
             </div>
         );
     }
@@ -45,7 +23,8 @@ class MainPage extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
+        taskLists: state.taskLists
     };
 };
-const Home = connect(mapState, null)(MainPage);
-export default Home;
+const MainPage = connect(mapState, null)(MainPageAux);
+export default MainPage;

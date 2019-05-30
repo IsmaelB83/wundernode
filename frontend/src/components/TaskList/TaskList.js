@@ -1,38 +1,45 @@
 /* Import node modules */
 import React from 'react';
+import { connect } from 'react-redux';
 /* Import own modules */
 /* Import css*/
 import './TaskList.css';
 
-export default class TaskList extends React.Component {
-  
+class TaskListAux extends React.Component {
+
+      constructor(props) {
+        super(props);
+        this.state = {
+            selected: 0
+        }
+    }
+
     render() {
         return (
             <ul className='tasksList'>
-                <li>
-                    <TaskItem icon='fas fa-inbox' text='Inbox' color='blue'/>
-                </li>
-                <li>
-                    <TaskItem icon='far fa-star' text='Starred' color='red'/>
-                </li>
-                <li className='tasksList--active'>
-                    <TaskItem icon='fas fa-user-friends' text='Lista compra carrefour'/>
-                </li>
-                <li>
-                    <TaskItem icon='fas fa-user-friends' text='Lista de la compra'/>
-                </li>
-                <li>
-                    <TaskItem icon='fas fa-user-friends' text='Livi'/>
-                </li>
-                <li>
-                    <TaskItem icon='fas fa-user-friends' text='Películas para ver'/>
-                </li>
-                <li>
-                    <TaskItem icon='fas fa-list' text='Prueba'/>
-                </li>
+            { this.props.taskLists && 
+                this.props.taskLists.map((value, index) => {
+                    return  <li key={value._id} 
+                                className={`${index===this.state.selected?'tasksList--active':''}`}
+                                onClick={this.taskListClick.bind(this)} 
+                                data-target={`/tasklist/task/${value._id}`}
+                            >
+                                <TaskItem id={value._id} icon={value.icon} text={value.description} color={value.color} />
+                            </li>
+                })}
+            }
             </ul>
         );
     };
+
+    async taskListClick(ev) {
+        ev.preventDefault();
+        let response = await fetch(ev.currentTarget.dataset.target)
+        if (response.status === 200) {
+            let json = await response.json();
+            console.log(json.result);
+        }
+    }
 }
 
 class TaskItem extends React.Component {
@@ -45,3 +52,12 @@ class TaskItem extends React.Component {
         );
     };
 }
+
+// React-Redux
+const mapState = (state) => { 
+    return { 
+        taskLists: state.taskLists
+    };
+};
+const TaskList = connect(mapState, null)(TaskListAux);
+export default TaskList;

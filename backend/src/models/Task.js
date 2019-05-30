@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const TaskSchema = new Schema(
     {  
         owner: { type: Schema.Types.ObjectId, ref: 'User' },
+        taskList: { type: Schema.Types.ObjectId, ref: 'TaskList' },
         description: { type: String },
         due: { type: Date },
         reminder: { type: Date },
