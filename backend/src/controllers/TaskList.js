@@ -6,22 +6,24 @@ const ctrl = {};
 
 ctrl.all = async (req, res, next) => {
     try {
-        let taskLists = await TaskList.find({});
+        // Query information to mongodb
+        let taskLists = await TaskList.find({}).sort({_id: 1});
         if (!taskLists || taskLists.length === 0) {
-            res.json({
+            res.status(404).json({
                 status: 'error', 
                 description: 'Number of taskList lists found is 0',
                 result: {}
             });
-            return ;
+            return;
         }
+        // Return information
         res.json({
             status: 'ok',
             description: `Total of taskList lists: ${taskLists.length}`,
             result: taskLists
         });
     } catch (error) {
-        res.json({
+        res.status(404).json({
             status: 'error',
             description: `Uncontrolled error: ${error}`,
             result: {}
@@ -52,7 +54,7 @@ ctrl.getById = async (req, res, next) => {
     try {
         let taskList = await TaskList.findOne({_id: req.params.id});
         if (!taskList) {
-            res.json({
+            res.status(404).json({
                 status: 'error', 
                 description: 'Number of taskList lists found is 0',
                 result: {}
@@ -73,7 +75,7 @@ ctrl.updateById = async (req, res, next) => {
     try {
         let taskList = await TaskList.findOne({_id: req.params.id});
         if (!taskList) {
-            res.json({
+            res.status(404).json({
                 status: 'error',
                 description: `taskList not found`,
                 result: {}

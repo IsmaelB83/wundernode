@@ -9,8 +9,8 @@ const TaskSchema = new Schema(
         description: { type: String },
         due: { type: Date },
         reminder: { type: Date },
-        starred: { type: Boolean },
-        completed: { type: Boolean },
+        starred: { type: Boolean, default: false },
+        completed: { type: Boolean, default: false },
     },
     {
         timestamps: true,

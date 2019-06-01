@@ -2,7 +2,7 @@
 .tasksList {
     padding: 0;
     list-style-type: none;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
     white-space: nowrap;
     color: #262626;
@@ -12,6 +12,9 @@
 .tasksList li {
     padding: 10px 20px;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /* Estados de la lista */
@@ -34,6 +37,24 @@
     color:  lightgrey;
 }
 
+.taskList-badges span:last-child{
+    margin-left: 3px;
+}
+
+.taskList-badges .badge {
+    font-weight: bold;
+}
+
+.taskList-badges .badge-danger {
+    color: #d74e48;
+    background: rgba(215,78,72,0.1);
+}
+
+.taskList-badges .badge-secondary {
+    color: #bdbcbb;
+    background: transparent;
+}
+
 /* Estados de cada task */
 .taskList-item--blue .taskList-icon {
     color: #2b8dec;
@@ -41,4 +62,12 @@
 
 .taskList-item--red .taskList-icon {
     color: #d74e48;
+}
+
+.taskList-item--green .taskList-icon {
+    color: #5fa004;
+}
+
+.taskList-item--orange .taskList-icon {
+    color: #e29600;
 }

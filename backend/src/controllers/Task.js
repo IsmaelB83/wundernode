@@ -10,7 +10,7 @@ ctrl.all = async (req, res, next) => {
         if (req.params.id !== 'all') tasks = await Task.find({taskList: req.params.id});
         else tasks = await Task.find();
         if (!tasks) {
-            res.json({
+            res.status(404).json({
                 status: 'error', 
                 description: 'Task list not found',
                 result: {}
@@ -33,8 +33,8 @@ ctrl.all = async (req, res, next) => {
 ctrl.create = async (req, res, next) => {
     try {
         let taskList = await TaskList.findById(req.body.id);
-        if (!taskList) {
-            res.json({
+        if (!taskList || taskList.systemId === 1) {
+            res.status(404).json({
                 status: 'error', 
                 description: 'Task list not found',
                 result: {}
@@ -48,9 +48,14 @@ ctrl.create = async (req, res, next) => {
         }
         task.taskList = taskList;
         taskList.tasks.push(task);
-        await task.save();
+        if (task.starred) {
+            taskList.starred.push(task);
+        }
+        task = await task.save();
         await taskList.save();
-        res.json({status: 'ok', result: taskList});
+        taskList = await TaskList.findById(req.body.id);
+        let tasks = await Task.find({taskList: taskList._id});
+        res.json({status: 'ok', result: {taskList, tasks}});
     } catch (error) {
         log.fatal(`Error incontrolado: ${error}`);
     }
@@ -60,21 +65,28 @@ ctrl.modify = async (req, res, next) => {
     try {
         let task = await Task.findById(req.params.id);
         if (!task) {
-            res.json({
+            res.status(404).json({
                 status: 'error', 
                 description: 'Task not found',
                 result: {}
             });
             return ;
         }
-        task.owner = req.body.owner;
-        task.description = req.body.description;
-        task.due = req.body.due;
-        task.reminder = req.body.reminder;
+        let oldStarred = task.starred;
+        task.description = req.body.description?req.body.description:task.description;
+        task.due = req.body.due?req.body.due:task.due;
+        task.reminder = req.body.reminder?req.body.reminder:task.reminder;
         task.starred = req.body.starred;
         task.completed = req.body.completed;
-        await task.save();
-        res.json({status: 'ok', result: task});
+        task = await task.save();
+        let taskList = await TaskList.findById(task.taskList._id);
+        if (taskList && oldStarred !== task.starred) {
+            if (task.starred) taskList.starred.push(task);
+            else taskList.starred.splice(taskList.starred.indexOf(task._id), 1 );
+            await taskList.save();
+        }
+        let tasks = await Task.find({taskList: taskList._id});
+        res.json({status: 'ok', result: {taskList, tasks}});
     } catch (error) {
         log.fatal(`Error incontrolado: ${error}`);
     }

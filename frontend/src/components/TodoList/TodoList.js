@@ -1,7 +1,10 @@
 /* Import node modules */
 import React from 'react';
 import { connect } from 'react-redux';
+import Axios from 'axios';
 /* Import own modules */
+import { actions } from '../../store/Store';
+/* Import own css */
 import './TodoList.css';
 
 class TodoListAux extends React.Component { 
@@ -23,9 +26,13 @@ class TodoListAux extends React.Component {
                                     <TodoItem text={value.description} 
                                             completed={value.completed} 
                                             active={this.state.selected===index?true:false} 
-                                            star={value.starred}/>
+                                            star={value.starred}
+                                            starredClick={this.todoStarredClick.bind(this)}
+                                            index={index}
+                                    />
                                 </li>
                     }
+                    return '';
                 })
             }
             </ol>
@@ -33,19 +40,35 @@ class TodoListAux extends React.Component {
     };
 
     clickLine(ev) {
-        this.setState({selected: parseInt(ev.currentTarget.dataset.index)});
-        console.log(this.state);
+        this.setState({ selected: parseInt(ev.currentTarget.dataset.index) });
+    }
+
+    async todoStarredClick(ev) {
+        ev.preventDefault();
+        try {
+            let index = ev.currentTarget.dataset.index;
+            let result = await Axios.put(`/tasklist/task/${this.props.tasks[index]._id}`, null, {
+                data: {
+                    starred: !this.props.tasks[index].starred
+                }
+            });
+            if (result.status === 200) {
+                this.props.loadTaskList(
+                    result.data.result.taskList,
+                    result.data.result.tasks
+                );
+                this.props.refreshTaskLists(
+                    result.data.result.taskList._id,
+                    this.props.tasks[index]
+                )
+            }
+        } catch (error) {
+            console.log(error)
+        }   
     }
 }
 
 class TodoItem extends React.Component {
-    
-    constructor(props) {
-        super(props);
-        this.state = {
-            star: this.props.star
-        };
-    }
 
     render() {
         return (
@@ -57,8 +80,8 @@ class TodoItem extends React.Component {
                     <span className='todo-name'>{this.props.text}</span>
                     {this.props.completed && <small className='todo-done'>a few seconds ago by ismael</small>}
                 </div>
-                <div className={`todo-star ${this.state.star?'todo-star--starred':''}`}>
-                    <a href='/' onClick={() => {this.setState({star: !this.state.star})}}>
+                <div className={`todo-star ${this.props.star?'todo-star--starred':''}`}>
+                    <a href='/' onClick={this.props.starredClick} data-index={this.props.index}>
                         <img className='starImg' src={`${process.env.PUBLIC_URL}/img/star.png`} alt='star'></img>
                     </a>            
                 </div>
@@ -70,8 +93,14 @@ class TodoItem extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
-        tasks: state.tasks
+        tasks: state.currentTasks,
+        switch: state.switch,
     };
 };
-const TodoList = connect(mapState, null)(TodoListAux);
+const mapActions = { 
+    loadTaskList: actions.setTaskList,
+    refreshTaskLists: actions.refreshTaskLists,
+};
+
+const TodoList = connect(mapState, mapActions)(TodoListAux);
 export default TodoList;

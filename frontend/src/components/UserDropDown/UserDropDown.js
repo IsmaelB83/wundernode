@@ -10,7 +10,7 @@ export default class UserBar extends React.Component {
             <div className="userbar">
                 <button className="user">
                     <img src="http://www.jackedandstrong.com/wp-content/uploads/2016/08/Avatar-Facebook-1.jpg" alt="avatar"></img>
-                    <span>ismael bernal</span>
+                    <span>{this.props.username}</span>
                     <i className="fas fa-angle-down"></i>
                 </button>
             </div>

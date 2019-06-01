@@ -4,6 +4,7 @@
     background-color: #F7F7F7;
     display: grid;
     grid-template-rows: auto auto 1fr 90px;
+    overflow: hidden;
 }
 
 .createbutton {

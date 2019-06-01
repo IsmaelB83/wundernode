@@ -31,4 +31,4 @@ const mapState = (state) => {
     };
 };
 const Sidebar = connect(mapState, null)(SidebarAux);
-export default SidebarAux;
+export default Sidebar;

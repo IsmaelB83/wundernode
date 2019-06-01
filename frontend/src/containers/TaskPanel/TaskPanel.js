@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 /* Import own modules */
 import ButtonHeading from '../../components/Buttons/ButtonHeading';
 import ToolBar from '../../components/ToolBar/ToolBar';
-import AddTaskBar from '../../components/AddTaskBar/AddTaskBar';
+import TaskBar from '../../components/TaskBar/TaskBar';
 import TodoList from '../../components/TodoList/TodoList';
 /* Import css */
 import './TaskPanel.css';
@@ -26,7 +26,7 @@ class TaskPanelAux extends React.Component {
             <div className='task'>
                 <ToolBar/>
                 <div className='taskScWrapper'>
-                    <AddTaskBar/>
+                    <TaskBar/>
                     <div className='showCompleted'>
                         <TodoList id='todosPending' completed={false}/>
                         <ButtonHeading/>

@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'; 
 /* Import own modules */
 import MainPage from './containers/MainPage/MainPage';
-import { store, actions } from './Store';
+import { store, actions } from './store/Store';
 /* Import css */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/animate.min.css';
@@ -31,12 +31,13 @@ async function retrieveTaskLists() {
     let response = await fetch('/tasklist/all');
     if (response.status === 200) {
         let json = await response.json();
-        store.dispatch(actions.setTaskLists(json.result));
+        store.dispatch(actions.loadTaskLists(json.result));
         if (json.result.length > 0) {
-            response = await fetch(`/tasklist/task/${json.result[4]._id}`);
+            let current = json.result[0];
+            response = await fetch(`/tasklist/task/${current._id}`);
             if (response.status === 200) {
                 json = await response.json();
-                store.dispatch(actions.setTasksOfList(json.result));
+                store.dispatch(actions.setTaskList(current, json.result));
             }
         }
     }

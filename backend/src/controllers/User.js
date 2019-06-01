@@ -3,7 +3,7 @@ const passport = require('passport');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt-nodejs');
 // Own imports
-const { User } = require('../models');
+const { User, TaskList } = require('../models');
 const { mail } = require('../utils');
 
 const ctrl = {};
@@ -20,6 +20,32 @@ ctrl.create = async (req, res, next) => {
                 result: user
             });
         }
+        // Creando listas de tareas por defecto
+        let taskList = {
+            description: 'Inbox',
+            members: user,
+            active: true,
+            icon: 'fas fa-inbox',
+            color: 'blue',
+            system: true,
+            systemId: 0,
+        }
+        await TaskList.create(taskList);
+        taskList.description = 'Starred';
+        taskList.icon = 'far fa-star';
+        taskList.color = 'red';
+        taskList.systemId++;
+        await TaskList.create(taskList);
+        taskList.description = 'Today';
+        taskList.icon = 'far fa-calendar-minus';
+        taskList.color = 'green';
+        taskList.systemId++;
+        await TaskList.create(taskList);
+        taskList.description = 'Week';
+        taskList.icon = 'far fa-calendar-alt';
+        taskList.color = 'orange';
+        taskList.systemId++;
+        await TaskList.create(taskList);
         // Genero url de reseteo y la envío por mail
         /*const resetUrl = `http://${req.headers.host}/user/new/${user.token}`;
         mail.send({
