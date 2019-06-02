@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'; 
 /* Import own modules */
 import MainPage from './containers/MainPage/MainPage';
-import { store, actions } from './store/Store';
+import { store } from './store/Store';
 /* Import css */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/animate.min.css';
@@ -24,21 +24,3 @@ ReactDOM.render( reactComp, document.getElementById('root'));
 
 // Service worker
 serviceWorker.unregister();
-
-// Cargar lista de tareas
-retrieveTaskLists();
-async function retrieveTaskLists() {
-    let response = await fetch('/tasklist/all');
-    if (response.status === 200) {
-        let json = await response.json();
-        store.dispatch(actions.loadTaskLists(json.result));
-        if (json.result.length > 0) {
-            let current = json.result[0];
-            response = await fetch(`/tasklist/task/${current._id}`);
-            if (response.status === 200) {
-                json = await response.json();
-                store.dispatch(actions.setTaskList(current, json.result));
-            }
-        }
-    }
-}

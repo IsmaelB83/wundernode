@@ -1,4 +1,5 @@
 // Node imports
+const moment = require('moment');
 // Own imports
 const { Task, TaskList, User } = require('../models');
 
@@ -7,8 +8,30 @@ const ctrl = {};
 ctrl.all = async (req, res, next) => {
     try {
         let tasks;
-        if (req.params.id !== 'all') tasks = await Task.find({taskList: req.params.id});
-        else tasks = await Task.find();
+        switch (req.params.id) {
+            case 'all':
+                tasks = await Task.find();
+                break;
+            case 'starred':
+                tasks = await Task.find({starred: true});
+                break;
+            case 'today':
+                const today = moment().startOf('day')
+                tasks = await Task.find({due: { $lte: moment(today).endOf('day').toDate() }});
+                break;
+            case 'week':
+                const weekStart = moment().startOf('week'), weekEnd = moment().endOf('week');                
+                tasks = await Task.find({
+                    due: {   
+                        $gte: weekStart.toDate(),
+                        $lte: weekEnd.toDate() 
+                    }
+                });
+                break;
+            default:
+                tasks = await Task.find({taskList: req.params.id});
+                break;
+        }
         if (!tasks) {
             res.status(404).json({
                 status: 'error', 
@@ -33,7 +56,7 @@ ctrl.all = async (req, res, next) => {
 ctrl.create = async (req, res, next) => {
     try {
         let taskList = await TaskList.findById(req.body.id);
-        if (!taskList || taskList.systemId === 1) {
+        if (!taskList || ( taskList.system && taskList.systemId !== 0)) {
             res.status(404).json({
                 status: 'error', 
                 description: 'Task list not found',

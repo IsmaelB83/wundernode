@@ -1,5 +1,19 @@
-/* Botón */
-.botonLight { 
+/* Button base */
+.buttonBase {
+    position: relative;
+    color: #737272;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    padding: 8px 12px;
+    background: #fafafa;
+    box-shadow: inset 0 0 0 1px #d6d6d6;
+    border: none;
+    border-radius: 3px;
+}
+
+/* Button transparent */
+.buttonLight { 
     border: none;
     background-color: transparent;
     text-transform: uppercase;
@@ -7,7 +21,7 @@
 }
 
 /* Button type heading */
-.botonHeading {
+.buttonHeading {
     padding: 3px 10px;
     text-transform: uppercase;
     display: inline-block;
@@ -22,16 +36,31 @@
 
 
 /* Tamaños */ 
-.boton--md {
+.button--md {
     padding: 4px 10px;
     border-radius: 5px;
 }
 
 /* Colores */
-.boton--white i       { color: #f7f7f7; }
-.boton--white i:hover { color: #f7f7f7; }
+.button--white i       { color: #f7f7f7; }
+.button--white i:hover { color: #f7f7f7; }
 
-.boton--grey i       { color: #818181; }
-.boton--grey i:hover { color: #356573; }
+.button--grey i       { color: #818181; }
+.button--grey i:hover { color: #356573; }
 
-.boton--blue         { background-color: #285e6e; }
+.button--blue         { background-color: #285e6e; }
+
+.button--lightblue    { 
+    box-shadow: inset 0 0 0 1px #328ad6;
+    background-color: #328ad6; 
+    color: #fff;
+}
+
+.button--lightblue:disabled {
+    box-shadow: inset 0 0 0 1px #81baec;
+    background-color: #81baec;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}

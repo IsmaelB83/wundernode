@@ -3,10 +3,10 @@ import React from 'react';
 /* Import own modules */
 import './Buttons.css';
 
-export default class ButtonLight extends React.Component {
+export default class ButtonHeading extends React.Component {
     render() {
         return (
-            <a href='/' className='botonHeading boton--blue mt-2'>Show completed to-dos</a>
+            <a href='/' className='buttonHeading button--blue mt-2'>Show completed to-dos</a>
         );
     };
 }

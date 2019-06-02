@@ -5,21 +5,12 @@ import { connect } from 'react-redux';
 import ButtonHeading from '../../components/Buttons/ButtonHeading';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import TaskBar from '../../components/TaskBar/TaskBar';
-import TodoList from '../../components/TodoList/TodoList';
+import TodoPanel from '../../components/TodoPanel/TodoPanel';
 /* Import css */
 import './TaskPanel.css';
 
 
 class TaskPanelAux extends React.Component {
-    
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-    
-    componentDidMount() {
-    }
 
     render() {
         return (
@@ -28,9 +19,9 @@ class TaskPanelAux extends React.Component {
                 <div className='taskScWrapper'>
                     <TaskBar/>
                     <div className='showCompleted'>
-                        <TodoList id='todosPending' completed={false}/>
+                        <TodoPanel id='todosPending' completed={false}/>
                         <ButtonHeading/>
-                        <TodoList id='todosDone' completed={true}/>
+                        <TodoPanel id='todosDone' completed={true}/>
                     </div>
                 </div>
             </div>
@@ -41,7 +32,10 @@ class TaskPanelAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
+        taskLists: state.taskLists,
+        switch: state.switch
     };
 };
+
 const TaskPanel = connect(mapState, null)(TaskPanelAux);
 export default TaskPanel;

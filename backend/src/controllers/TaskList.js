@@ -1,4 +1,5 @@
 // Node imports
+const moment = require('moment');
 // Own imports
 const { TaskList, Task, User } = require('../models');
 
@@ -7,7 +8,7 @@ const ctrl = {};
 ctrl.all = async (req, res, next) => {
     try {
         // Query information to mongodb
-        let taskLists = await TaskList.find({}).sort({_id: 1});
+        let tasks, taskLists = await TaskList.find({}).sort({_id: 1});
         if (!taskLists || taskLists.length === 0) {
             res.status(404).json({
                 status: 'error', 
@@ -15,6 +16,36 @@ ctrl.all = async (req, res, next) => {
                 result: {}
             });
             return;
+        }
+        // Conformo los arrays de las listas de sistema
+        for (let i = 1; i <= 3; i++) {
+            const list = taskLists[i];
+            switch (list.systemId) {
+                case 1:
+                    // Starred
+                    tasks = await Task.find({starred: true});
+                    break;           
+                case 2:
+                    // Due today
+                    const today = moment().startOf('day')
+                    tasks = await Task.find({due: { $lte: moment(today).endOf('day').toDate() }});
+                    break;
+                case 3:
+                    // Due week
+                    const weekStart = moment().startOf('week'), weekEnd = moment().endOf('week');
+                    tasks = await Task.find({
+                        due: {   
+                            $gte: weekStart.toDate(),
+                            $lte: weekEnd.toDate() 
+                        }
+                    });
+                    break;
+            }
+            list._id = taskLists[0]._id;
+            tasks.forEach(t => { 
+                list.tasks.push(t._id)
+                if (t.starred) list.starred.push(t._id);
+            });
         }
         // Return information
         res.json({

@@ -6,9 +6,9 @@ import './Inputs.css';
 export default class InputIcon extends React.Component {
     render() {
         return (
-            <div className="inputGroup">
-                <button className="boton--light"><i class="fas fa-search"></i></button>
-                <input className="input--transparent" placeholder="search..."></input>
+            <div className={`inputicon-group ${this.props.size==='lg'?'inputicon-group--lg':''}`}>
+                <i className={`inputicon-icon ${this.props.icon}`}></i>
+                <input className={`inputicon-input ${this.props.input}`} placeholder={this.props.placeholder}></input>
             </div>
         );
     };

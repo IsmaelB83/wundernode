@@ -2,9 +2,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 /* Import own modules */
-import TaskList from '../../components/TaskList/TaskList';
+import TaskPanel from '../../components/TaskPanel/TaskPanel';
 import UserBar from '../../components/UserBar/UserBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import CreateList from '../../components/CreateList/CreateList';
 /* Import css */
 import './Sidebar.css';
 
@@ -16,19 +17,20 @@ class SidebarAux extends React.Component {
             <div className="sidebar" role="navigation">
                 <SearchBar/>
                 <UserBar/>
-                <TaskList/>
-                <div className="createbutton">
-                    <button><i className="fa fa-plus"></i>Create List</button>
-                </div>
+                <TaskPanel/>
+                <CreateList/>
             </div>
         );
     }
 }
 
+
 // React-Redux
 const mapState = (state) => { 
     return { 
+        taskLists: state.taskLists,
     };
 };
+
 const Sidebar = connect(mapState, null)(SidebarAux);
 export default Sidebar;

@@ -1,0 +1,94 @@
+.createbutton {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.createbutton-link {
+    display: inline-block;
+    position: relative;
+    padding: 9px 50px;
+    border: none;
+    font-weight: 400;
+    text-align: left;
+    background-color: transparent; 
+    color: #328ad6;
+}
+
+.createbutton-link i {
+    position: absolute;
+    font-size: 18px;
+    left: 20px;
+    top: 12px;
+}
+
+.popup-wrapper {
+    padding: 20px;
+}
+
+.popup-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-body {
+    margin: 5px 0;
+}
+
+.popup-footer {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.popup-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1.17em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.tab-panel {
+    padding: 5px 0;
+}
+
+.tab-options {
+    margin-bottom: 5px;
+}
+
+.tab-options a {
+    font-size: 10px;
+    margin-right: 5px;
+    text-transform: uppercase;
+    color: #737272;
+}
+
+.tab-options a:active {
+    color: black;
+    font-weight: bold;
+} 
+
+.popup-owner {
+    margin: 10px 0;
+    border-top: 1px solid grey;
+    padding: 10px;
+}
+
+.owner-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+}
+
+.popup-input {
+    padding: 6px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #d6d6d6;
+}
+
+.popup-input--block {
+    width: 100%;
+}

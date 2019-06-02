@@ -1,23 +1,27 @@
-.inputGroup {
+.inputicon-group {
     position: relative;
     width: 100%;
 }
 
-.inputGroup button {
+.inputicon-icon {
     position: absolute;   
-    top: 0;
-    right: 0;
-    color: white;
+    top: 5px;
+    left: 5px;
+    line-height: 20px;
+    color: #737272;
 }
 
-.inputGroup input {
-    width: 100%;
-    margin-left: 10px;
-    border: none;
-    background-color: transparent;
-    color: white;
+.inputicon-input {
+    padding-left: 30px;
 }
 
-.inputGroup input::placeholder {
-    color: white;
+/* Estilos por estado */
+.inputicon-group--lg .inputicon-icon {
+    font-size: 20px;
+    top: 12px;
+    left: 10px;
+}
+
+.inputicon-group--lg .inputicon-input {
+    padding: 10px 10px 10px 45px;
 }

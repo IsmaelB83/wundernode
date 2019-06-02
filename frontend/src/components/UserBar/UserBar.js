@@ -10,11 +10,11 @@ class UserBarAux extends React.Component {
   
     render() {
         return (
-            <div className="userbar">
+            <div className='userbar'>
                 <UserDropDown username={this.props.username}/>
-                <div className="userbar-actions">
-                    <ButtonLight icon="far fa-bell" color="grey"/>
-                    <ButtonLight icon="far fa-comments" color="grey"/>
+                <div className='userbar-actions'>
+                    <ButtonLight icon='far fa-bell' color='grey'/>
+                    <ButtonLight icon='fas fa-sync-alt' color='grey'/>
                 </div>
             </div>
         );

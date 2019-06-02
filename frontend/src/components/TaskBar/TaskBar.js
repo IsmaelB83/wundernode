@@ -63,7 +63,7 @@ class AddTaskBarAux extends React.Component {
                     );
                     this.props.refreshTaskLists(
                         result.data.result.taskList._id,
-                        result.data.result.tasks.pop()
+                        result.data.result.tasks[result.data.result.tasks.length-1]
                     );
                 }
                 this.setState({

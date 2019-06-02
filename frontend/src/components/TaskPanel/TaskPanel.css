@@ -1,0 +1,18 @@
+/* Estilos de la lista */
+.tasksList {
+    padding: 0;
+    list-style-type: none;
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+    color: #262626;
+    letter-spacing: .3px;
+}
+
+.tasksList li {
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
