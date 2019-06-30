@@ -1,5 +1,6 @@
 // Node imports
 const moment = require('moment');
+moment.locale('en', { week : { dow : 1, doy : 4 } } );
 // Own imports
 const { TaskList, Task, User } = require('../models');
 
@@ -23,20 +24,23 @@ ctrl.all = async (req, res, next) => {
             switch (list.systemId) {
                 case 1:
                     // Starred
-                    tasks = await Task.find({starred: true});
+                    tasks = await Task.find({
+                        starred: true
+                    });
                     break;           
                 case 2:
                     // Due today
-                    const today = moment().startOf('day')
-                    tasks = await Task.find({due: { $lte: moment(today).endOf('day').toDate() }});
+                    tasks = await Task.find({
+                        due: { 
+                            $lte: moment().endOf('day').toDate() 
+                        }
+                    });
                     break;
                 case 3:
                     // Due week
-                    const weekStart = moment().startOf('week'), weekEnd = moment().endOf('week');
                     tasks = await Task.find({
                         due: {   
-                            $gte: weekStart.toDate(),
-                            $lte: weekEnd.toDate() 
+                            $lte: moment().endOf('week').toDate() 
                         }
                     });
                     break;

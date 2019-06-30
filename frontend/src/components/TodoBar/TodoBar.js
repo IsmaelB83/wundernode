@@ -6,9 +6,9 @@ import Axios from 'axios';
 import ButtonLight from '../Buttons/ButtonLight';
 import { actions } from '../../store/Store';
 /* Import css */
-import './TaskBar.css';
+import './TodoBar.css';
 
-class AddTaskBarAux extends React.Component {
+class TodoBarAux extends React.Component {
   
     constructor(props) {
         super(props);
@@ -51,19 +51,14 @@ class AddTaskBarAux extends React.Component {
             try {
                 let result = await Axios.post(`/tasklist/task`, null, {
                     data: {
-                        id: !this.props.taskList.system?this.props.taskList._id:this.props.inboxId,
+                        id: this.props.list._id,
                         description: this.state.input,
                         starred: this.state.starred,
                     }
                 });
                 if (result.status === 200) {
-                    this.props.refreshCurrent(
-                        result.data.result.taskList,
-                        result.data.result.tasks
-                    );
-                    this.props.refreshTaskLists(
-                        result.data.result.taskList._id,
-                        result.data.result.tasks[result.data.result.tasks.length-1]
+                    this.props.addTodo(
+                        result.data.result.tasks.slice(-1)[0]
                     );
                 }
                 this.setState({
@@ -80,15 +75,13 @@ class AddTaskBarAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
-        taskList: state.currentTaskList,
-        inboxId: state.inboxId
+        list: state.lists[state.selected],
     };
 };
 const mapActions = { 
-    refreshCurrent: actions.setTaskList,
-    refreshTaskLists: actions.refreshTaskLists
+    addTodo: actions.addTodo,
 };
 
 
-const AddTaskBar = connect(mapState, mapActions)(AddTaskBarAux);
-export default AddTaskBar;
+const TodoBar = connect(mapState, mapActions)(TodoBarAux);
+export default TodoBar;

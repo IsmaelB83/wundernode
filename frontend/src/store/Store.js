@@ -1,43 +1,68 @@
 // Import redux
 import { createStore } from 'redux';
+// Import own modules
+import utils from './utils';
 
 // App initial state
 const initialState = {
-    selectedList: 0,
-    username: 'ismael bernal',
-    inboxId: '',
-    taskLists: [],
-    currentTaskList: null,
-    currentTasks: [],
+    user: {},
+    lists: [],
+    selected: 0,
+    todos: [],
     switch: false, // Hack to force update in nested structures such as taskLists
 }
 
 // Actions
 export const actions = {
-    loadTaskLists: (taskLists) => {
+    init: (lists) => {
         return {
-            type: 'LOAD_TASKLISTS',
+            type: 'INIT',
             payload: { 
-                taskLists: taskLists,
+                lists: lists,
             }
         }
     },
-    setTaskList: (selected, taskList, tasks) => {
+    reloadLists: (lists) => {
         return {
-            type: 'SET_TASKLIST',
+            type: 'RELOAD_LISTS',
+            payload: { 
+                lists: lists,
+            }
+        }
+    },
+    reloadList: (list, todos) => {
+        return {
+            type: 'RELOAD_LIST',
+            payload: { 
+                list: list,
+                todos: todos,
+            }
+        }
+    },
+    loadList: (selected, list, todos) => {
+        return {
+            type: 'LOAD_LIST',
             payload: {
                 selected: selected,
-                taskList: taskList,
-                tasks: tasks,
+                list: list,
+                todos: todos
             }
         }
     },
-    refreshTaskLists: (id, task) => {
+    addTodo: (todo) => {
         return {
-            type: 'REFRESH_TASKLISTS',
-            payload: { 
-                id: id,
-                task: task
+            type: 'ADD_TODO',
+            payload: {
+                todo: todo,
+            }
+        }
+    },
+    starredTodo: (index, starred) => {
+        return {
+            type: 'STARRED_TODO',
+            payload: {
+                index: index,
+                starred: starred
             }
         }
     },
@@ -47,75 +72,49 @@ export const actions = {
 function charReducer(state, action) {
     let newState = {};
     switch (action.type) {
-        case 'LOAD_TASKLISTS':
+        case 'INIT':
             newState = {...state};
-            newState.taskLists = action.payload.taskLists;
+            newState.user = { name: 'ismael bernal', email: 'ismaelbernal83@gmail.com' };
+            newState.selected = 0;
+            newState.lists = action.payload.lists;
             newState.switch = !newState.switch;
             return newState;
-        case 'SET_TASKLIST':
+        case 'RELOAD_LISTS':
             newState = {...state};
-            newState.selectedList = action.payload.selected;
-            newState.currentTaskList = action.payload.taskList;
-            newState.currentTasks = action.payload.tasks;
+            newState.lists = action.payload.lists;
             newState.switch = !newState.switch;
             return newState;
-        case 'REFRESH_TASKLISTS':
+        case 'RELOAD_LIST':
             newState = {...state};
-            // Variables
-            let starred = newState.taskLists[1];
-            let today = newState.taskLists[2];
-            let week = newState.taskLists[3];
-            // Actualizar la lista propietaria de la tarea
-            for (let i = 0; i < newState.taskLists.length; i++) {
-                let list, index;
-                list = newState.taskLists[i];
-                if (list._id === action.payload.id) {
-                    // Actualizar lista propietaria
-                    index = list.tasks.indexOf(action.payload.task._id);
-                    if (index<0) list.tasks.push(action.payload.task._id);  
-                    if (action.payload.task.starred) {
-                        index = list.starred.indexOf(action.payload.task._id);
-                        if (index<0) list.starred.push(action.payload.task._id);
-                        // Añadir a la de starred
-                        index = starred.tasks.indexOf(action.payload.task._id);
-                        if (index<0) {
-                            starred.tasks.push(action.payload.task._id);  
-                            starred.starred.push(action.payload.task._id);  
-                        }
-                    } else {
-                        index = list.starred.indexOf(action.payload.task._id);
-                        if (index>=0) list.starred.splice(index,1);
-                        // Quitar de la de starred
-                        index = starred.tasks.indexOf(action.payload.task._id);
-                        if (index>=0) {
-                            starred.tasks.splice(index,1);
-                            starred.starred.splice(index,1);
-                        }
-                        // Quitar de la diaria
-                        index = today.starred.indexOf(action.payload.task._id);
-                        if (index>=0) today.starred.splice(index,1);
-                        // Quitar de la semanal
-                        index = week.starred.indexOf(action.payload.task._id);
-                        if (index>=0) week.starred.splice(index,1);
-                    }
-                    // Añadir/Quitar de las de vencimientos
-                    if (action.payload.task.due) {
-                        
-                    } else {
-                        // Lista diaria
-                        index = today.tasks.indexOf(action.payload.task._id);
-                        if (index>=0) today.tasks.splice(index,1);
-                        index = today.starred.indexOf(action.payload.task._id);
-                        if (index>=0) today.starred.splice(index,1);
-                        // Lista semana
-                        index = week.tasks.indexOf(action.payload.task._id);
-                        if (index>=0) week.tasks.splice(index,1);
-                        index = week.starred.indexOf(action.payload.task._id);
-                        if (index>=0) week.starred.splice(index,1);
-                    }
-                }                 
+            newState.lists[newState.selected] = action.payload.list;
+            newState.todos = action.payload.todos;
+            newState.switch = !newState.switch;
+            return newState;
+        case 'LOAD_LIST':
+            newState = {...state};
+            newState.selected = action.payload.selected;
+            newState.lists[action.payload.selected] = action.payload.list;
+            newState.todos = action.payload.todos;
+            newState.switch = !newState.switch;
+            return newState;
+        case 'ADD_TODO':
+            newState = {...state};
+            let list = newState.lists[newState.selected];
+            if (newState.selected <= 3) list = newState.lists[0];
+            list.tasks.push(action.payload.todo._id);
+            newState.todos.push(action.payload.todo);
+            utils.updateListsStarred(newState.lists[1], newState.lists[2], newState.lists[3], list, action.payload.todo);
+            return newState;
+        case 'STARRED_TODO': 
+            newState = {...state};
+            newState.todos[action.payload.index].starred = action.payload.starred;
+            for (let i = 0; i < newState.lists.length; i++) {
+                if (newState.lists[i]._id === newState.todos[action.payload.index].taskList) {
+                    utils.updateListsStarred(newState.lists[1], newState.lists[2], newState.lists[3], newState.lists[i], newState.todos[action.payload.index]);
+                    break;
+                }
             }
-            newState.switch = !state.switch;
+            newState.switch = !newState.switch;
             return newState;
         default:
             return state;

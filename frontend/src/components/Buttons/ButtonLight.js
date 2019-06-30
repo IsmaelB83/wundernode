@@ -4,6 +4,7 @@ import React from 'react';
 import './Buttons.css';
 
 export default class ButtonLight extends React.Component {
+    
     render() {
         return (
             <button className={`buttonLight ${this.props.className} button--${this.props.color}`} onClick={this.props.onClick}>
@@ -13,4 +14,5 @@ export default class ButtonLight extends React.Component {
             </button>
         );
     };
+    
 }

@@ -1,5 +1,5 @@
 /* Estilos de la lista */
-.tasksList {
+.tasklist {
     padding: 0;
     list-style-type: none;
     font-size: 14px;
@@ -9,10 +9,11 @@
     letter-spacing: .3px;
 }
 
-.tasksList li {
+.tasklist-li {
     padding: 10px 20px;
     cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+}
+
+.tasklist-li--active {
+    background-color: #E0EEFA;
 }

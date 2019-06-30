@@ -1,5 +1,6 @@
 // Node imports
 const moment = require('moment');
+moment.locale('en', { week : { dow : 1, doy : 4 } } );
 // Own imports
 const { Task, TaskList, User } = require('../models');
 
@@ -7,24 +8,28 @@ const ctrl = {};
 
 ctrl.all = async (req, res, next) => {
     try {
+        
         let tasks;
         switch (req.params.id) {
             case 'all':
                 tasks = await Task.find();
                 break;
             case 'starred':
-                tasks = await Task.find({starred: true});
+                tasks = await Task.find({
+                    starred: true
+                });
                 break;
             case 'today':
-                const today = moment().startOf('day')
-                tasks = await Task.find({due: { $lte: moment(today).endOf('day').toDate() }});
+                tasks = await Task.find({
+                    due: { 
+                        $lte: moment().endOf('day').toDate() 
+                    }
+                });
                 break;
             case 'week':
-                const weekStart = moment().startOf('week'), weekEnd = moment().endOf('week');                
                 tasks = await Task.find({
                     due: {   
-                        $gte: weekStart.toDate(),
-                        $lte: weekEnd.toDate() 
+                        $lte: moment().endOf('week').toDate() 
                     }
                 });
                 break;

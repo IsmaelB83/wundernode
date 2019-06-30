@@ -20,11 +20,11 @@ class TodoPanelAux extends React.Component {
     render() {
         return (
             <ol id={this.props.id} className={`todoList ${this.props.completed?'todoList--done':''}`}>
-            { this.props.tasks && 
-                this.props.tasks.map((value, index) => {
+            { this.props.todos.length > 0 && 
+                this.props.todos.map((value, index) => {
                     if (value.completed === this.props.completed) {
                         return <li key={index} onClick={this.clickLine.bind(this)} data-index={index}>
-                                    <Todo text={value.description} 
+                                    <Todo   text={value.description} 
                                             completed={value.completed} 
                                             active={this.state.selected===index?true:false} 
                                             due={value.due}
@@ -50,20 +50,15 @@ class TodoPanelAux extends React.Component {
         ev.preventDefault();
         try {
             let index = ev.currentTarget.dataset.index;
-            let result = await Axios.put(`/tasklist/task/${this.props.tasks[index]._id}`, null, {
-                data: {
-                    starred: !this.props.tasks[index].starred
+            if (index >= 0) {
+                let todo = this.props.todos[index];
+                let result = await Axios.put(`/tasklist/task/${todo._id}`, null, {
+                    data: { starred: !todo.starred }
+                });
+                if (result.status === 200) {
+                    this.props.starredTodo(index, !todo.starred);
+                    
                 }
-            });
-            if (result.status === 200) {
-                this.props.setTaskList(
-                    result.data.result.taskList,
-                    result.data.result.tasks
-                );
-                this.props.refreshTaskLists(
-                    result.data.result.taskList._id,
-                    this.props.tasks[index]
-                )
             }
         } catch (error) {
             console.log(error)
@@ -73,14 +68,14 @@ class TodoPanelAux extends React.Component {
 
 // React-Redux
 const mapState = (state) => { 
-    return { 
-        tasks: state.currentTasks,
+    return {
+        todos: state.todos,
         switch: state.switch
     };
 };
 const mapActions = { 
-    setTaskList: actions.setTaskList,
-    refreshTaskLists: actions.refreshTaskLists,
+    reloadList: actions.reloadList,
+    starredTodo: actions.starredTodo,
 };
 
 const TodoPanel = connect(mapState, mapActions)(TodoPanelAux);

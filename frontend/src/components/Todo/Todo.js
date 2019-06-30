@@ -4,12 +4,14 @@ import moment from 'moment';
 /* Import own css */
 import './Todo.css';
 
+const audio = new Audio(`${process.env.PUBLIC_URL}/audio/completed.ogg`);
+
 export default class Todo extends React.Component {
 
     render() {
         return (
             <div className={`todo ${this.props.active?'todo--active':''}`}>
-                <a href='/' className='todo-check'>
+                <a href='/' className='todo-check' onClick={this.setTodoDone.bind(this)}>
                     <i className={`far ${this.props.completed?'fa-check-square':'fa-square'}`}></i>
                 </a>
                 <div className={`todo-nameWrapper ${this.props.completed?'todo--done':''}`}>
@@ -25,4 +27,13 @@ export default class Todo extends React.Component {
             </div>
         );
     };
+
+    async setTodoDone(ev) {
+        try {
+            ev.preventDefault();
+            audio.play();               
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }

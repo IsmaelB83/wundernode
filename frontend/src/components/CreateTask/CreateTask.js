@@ -7,9 +7,9 @@ import Axios from 'axios';
 //import InputIcon from '../Inputs/InputIcon';
 import ButtonBase from '../Buttons/ButtonBase';
 /* Import own css */
-import './CreateList.css';
+import './CreateTask.css';
 
-export default class CreateList extends React.Component {
+export default class CreateTask extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +34,7 @@ export default class CreateList extends React.Component {
                                    className='popup-input popup-input--block' 
                                    placeholder='List Name'
                                    onChange={(ev) => { this.save.current.enable(ev.currentTarget.value==='')}}
-                                   onKeyPress={(ev) => { if(ev.key==='Enter') { this.closeModal(); this.createList()}}}
+                                   onKeyPress={(ev) => { if(ev.key==='Enter') { this.closeModal(); this.CreateTask()}}}
                             />
                         </div>
                         {/* 

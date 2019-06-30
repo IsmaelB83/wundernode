@@ -12,7 +12,7 @@ class ToolBarAux extends React.Component {
     render() {
         return (
             <div className="list-toolbar">
-                <h1 className="list-title">{this.props.taskList && this.props.taskList.description}</h1>
+                <h1 className="list-title">{ ( this.props.selected && this.props.lists[this.props.selected].description ) || 'Inbox' }</h1>
                 <div className="list-actions">
                     <ButtonLight className='button-md' color='white' icon='fas fa-user-plus' span='Share'/>
                     <ButtonLight className='button-md' color='white' icon='fas fa-sort' span='Sort'/>
@@ -26,7 +26,8 @@ class ToolBarAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
-        taskList: state.currentTaskList,
+        selected: state.selected,
+        lists: state.lists,
     };
 };
 

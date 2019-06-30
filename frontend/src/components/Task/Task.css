@@ -5,53 +5,52 @@
    justify-content: space-between;
 }
 
-.task-name {
+.taskitem-name {
     line-height: 23px;
     color: black;
     display: block;
+    width: 100%;;
 }
 
-/* Estilos de estados */
-.tasksList--active {
-    background-color: #E0EEFA;
-}
-
-.tasksList--active .badge--danger {
-    color: #fff;
-    background: #d74e48;
-}
-
-.tasksList--active .badge--secondary {
-    color: #000;
-    background: transparent;
+.taskitem-badges { 
+    font-weight: bold; 
+    float: right;
 }
 
 /* Badges */
-.task-badges .badge.badge.badge { 
-    font-weight: bold; 
-}
-
-.task .task-badges > .badge.badge--danger {
+.badge-starred {
     color: #d74e48;
     background: rgba(215,78,72,0.1);
 }
 
-.task .task-badges > .badge.badge--secondary {
+.badge-normal {
     color: #bdbcbb;
     background: transparent;
 }
 
-.task-badges .badge:last-child { margin-left: 3px; }
+.taskitem-badges .badge:last-child { margin-left: 3px; }
+
+/* Estilos de los estados */
+.badge-starred--active {
+    color: #fff;
+    background: #d74e48;
+}
+
+.badge-normal--active {
+    color: #000;
+    background: transparent;
+}
+
 
 /* Iconos */
-.task-icon {
+.taskitem-icon {
     height: 20px;
     width: 25px;
     margin-right: 10px;
     font-size: 20px;
     color:  lightgrey;
 }
-.task-icon.blue   { color: #2b8dec; }
-.task-icon.red    { color: #d74e48; }
-.task-icon.green  { color: #5fa004; }
-.task-icon.orange { color: #e29600; }
+.taskitem-icon.blue   { color: #2b8dec; }
+.taskitem-icon.red    { color: #d74e48; }
+.taskitem-icon.green  { color: #5fa004; }
+.taskitem-icon.orange { color: #e29600; }

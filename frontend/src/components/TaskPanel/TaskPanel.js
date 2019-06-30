@@ -11,20 +11,21 @@ class TaskPanelAux extends React.Component {
 
     render() {
         return (
-            <ul className='tasksList'>
-            {   this.props.taskLists && 
-                this.props.taskLists.map((value, index) => {
+            <ul className='tasklist'>
+            {   this.props.lists.length > 0 && 
+                this.props.lists.map((value, index) => {
                     return  <li key={index} 
-                                    className={`${index===this.props.selectedList?'tasksList--active':''}`}
-                                    onClick={this.taskListClick.bind(this)} 
-                                    data-index={index}
+                                className={`tasklist-li ${index===this.props.selected?'tasklist-li--active':''}`}
+                                onClick={this.taskListClick.bind(this)} 
+                                data-index={index}
                             >
                                 <Task   id={value._id} 
                                         icon={value.icon} 
                                         text={value.description} 
                                         color={value.color}
                                         starred={value.starred.length}
-                                        tasks={value.tasks.length} 
+                                        tasks={value.tasks.length}
+                                        active={index===this.props.selected?true:false}
                                 />
                             </li>
                 })
@@ -36,27 +37,20 @@ class TaskPanelAux extends React.Component {
     async taskListClick(ev) {
         ev.preventDefault();
         let index = ev.currentTarget.dataset.index
-        let taskList = this.props.taskLists[index];
+        let taskList = this.props.lists[index];
         let url = '/tasklist/task/'
         /* Las búsquedas de todos de las listas de sistema son una excepción */
         switch (taskList.systemId) {
-            case 1:
-                url += 'starred';
-                break;
-            case 2:
-                url += 'today';
-                break;
-            case 3: 
-                url += 'week';
-                break;
-            default:
-                url += taskList._id;
+            case 1:   url += 'starred';     break;
+            case 2:   url += 'today';       break;
+            case 3:   url += 'week';        break;
+            default:  url += taskList._id;
         }
         let response = await fetch(url);
         if (response.status === 200) {
             let json = await response.json();
             if (json) {
-                this.props.loadTaskList(parseInt(index), taskList, json.result); 
+                this.props.loadList(parseInt(index), taskList, json.result); 
             }
         }
     }
@@ -65,12 +59,15 @@ class TaskPanelAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
-        selectedList: state.selectedList,
-        taskLists: state.taskLists,
-        switch: state.switch
+        selected: state.selected,
+        lists: state.lists,
+        switch: state.switch,
     };
 };
-const mapActions = { loadTaskList: actions.setTaskList };
+
+const mapActions = { 
+    loadList: actions.loadList 
+};
 
 const TaskPanel = connect(mapState, mapActions)(TaskPanelAux);
 export default TaskPanel;
