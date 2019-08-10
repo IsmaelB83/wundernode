@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 // Own imports
-const router = require('./routes/index');
+const { user, task, tasklist } = require('./routes/index');
 const { passport } = require('./config');
 const { vardump } = require('./utils/index');
 
@@ -36,17 +36,28 @@ module.exports = function(app) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(bodyParser.urlencoded({extended: true}));
-
-    // Asignar variables locales al response
-    app.use((req, res, next) => {
-        res.locals.vardump = vardump;
-        res.locals.messages = req.flash();
-        res.locals.user = {...req.user};
-        next();
-    });
-
     // Routers
-    app.use('/', router());
-
+    app.use('/users', user());
+    app.use('/tasks', task());
+    app.use('/tasklists', tasklist());
+    // catch 404 and forward to error handler
+    app.use(function(req, res, next) {
+        next(createError(404));
+    });
+    // error handler
+    app.use(function(error, req, res, next) {
+        // Validation error
+        if (error.array) { 
+            error.status = 422;
+            const errInfo = error.array({ onlyFirstError: true })[0];
+            error.error = `No válido - ${errInfo.param} ${errInfo.msg}`;
+        }
+        // status 500 si no se indica lo contrario
+        res.status(error.status || 500);
+        res.json({
+            success: false, 
+            error: error
+        });
+    });
     return app;
 };

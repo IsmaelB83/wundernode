@@ -1,6 +1,6 @@
 // Node imports
 const moment = require('moment');
-moment.locale('en', { week : { dow : 1, doy : 4 } } );
+moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 // Own imports
 const { TaskList, Task, User } = require('../models');
 
@@ -8,17 +8,23 @@ const ctrl = {};
 
 ctrl.all = async (req, res, next) => {
     try {
-        // Query information to mongodb
-        let tasks, taskLists = await TaskList.find({}).sort({_id: 1});
-        if (!taskLists || taskLists.length === 0) {
-            res.status(404).json({
-                status: 'error', 
-                description: 'Number of taskList lists found is 0',
-                result: {}
-            });
-            return;
-        }
-        // Conformo los arrays de las listas de sistema
+        // Listado
+        TaskList.list(req.query.description, req.query.owner, req.query.member, req.query.active, 
+            req.query.system, parseInt(req.query.limit), parseInt(req.query.skip), req.query.fields, 
+            function(error, results) {
+                // Error
+                if (error) {
+                    next(error);
+                    return;
+                }
+                // Ok
+                res.status(200).json({
+                    success: true,
+                    count: results.length,
+                    results: results
+                });
+        });
+        /* // Conformo los arrays de las listas de sistema
         for (let i = 1; i <= 3; i++) {
             const list = taskLists[i];
             switch (list.systemId) {
@@ -50,19 +56,11 @@ ctrl.all = async (req, res, next) => {
                 list.tasks.push(t._id)
                 if (t.starred) list.starred.push(t._id);
             });
-        }
-        // Return information
-        res.json({
-            status: 'ok',
-            description: `Total of taskList lists: ${taskLists.length}`,
-            result: taskLists
-        });
+        }*/
     } catch (error) {
-        res.status(404).json({
-            status: 'error',
-            description: `Uncontrolled error: ${error}`,
-            result: {}
-        });
+        // Los errores de validación de usuario NO me interesa loguerarlos
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);
     }
 }
 

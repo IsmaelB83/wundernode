@@ -1,6 +1,6 @@
 // Node imports
 const moment = require('moment');
-moment.locale('en', { week : { dow : 1, doy : 4 } } );
+moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 // Own imports
 const { Task, TaskList, User } = require('../models');
 

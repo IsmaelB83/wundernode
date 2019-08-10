@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "watch": "webpack --w --mode development",
-    "init": "node src/database/install_db.js"
+
+    "watch": "webpack --w --mode development"
   },
   "author": "Ismael",
   "license": "ISC",

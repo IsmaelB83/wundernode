@@ -2,63 +2,35 @@
 const passport = require('passport');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt-nodejs');
+const { validationResult } = require('express-validator');
 // Own imports
 const { User, TaskList } = require('../models');
 const { mail } = require('../utils');
 
 const ctrl = {};
 
+
 ctrl.create = async (req, res, next) => {
     try {
-        let user = {...req.body};  
-        user.token = crypto.randomBytes(20).toString('hex');
-        user = await User.create(user);  
-        if (!user) {
-            res.json({
-                status: 'error',
-                description: 'Error creando usuario',
-                result: user
-            });
+        // Validaciones
+        validationResult(req).throw();
+        // Creación del usuario
+        let user = await User.insert(new User({...req.body}));
+        if (user) {
+            // Creo las listas por defecto del usuario
+            let result = await TaskList.insertSystemTaskLists(user.id);
+            if (result) {
+                // Ok
+                res.status(201).json({
+                    success: true,
+                    description: 'User created successfully',
+                    result: user
+                });
+                return;
+            }
         }
-        // Creando listas de tareas por defecto
-        let taskList = {
-            description: 'Inbox',
-            members: user,
-            active: true,
-            icon: 'fas fa-inbox',
-            color: 'blue',
-            system: true,
-            systemId: 0,
-        }
-        await TaskList.create(taskList);
-        taskList.description = 'Starred';
-        taskList.icon = 'far fa-star';
-        taskList.color = 'red';
-        taskList.systemId++;
-        await TaskList.create(taskList);
-        taskList.description = 'Today';
-        taskList.icon = 'far fa-calendar-minus';
-        taskList.color = 'green';
-        taskList.systemId++;
-        await TaskList.create(taskList);
-        taskList.description = 'Week';
-        taskList.icon = 'far fa-calendar-alt';
-        taskList.color = 'orange';
-        taskList.systemId++;
-        await TaskList.create(taskList);
-        // Genero url de reseteo y la envío por mail
-        /*const resetUrl = `http://${req.headers.host}/user/new/${user.token}`;
-        mail.send({
-            email: user.email, 
-            subject: 'Activar cuenta de usuario',
-            url: resetUrl,
-            view: 'newUser'
-        });*/
-        res.json({
-            status: 'ok',
-            description: 'Usuario creado con éxito',
-            result: user
-        })
+        // Error
+        next('Error creando usuario');
     } catch (error) {
         log.fatal(`Error incontrolado: ${error}`);
     }
