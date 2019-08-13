@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 // Own imports
 const { user, task, tasklist } = require('./routes/index');
 const { passport } = require('./config');
-const { vardump } = require('./utils/index');
+const { Error } = require('./middlewares');
 
 
 module.exports = function(app) {
@@ -47,19 +47,6 @@ module.exports = function(app) {
         next(createError(404));
     });
     // error handler
-    app.use(function(error, req, res, next) {
-        // Validation error
-        if (error.array) { 
-            error.status = 422;
-            const errInfo = error.array({ onlyFirstError: true })[0];
-            error.error = `No válido - ${errInfo.param} ${errInfo.msg}`;
-        }
-        // status 500 si no se indica lo contrario
-        res.status(error.status || 500);
-        res.json({
-            success: false, 
-            error: error
-        });
-    });
+    app.use(Error);
     return app;
 };

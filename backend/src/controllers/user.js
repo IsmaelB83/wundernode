@@ -21,6 +21,7 @@ const ctrl = {};
  */
 ctrl.login = async (req, res, next) => {
     try {
+        debugger;
         const user = await User.findOne({email: req.body.email});
         if (user) {
             // Comparo los passwords

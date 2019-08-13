@@ -3,14 +3,14 @@
 const express = require('express');
 // Own imports
 const { TaskListCtrl } = require('../controllers');
-const authorize = require('../middlewares/auth');
+const { Auth } = require('../middlewares');
 
 module.exports = () => {
     const router = express.Router();
     // Rutas de tasklists
-    router.get('/', authorize, TaskListCtrl.all);
-    router.get('/:id', TaskListCtrl.getById);
-    router.post('/', authorize, TaskListCtrl.create);
-    router.put('/:id', authorize, TaskListCtrl.updateById);
+    router.get('/', Auth, TaskListCtrl.all);
+    router.get('/:id', Auth, TaskListCtrl.getById);
+    router.post('/', Auth, TaskListCtrl.create);
+    router.put('/:id', Auth, TaskListCtrl.updateById);
     return router;
 }
