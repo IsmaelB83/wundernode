@@ -3,6 +3,8 @@
 const moment = require('moment');
 // Own imports
 const { TaskList, Task, User } = require('../models');
+const Log = require('../utils/log');
+
 
 moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 

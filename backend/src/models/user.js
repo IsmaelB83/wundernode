@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 // Own imports
 const TaskList = require('./tasklist');
+const Log = require('../utils/log');
 
 
 // User

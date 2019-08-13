@@ -1,13 +1,57 @@
 "use strict";
 // Node imports
-const crypto = require('crypto');
-const bcrypt = require('bcrypt-nodejs');
 const { validationResult } = require('express-validator');
+const bcrypt = require('bcrypt-nodejs');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
 // Own imports
 const { User, TaskList } = require('../models');
 const { Mail, Log } = require('../utils');
+const { config } = require('../config');
 
 const ctrl = {};
+
+
+/**
+ * Hacer login en la API. Retorna un JWT.
+ * @param {Request} req Request web
+ * @param {Response} res Response web
+ * @param {Middleware} next Siguiente middleware al que llamar
+ */
+ctrl.login = async (req, res, next) => {
+    try {
+        const user = await User.findOne({email: req.body.email});
+        if (user) {
+            // Comparo los passwords
+            if (bcrypt.compareSync(req.body.password, user.password)) {
+                // Creo el payload del y firmo el token
+                const payload = {
+                    user: user._id,
+                    name: user.name,
+                    email: user.email, 
+                    expires: moment().add(14, 'days').unix()
+                };
+                const token = jwt.sign({payload}, config.secret_key);
+                // Retorno el token al usuario
+                return res.json({
+                    success: true,
+                    description: 'Authorization successful',
+                    token: token,
+                });
+            } else {
+                return res.status(401).json({
+                    success: false,
+                    description: 'Not authorized'
+                })
+            }
+        }
+        next('Usuario no encontrado');
+    } catch (error) {
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);   
+    }
+}
 
 /**
  * Listado de usuarios con filtros
