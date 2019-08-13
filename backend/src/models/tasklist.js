@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+
 // TaskList
 const TaskListSchema = new Schema(
     {   
@@ -46,8 +47,8 @@ TaskListSchema.statics.list = function(description, owner, member, active, syste
         // Query
         queryDB.exec(callback);        
     } catch (error) {
-        log.fatal('Error ejecutando consulta.');
-        log.fatal(error); 
+        Log.fatal('Error ejecutando consulta.');
+        Log.fatal(error); 
         callback(error);
     }
 }
@@ -60,8 +61,8 @@ TaskListSchema.statics.insert = async function(taskList) {
     try {
         return await taskList.save();
     } catch (error) {
-        log.fatal('Error insertando taskList.');
-        log.fatal(error);
+        Log.fatal('Error insertando taskList.');
+        Log.fatal(error);
     }
 };
 
@@ -73,8 +74,8 @@ TaskListSchema.statics.insertAll = async function(taskLists) {
     try {
         return await TaskList.insertMany(taskLists);
     } catch (error) {
-        log.fatal('Error insertando taskLists lists.');
-        log.fatal(error);
+        Log.fatal('Error insertando taskLists lists.');
+        Log.fatal(error);
     }
 };
 
@@ -116,8 +117,8 @@ TaskListSchema.statics.insertSystemTaskLists = async function(owner) {
         // Ok
         return true;
     } catch (error) {
-        log.fatal('Error insertando taskLists por defecto.');
-        log.fatal(error);
+        Log.fatal('Error insertando taskLists por defecto.');
+        Log.fatal(error);
     }
 };
 
@@ -140,8 +141,8 @@ TaskListSchema.statics.updateTaskList = async function(id, newTaskList) {
         }
         return false;
     } catch (error) {
-        log.fatal('Error insertando anuncio.');
-        log.fatal(error);
+        Log.fatal('Error insertando anuncio.');
+        Log.fatal(error);
     }
 };
 
@@ -152,8 +153,8 @@ TaskListSchema.statics.deleteAll = async function() {
     try {
         await TaskList.deleteMany({});
     } catch (error) {
-        log.fatal('Error eliminando listas de tareas.');
-        log.fatal(error);
+        Log.fatal('Error eliminando listas de tareas.');
+        Log.fatal(error);
     }
 };
 

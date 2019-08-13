@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-    User: require('./User'),
-    Task: require('./Task'),
-    TaskList: require('./TaskList'),
+    User: require('./user'),
+    Task: require('./task'),
+    TaskList: require('./tasklist'),
 }

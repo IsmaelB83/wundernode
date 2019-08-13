@@ -1,13 +1,15 @@
 {
    "Users": [
       {
-         "name": "Ismael Bernal",
-         "email": "ismaelbernal83@gmail.com",
+         "name": "Ismael",
+         "email": "ismael@gmail.com",
+         "password": "qwerty83",
          "active": true
       },
       {
-         "name": "Tamara Mazuela",
-         "email": "tamazzu@hotmail.com",
+         "name": "Tamara",
+         "email": "tamara@gmail.com",
+         "password": "qwerty83",
          "active": true
       }
    ],

@@ -1,5 +1,7 @@
+"use strict";
+
 module.exports = {
-    UserCtrl: require('./User'),
-    TaskListCtrl: require('./TaskList'),
-    TaskCtrl: require('./Task')
+    UserCtrl: require('./user'),
+    TaskListCtrl: require('./tasklist'),
+    TaskCtrl: require('./task')
 }

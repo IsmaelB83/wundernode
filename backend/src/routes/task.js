@@ -1,4 +1,7 @@
+"use strict";
+// Node imports
 const express = require('express');
+// Own imports
 const { TaskCtrl } = require('../controllers');
 
 module.exports = () => {

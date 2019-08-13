@@ -5,7 +5,7 @@ const fs = require('fs');
 const database = require('./index');
 const { User, TaskList, Task } = require('../models');
 const { config } = require('../config');
-const { log } = require('../utils');
+const { Log } = require('../utils');
 
 
 // Inicializar base de datos
@@ -48,9 +48,9 @@ async function initDB() {
         }
         tasks = await Task.insertAll(tasks);
         // Log
-        log.info(`Base de datos inicializada con exito. Puede arrancar la API mediante "npm start".`);        
+        Log.info(`Base de datos inicializada con exito. Puede arrancar la API mediante "npm start".`);        
     } catch (error) {
-        log.fatal('ERROR incontrolado.');
-        log.fatal(error);
+        Log.fatal('ERROR incontrolado.');
+        Log.fatal(error);
     }
 }

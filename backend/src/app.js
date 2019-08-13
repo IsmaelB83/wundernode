@@ -1,3 +1,4 @@
+"use strict";
 // Node imports
 const path = require('path');
 const cors = require('cors');

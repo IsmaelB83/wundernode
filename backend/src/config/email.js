@@ -1,6 +1,8 @@
+"use strict";
+
 module.exports = {
-    user: '60386b56b972c7',
-    pass: '2040837e2d3cfc',
+    user: 'c49985c595591f',
+    pass: 'a98e6b1c2d3e77',
     host: 'smtp.mailtrap.io',
     port: '2525'
 }

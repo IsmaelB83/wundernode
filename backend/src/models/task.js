@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+
 // Task
 const TaskSchema = new Schema(
     {  
@@ -46,8 +47,8 @@ TaskSchema.statics.list = function(taskList, description, due, reminder, starred
         // Query
         queryDB.exec(callback);        
     } catch (error) {
-        log.fatal('Error ejecutando consulta.');
-        log.fatal(error); 
+        Log.fatal('Error ejecutando consulta.');
+        Log.fatal(error); 
         callback(error);
     }
 }
@@ -60,8 +61,8 @@ TaskSchema.statics.insert = async function(task) {
     try {
         return await task.save();
     } catch (error) {
-        log.fatal('Error insertando task.');
-        log.fatal(error);
+        Log.fatal('Error insertando task.');
+        Log.fatal(error);
     }
 };
 
@@ -73,8 +74,8 @@ TaskSchema.statics.insertAll = async function(tasks) {
     try {
         return await Task.insertMany(tasks);
     } catch (error) {
-        log.fatal('Error insertando tasks.');
-        log.fatal(error);
+        Log.fatal('Error insertando tasks.');
+        Log.fatal(error);
     }
 };
 
@@ -97,8 +98,8 @@ TaskSchema.statics.updateTask = async function(id, newTask) {
         }
         return false;
     } catch (error) {
-        log.fatal('Error insertando anuncio.');
-        log.fatal(error);
+        Log.fatal('Error insertando anuncio.');
+        Log.fatal(error);
     }
 };
 
@@ -109,8 +110,8 @@ TaskSchema.statics.deleteAll = async function() {
     try {
         await Task.deleteMany({});
     } catch (error) {
-        log.fatal('Error eliminando tareas.');
-        log.fatal(error);
+        Log.fatal('Error eliminando tareas.');
+        Log.fatal(error);
     }
 };
 

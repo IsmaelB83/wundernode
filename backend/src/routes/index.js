@@ -1,4 +1,4 @@
-const express = require('express');
+"use strict";
 
 module.exports = {
     user: require('./user'),

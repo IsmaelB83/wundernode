@@ -1,8 +1,10 @@
+"use strict";
 // Node imports
 const moment = require('moment');
-moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 // Own imports
 const { Task, TaskList, User } = require('../models');
+
+moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 
 const ctrl = {};
 
@@ -85,7 +87,7 @@ ctrl.create = async (req, res, next) => {
         let tasks = await Task.find({taskList: taskList._id});
         res.json({status: 'ok', result: {taskList, tasks}});
     } catch (error) {
-        log.fatal(`Error incontrolado: ${error}`);
+        Log.fatal(`Error incontrolado: ${error}`);
     }
 }
 
@@ -116,7 +118,7 @@ ctrl.modify = async (req, res, next) => {
         let tasks = await Task.find({taskList: taskList._id});
         res.json({status: 'ok', result: {taskList, tasks}});
     } catch (error) {
-        log.fatal(`Error incontrolado: ${error}`);
+        Log.fatal(`Error incontrolado: ${error}`);
     }
 }
 

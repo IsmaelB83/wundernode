@@ -1,6 +1,8 @@
+"use strict";
 const utils = {
     vardump: (object) => JSON.stringify(object, null, 2),
-    log: require('./log')
+    Log: require('./log'),
+    Mail: require('./mail')
 }
 
 module.exports = utils;
