@@ -41,13 +41,12 @@ ctrl.login = async (req, res, next) => {
                     token: token,
                 });
             } else {
-                return res.status(401).json({
-                    success: false,
-                    description: 'Not authorized'
-                })
+                // No autorizado
+                return next({status: 401, error: 'No autorizado'});
             }
         }
-        next('Usuario no encontrado');
+        // No autorizado
+        next({status: 401, error: 'No autorizado'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);   
@@ -147,8 +146,8 @@ ctrl.activate = async (req, res, next) => {
             });
             return;
         }
-        // Error
-        next('Usuario no encontrado');
+        // No autorizado
+        next({status: 401, error: 'No autorizado'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
@@ -186,8 +185,8 @@ ctrl.resetRequest = async (req, res, next) => {
             });
             return;
         }
-        // Error
-        next('Usuario no encontrado');
+        // No autorizado
+        next({status: 401, error: 'No autorizado'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
@@ -224,8 +223,8 @@ ctrl.reset = async (req, res, next) => {
             });
             return;
         }
-        // Error
-        next('Usuario no encontrado');
+        // No autorizado
+        next({status: 401, error: 'No autorizado'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
