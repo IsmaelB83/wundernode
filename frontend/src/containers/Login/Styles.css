@@ -1,0 +1,18 @@
+.login-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 16px;
+    border: 1px solid rgba(36,123,198,0.15);
+}
+
+.logo {
+    display: block;
+    margin: 30px auto;
+    width: 60px;
+    height: 60px;
+}
+
+.login {
+    padding: 10px;
+}

@@ -171,7 +171,7 @@ ctrl.resetRequest = async (req, res, next) => {
             user.expire = Date.now() + 360000;
             user = await user.save();
             // Genero url de reseteo y la envío por mail
-            const resetUrl = `http://${req.headers.host}/users/reset/${user.token}`;
+            const resetUrl = `http://localhost:3000/reset/password/${user.token}`;
             Mail.send({
                 email: user.email, 
                 subject: 'Password reset',

@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 /* Import own modules */
 import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
+import Reset from './containers/Login/Reset';
+import ResetRequest from './containers/Login/ResetRequest';
 import { store } from './store/Store';
 /* Import css */
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,8 +19,10 @@ import './assets/css/index.css';
 let reactComp = <Provider store={store}>
                     <Router>
                         <Switch>
-                            <Route path='/' exact component={Home} />
-                            <Route path='/login' exact component={Login} />
+                            <Route path='/' exact component={Login} />
+                            <Route path='/reset' exact component={ResetRequest} />
+                            <Route path='/reset/password/:token' exact component={Reset} />
+                            <Route path='/home' exact component={Home} />
                         </Switch>
                     </Router>
                 </Provider>;

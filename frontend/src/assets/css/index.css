@@ -1,12 +1,27 @@
+/**
+ * Generic styles 
+ **/
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-a { text-decoration: none; }
+
+a { 
+  text-decoration: none !important;
+  font-weight: bold;
+}
+
 button:focus {outline:0;}
-ul, li { list-style: none; }
-img, embed, object, video { max-width: 100%; }
+
+ul, li {
+  list-style: none; 
+}
+
+img, embed, object, video { 
+  max-width: 100%; 
+}
 
 body {
   margin: 0;

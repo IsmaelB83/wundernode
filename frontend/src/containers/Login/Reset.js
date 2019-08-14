@@ -7,8 +7,15 @@ import { actions } from '../../store/Store';
 import './Styles.css';
 
 
-class LoginAux extends React.Component {
+class ResetAux extends React.Component {
     
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: 'Ismael Bernal',
+        }
+    }
+
     componentDidMount() {
     }
 
@@ -20,21 +27,20 @@ class LoginAux extends React.Component {
                 </div>
                 <img class='logo' src={`${process.env.PUBLIC_URL}/img/wl_icon.png`} alt='icon'></img>
                 <div className="login-wrapper">
-                    <form class='login' action="/users/login" method='POST'>
+                    <h4>Nueva contraseña</h4>
+                    <p class='text-muted'>Hola, <b>{this.state.name}</b>: es hora de crear tu nueva contraseña de Wunderlist</p>
+                    <form class='login' action="/users/reset" method='POST'>
                         <div class="form-group">
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico"></input>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Nueva contraseña"></input>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña"></input>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Vuelve a escribir la contraseña"></input>
                         </div>
-                        <button type="submit" class="btn btn-block btn-primary">Iniciar Sesión</button>
+                        <button type="submit" class="btn btn-block btn-primary">Restablecer contraseña</button>
                         <div class="mt-2">
-                            <a href="/reset" class=''>¿Has olvidado tu contraseña?</a>
+                            ¿Ya tienes una cuenta? <a href="/" class=''>Iniciar sesión</a>
                         </div>
                     </form>
-                </div>
-                <div class="mt-2 text-center">
-                    ¿No tienes cuenta? <a href="/new" class=''>Crear cuenta</a>
                 </div>
             </div>
         );
@@ -52,5 +58,5 @@ const mapActions = {
     loadList: actions.loadList
 }
 
-const Login = connect(mapState, mapActions)(LoginAux);
-export default Login;
+const Reset = connect(mapState, mapActions)(ResetAux);
+export default Reset;
