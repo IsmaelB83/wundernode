@@ -1,15 +1,20 @@
 /* Import node modules */
-import Axios from 'axios'
+import Axios from 'axios';
 import React from 'react';
-import { connect } from 'react-redux';
 /* Import own modules */
-import { actions } from '../../store/Store';
+import InputIcon from '../../components/Inputs/InputIcon';
 /* Import css */
 import './Styles.css';
 
-
-class ResetRequestAux extends React.Component {
+/**
+ * Componente para solicitar el reseteo del password.
+ */
+export default class ResetRequest extends React.Component {
     
+    /**
+     * Constructor
+     * @param {*} props 
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -19,28 +24,33 @@ class ResetRequestAux extends React.Component {
         }
     }
 
+    /**
+     * Render
+     */
     render() {
         return (
             <div>
                 <div className="alert alert-info small text-center" role="alert">
                     This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
                 </div>
-                <img className='logo' src={`${process.env.PUBLIC_URL}/img/wl_icon.png`} alt='icon'></img>
+                <img className='logo' src={`${process.env.PUBLIC_URL}/img/nodejs.jpg`} alt='icon'></img>
                 <div className="login-wrapper">
                     { !this.state.reset && 
                         <div>
                             <h4>¿Has olvidado tu contraseña?</h4>
                             <p className="small">No te preocupes. Escribe tu dirección de correo electrónico y te enviaremos las instrucciones para restablecerla.</p>
-                            <form className='login' action="/users/reset" method='POST'>
+                            <form className='login' action="/users/reset" method='POST' onSubmit={this.resetPassword.bind(this)}>
                                 { this.state.error &&
                                     <div className="alert alert-danger small text-center mt-2 p-1" role="alert">
-                                        El email introducido es incorrecto
+                                        El email introducido no existe o es incorrecto
                                     </div>
                                 }
                                 <div className="form-group">
-                                    <input type="email" name="email" className="form-control" id="email" placeholder="Correo electrónico" onChange={this.onChangeEmail.bind(this)}></input>
+                                    <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
+                                        type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
+                                    </InputIcon>
                                 </div>
-                                <button type="submit" className="btn btn-block btn-primary" onClick={this.resetPassword.bind(this)}> Solicitar restablecer contraseña</button>
+                                <button type="submit" className="btn btn-block btn-primary"> Solicitar restablecer contraseña</button>
                             </form>
                             <div className="mt-2">
                                 ¿Ya tienes una cuenta? <a href="/" className=''>Iniciar sesión</a>
@@ -61,10 +71,10 @@ class ResetRequestAux extends React.Component {
         );
     }
 
-    onChangeEmail(event) {
-        this.setState({email: event.target.value});
-    }
-
+    /**
+     * Solicita el cambio de password cuando se hace click en el botón
+     * @param {*} ev 
+     */
     async resetPassword(ev) {
         try {
             // Prevengo submit estandar
@@ -85,17 +95,3 @@ class ResetRequestAux extends React.Component {
         }
     }
 }
-
-// React-Redux
-const mapState = (state) => { 
-    return { 
-        lists: state.lists,
-    };
-};
-const mapActions = {
-    init: actions.init,
-    loadList: actions.loadList
-}
-
-const ResetRequest = connect(mapState, mapActions)(ResetRequestAux);
-export default ResetRequest;

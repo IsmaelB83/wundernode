@@ -14,6 +14,22 @@ const initialState = {
 
 // Actions
 export const actions = {
+    start: (user) => {
+        return {
+            type: 'START',
+            payload: {
+                user: user
+            }
+        }
+    },
+    login: (user) => {
+        return {
+            type: 'LOGIN',
+            payload: {
+                user: user,
+            }
+        }
+    },
     init: (lists) => {
         return {
             type: 'INIT',
@@ -72,9 +88,17 @@ export const actions = {
 function charReducer(state, action) {
     let newState = {};
     switch (action.type) {
+        case 'START': 
+            newState = {...state};
+            newState.user = action.payload.user;
+            return newState;
+        case 'LOGIN':
+            newState = {...state};
+            newState.user = action.payload.user;
+            localStorage.setItem('user', JSON.stringify(newState.user));
+            return newState;
         case 'INIT':
             newState = {...state};
-            newState.user = { name: 'ismael bernal', email: 'ismaelbernal83@gmail.com' };
             newState.selected = 0;
             newState.lists = action.payload.lists;
             newState.switch = !newState.switch;

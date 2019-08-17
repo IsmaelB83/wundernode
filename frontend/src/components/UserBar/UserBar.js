@@ -11,7 +11,7 @@ class UserBarAux extends React.Component {
     render() {
         return (
             <div className='userbar'>
-                <UserDropDown username={this.props.username}/>
+                <UserDropDown user={this.props.user}/>
                 <div className='userbar-actions'>
                     <ButtonLight icon='far fa-bell' color='grey'/>
                     <ButtonLight icon='fas fa-sync-alt' color='grey'/>
@@ -24,7 +24,7 @@ class UserBarAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
-        username: state.username,
+        user: state.user,
     };
 };
 

@@ -1,5 +1,6 @@
 /* Import node modules */
 import React from 'react';
+import Axios from 'axios';
 import { connect } from 'react-redux';
 /* Import own modules */
 import { actions } from '../../store/Store';
@@ -23,7 +24,7 @@ class TaskPanelAux extends React.Component {
                                         icon={value.icon} 
                                         text={value.description} 
                                         color={value.color}
-                                        starred={value.starred.length}
+                                        // starred={value.starred.length}
                                         tasks={value.tasks.length}
                                         active={index===this.props.selected?true:false}
                                 />
@@ -38,7 +39,7 @@ class TaskPanelAux extends React.Component {
         ev.preventDefault();
         let index = ev.currentTarget.dataset.index
         let taskList = this.props.lists[index];
-        let url = '/tasklist/task/'
+        let url = '/tasklist/task/';
         /* Las búsquedas de todos de las listas de sistema son una excepción */
         switch (taskList.systemId) {
             case 1:   url += 'starred';     break;
@@ -46,7 +47,7 @@ class TaskPanelAux extends React.Component {
             case 3:   url += 'week';        break;
             default:  url += taskList._id;
         }
-        let response = await fetch(url);
+        let response = await Axios.get(url, { headers: { 'Authorization': "bearer " + this.props.user.token } });
         if (response.status === 200) {
             let json = await response.json();
             if (json) {
@@ -59,6 +60,7 @@ class TaskPanelAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return { 
+        user: state.user,
         selected: state.selected,
         lists: state.lists,
         switch: state.switch,

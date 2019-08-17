@@ -1,27 +1,30 @@
-.inputicon-group {
+.input_icon {
     position: relative;
     width: 100%;
 }
 
-.inputicon-icon {
+.input_icon-icon {
     position: absolute;   
     top: 5px;
     left: 5px;
     line-height: 20px;
-    color: #737272;
+    color: #007bff;
 }
 
-.inputicon-input {
+.input_icon-input {
     padding-left: 30px;
+    border-radius: 3px;
+    background-color: none;
+    border: 1px solid;
 }
 
 /* Estilos por estado */
-.inputicon-group--lg .inputicon-icon {
+.input_icon--lg .input_icon-icon {
     font-size: 20px;
-    top: 12px;
-    left: 10px;
+    top: 13px;
+    left: 12px;
 }
 
-.inputicon-group--lg .inputicon-input {
+.input_icon--lg .input_icon-input {
     padding: 10px 10px 10px 45px;
 }

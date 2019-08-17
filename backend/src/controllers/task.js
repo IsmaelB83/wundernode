@@ -10,7 +10,6 @@ const ctrl = {};
 
 ctrl.all = async (req, res, next) => {
     try {
-        
         let tasks;
         switch (req.params.id) {
             case 'all':

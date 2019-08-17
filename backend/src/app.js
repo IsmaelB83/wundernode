@@ -6,8 +6,6 @@ const morgan = require('morgan');
 const express = require('express');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
 // Own imports
 const { user, task, tasklist } = require('./routes/index');
 const { passport } = require('./config');
@@ -21,7 +19,7 @@ module.exports = function(app) {
     app.set('views', path.join(__dirname, './views'));
 
     // Static files
-    app.use(express.static('public'));
+    app.use('/public/', express.static('public'));
 
     // Middlewares
     app.use(morgan('dev'));
@@ -29,14 +27,6 @@ module.exports = function(app) {
     app.use(express.json());
     app.use(flash());
     app.use(cors());
-    app.use(cookieParser());
-    app.use(session({
-        secret: 'secret-key',
-        resave: true,
-        saveUninitialized: false
-    }));
-    app.use(passport.initialize());
-    app.use(passport.session());
     app.use(bodyParser.urlencoded({extended: true}));
     // Routers
     app.use('/users', user());

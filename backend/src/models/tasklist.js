@@ -2,6 +2,8 @@
 // Node imports
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+// Own imports
+const { Log } = require('../utils');
 
 
 // TaskList
@@ -11,11 +13,12 @@ const TaskListSchema = new Schema(
         owner: { type: Schema.Types.ObjectId, ref: 'User' },
         members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-        active: { type: Boolean, default: true },
+        active: { type: Boolean, default: true, select: false },
         icon: { type: String },
         color: { type: String },
         system: { type: Boolean, default: false },
         systemId: { type: Number },
+        __v: { type: Number, select: false}
     },
     {
         timestamps: true,
@@ -40,7 +43,7 @@ TaskListSchema.statics.list = function(description, owner, member, active, syste
         if (active) filter.active = active;
         if (system) filter.system = system;
         // Preparo la query
-        let queryDB = TaskList.find(filter);
+        let queryDB = TaskList.find(filter).populate('tasks').populate('members').populate('owner');
         queryDB.limit(limit);
         queryDB.skip(skip);
         queryDB.select(fields);

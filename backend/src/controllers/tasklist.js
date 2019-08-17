@@ -13,7 +13,7 @@ const ctrl = {};
 ctrl.all = async (req, res, next) => {
     try {
         // Listado
-        TaskList.list(req.query.description, req.query.owner, req.query.member, req.query.active, 
+        TaskList.list(req.query.description, req.query.owner, req.user.id, req.query.active, 
             req.query.system, parseInt(req.query.limit), parseInt(req.query.skip), req.query.fields, 
             function(error, results) {
                 // Error
@@ -72,18 +72,17 @@ ctrl.create = async (req, res, next) => {
     try {
         let taskList = new TaskList({...req.body});
         taskList.active = true;
-        let user = await User.findOne({email: 'ismaelbernal83@gmail.com'});
-        if (user) {
-            taskList.members.push(user);
-        }
-        user = await User.findOne({email: 'tamazzu@hotmail.com'});
-        if (user) {
-            taskList.members.push(user);
-        }
+        taskList.members.push(req.user.id);
+        taskList.owner = req.user.id;
         await taskList.save();
-        res.json({status: 'ok', result: taskList});
+        res.json({
+            success: true,
+            description: 'TaskList created',
+            result: taskList
+        });
     } catch (error) {
         Log.fatal(`Error incontrolado: ${error}`);
+        next(error);
     }
 }
 

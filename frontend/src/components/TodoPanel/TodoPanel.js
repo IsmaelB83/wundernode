@@ -53,6 +53,7 @@ class TodoPanelAux extends React.Component {
             if (index >= 0) {
                 let todo = this.props.todos[index];
                 let result = await Axios.put(`/tasklist/task/${todo._id}`, null, {
+                    headers: { 'Authorization': "bearer " + this.props.user.token },
                     data: { starred: !todo.starred }
                 });
                 if (result.status === 200) {
@@ -69,6 +70,7 @@ class TodoPanelAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return {
+        user: state.user,
         todos: state.todos,
         switch: state.switch
     };

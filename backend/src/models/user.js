@@ -10,15 +10,17 @@ const Log = require('../utils/log');
 
 // User
 const UserSchema = new mongoose.Schema(
-    {   name: { type: String, required: true, maxlength: 30},
+    {   name: { type: String, required: true, maxlength: 30 },
         email: { type: String, required: true, maxlength: 150, unique: true },
-        password: { type: String, required: true, minlength: 8 },
-        token: { type: String },
-        expire: { type: Date, default: Date.now() + 3600000 },
-        active: { type: Boolean, default: false },
+        password: { type: String, required: true, minlength: 8},
+        token: { type: String},
+        expire: { type: Date, default: Date.now() + 3600000, select: false },
+        active: { type: Boolean, default: false, select: false },
+        avatar: { type: String, default: ''},
+        __v: { type: Number, select: false}
     },
     {
-        timestamps: true,
+        timestamps: true, 
     }
 );
 

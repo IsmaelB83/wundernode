@@ -21,16 +21,16 @@ const ctrl = {};
  */
 ctrl.login = async (req, res, next) => {
     try {
-        debugger;
         const user = await User.findOne({email: req.body.email});
         if (user) {
             // Comparo los passwords
             if (bcrypt.compareSync(req.body.password, user.password)) {
-                // Creo el payload del y firmo el token
+                // Creo el payload y firmo el token
                 const payload = {
                     user: user._id,
                     name: user.name,
-                    email: user.email, 
+                    email: user.email,
+                    avatar: user.avatar,
                     expires: moment().add(14, 'days').unix()
                 };
                 const token = jwt.sign({payload}, config.secret_key);
@@ -39,6 +39,13 @@ ctrl.login = async (req, res, next) => {
                     success: true,
                     description: 'Authorization successful',
                     token: token,
+                    user: {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        token: token,
+                        avatar: user.avatar
+                    },
                 });
             } else {
                 // No autorizado
@@ -50,6 +57,23 @@ ctrl.login = async (req, res, next) => {
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);   
+    }
+}
+
+/**
+ * Chequeo el token si sigue siendo valido. Así la aplicación cliente puede decidir si vuelve
+ * a solicitar crendenciales sobre la API o no
+ */
+ctrl.checkToken = async (req, res, next) => {
+    try {
+        // Si llego aquí ya se que es un token valido (ha pasado el middleware auth).
+        return res.json({
+            success: true,
+            description: 'Token valido',
+    })
+    } catch (error) {
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);  
     }
 }
 
@@ -96,7 +120,7 @@ ctrl.create = async (req, res, next) => {
         let user = await User.insert(new User({...req.body}));
         if (user) {
             // Genero url de ativación de cuenta y la envío por mail
-            const activateUrl = `http://${req.headers.host}/users/activate/${user.token}`;
+            const activateUrl = `http://localhost:3000/activate/${user.token}`;
             Mail.send({
                 email: user.email, 
                 subject: 'Activate account',
@@ -206,7 +230,6 @@ ctrl.reset = async (req, res, next) => {
         // Busco por token válido e email
         const user = await User.findOne({
             token: req.params.token,
-            email: req.body.email,
             expire: { $gt: Date.now() }
         });
         // Si existe actualizo el password y lo guardo

@@ -1,9 +1,10 @@
 /* Import node modules */
-import React from 'react';
 import { connect } from 'react-redux';
+import React from 'react';
+import Axios from 'axios';
 /* Import own modules */
-import Sidebar from '../Sidebar/Sidebar';
-import MainContainer from '../MainContainer/MainContainer';
+import MainContainer from '../../components/MainContainer/MainContainer';
+import Sidebar from '../../components/Sidebar/Sidebar'
 import { actions } from '../../store/Store';
 /* Import css */
 import './Home.css';
@@ -12,24 +13,19 @@ import './Home.css';
 class HomeAux extends React.Component {
     
     componentDidMount() {
-        fetch('/tasklist/all')
-        .then (response => {
-            if (response.status === 200) {
-                response.json()
-                .then(lists => {
-                    fetch(`/tasklist/task/${lists.result[0]._id}`)
-                    .then (response => {
-                        if (response.status === 200) {
-                            response.json()
-                            .then (todos => {
-                                this.props.init(lists.result);
-                                this.props.loadList(0, lists.result[0], todos.result);  
-                            })
-                        }       
-                    })
-                });
-            }
-        });
+        try {
+            // Temporal, hasta que funcione el storage
+            Axios.get('/tasklists', { headers: { 'Authorization': "bearer " + this.props.user.token }})
+            .then (response => {
+                if (response.status === 200) {
+                    this.props.init(response.data.results);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        } catch (error) {
+        }
     }
 
     render() {
@@ -44,10 +40,12 @@ class HomeAux extends React.Component {
 
 // React-Redux
 const mapState = (state) => { 
-    return { 
+    return {
+        user: state.user, 
         lists: state.lists,
     };
 };
+
 const mapActions = {
     init: actions.init,
     loadList: actions.loadList

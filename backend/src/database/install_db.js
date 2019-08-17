@@ -42,8 +42,11 @@ async function initDB() {
         // Tasks
         let tasks = [];
         for (let i = 0; i < dump.Tasks.length; i++) {
-            let task = new Task({...dump.Tasks[i]})
-            task.taskList = taskLists[dump.Tasks[i].list].id;
+            let task = new Task({...dump.Tasks[i]});
+            let taskList = taskLists[dump.Tasks[i].list];
+            task.taskList = taskList.id;
+            taskList.tasks.push(task);
+            await taskList.save();
             tasks.push (task);
         }
         tasks = await Task.insertAll(tasks);

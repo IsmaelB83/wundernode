@@ -4,13 +4,15 @@
          "name": "Ismael",
          "email": "ismael@gmail.com",
          "password": "qwerty83",
-         "active": true
+         "active": true,
+         "avatar": "/public/img/avatars/isma.jpeg"
       },
       {
          "name": "Tamara",
          "email": "tamara@gmail.com",
          "password": "qwerty83",
-         "active": true
+         "active": true,
+         "avatar": "/public/img/avatars/tam.png"
       }
    ],
    "TaskLists": [
@@ -26,8 +28,8 @@
    ],
    "Tasks": [
       {
-        "list": 0,
-        "description": "Comprar leche"
+         "list": 0,
+         "description": "Comprar leche"
       },
       {
          "list": 0,

@@ -50,6 +50,7 @@ class TodoBarAux extends React.Component {
         } else {
             try {
                 let result = await Axios.post(`/tasklist/task`, null, {
+                    headers: { 'Authorization': "bearer " + this.props.user.token },
                     data: {
                         id: this.props.list._id,
                         description: this.state.input,
@@ -74,7 +75,8 @@ class TodoBarAux extends React.Component {
 
 // React-Redux
 const mapState = (state) => { 
-    return { 
+    return {
+        user: state.user,
         list: state.lists[state.selected],
     };
 };

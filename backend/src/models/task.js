@@ -7,12 +7,13 @@ const { Schema } = mongoose;
 // Task
 const TaskSchema = new Schema(
     {  
-        taskList: { type: Schema.Types.ObjectId, ref: 'TaskList' },
+        taskList: { type: Schema.Types.ObjectId, ref: 'TaskList', select: false},
         description: { type: String, maxlength: 200 },
         due: { type: Date },
         reminder: { type: Date },
         starred: { type: Boolean, default: false },
         completed: { type: Boolean, default: false },
+        __v: { type: Number, select: false}
     },
     {
         timestamps: true,

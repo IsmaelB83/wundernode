@@ -1,62 +1,116 @@
-/* Import node modules */
+/* Node modules */
 import React from 'react';
-import { connect } from 'react-redux';
-/* Import own modules */
-import { actions } from '../../store/Store';
+import Axios from 'axios';
+/* Own modules */
+import InputIcon from '../../components/Inputs/InputIcon';
 /* Import css */
 import './Styles.css';
 
-
-class ResetAux extends React.Component {
+/**
+ * Componente para 
+ */
+export default class Reset extends React.Component {
     
+    /**
+     * Constructor
+     * @param {*} props 
+     */
     constructor(props) {
         super(props);
+        let { token } = this.props.match.params
         this.state = {
-            name: 'Ismael Bernal',
+            password: '',
+            passwordB: '',
+            error: false,
+            errorText: '',
+            reset: false,
+            token: token,
         }
     }
 
-    componentDidMount() {
-    }
-
+    /**
+     * Render
+     */
     render() {
         return (
             <div>
-                <div class="alert alert-info small text-center" role="alert">
+                <div className="alert alert-info small text-center" role="alert">
                     This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
                 </div>
-                <img class='logo' src={`${process.env.PUBLIC_URL}/img/wl_icon.png`} alt='icon'></img>
-                <div className="login-wrapper">
-                    <h4>Nueva contraseña</h4>
-                    <p class='text-muted'>Hola, <b>{this.state.name}</b>: es hora de crear tu nueva contraseña de Wunderlist</p>
-                    <form class='login' action="/users/reset" method='POST'>
-                        <div class="form-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Nueva contraseña"></input>
-                        </div>
-                        <div class="form-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Vuelve a escribir la contraseña"></input>
-                        </div>
-                        <button type="submit" class="btn btn-block btn-primary">Restablecer contraseña</button>
-                        <div class="mt-2">
-                            ¿Ya tienes una cuenta? <a href="/" class=''>Iniciar sesión</a>
-                        </div>
-                    </form>
-                </div>
+                <img className='logo' src={`${process.env.PUBLIC_URL}/img/nodejs.jpg`} alt='icon'></img>
+                { !this.state.reset &&
+                    <div className="login-wrapper">
+                        <h4>Nueva contraseña</h4>
+                        <p className='text-muted'>Es hora de crear tu nueva contraseña de Wunderlist</p>
+                        <form className='login' action="/users/reset" method='POST' onSubmit={this.resetPassword.bind(this)}>
+                            { this.state.error &&
+                                <div className="alert alert-danger small text-center mt-0 p-1" role="alert">
+                                    {this.state.errorText}
+                                </div>
+                            }
+                            <div className="form-group">
+                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                    type="password" name="password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
+                                </InputIcon>
+                            </div>
+                            <div className="form-group">
+                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                    type="password" name="passwordB" required onChange={(ev) => {this.setState({passwordB: ev.target.value});}}>
+                                </InputIcon>
+                            </div>
+                            <button type="submit" className="btn btn-block btn-primary">Restablecer contraseña</button>
+                            <div className="mt-2">
+                                ¿Ya tienes una cuenta? <a href="/" className=''>Iniciar sesión</a>
+                            </div>
+                        </form>
+                    </div>
+                }
+                { this.state.reset && 
+                    <div className="login-wrapper">
+                        <h4>Contraseña actualizada</h4>
+                        <p className='text-muted'>Ya puede iniciar sesión con su nueva contraseña <a href="/" className=''>aquí</a></p>
+                    </div>
+                }
             </div>
         );
     }
-}
 
-// React-Redux
-const mapState = (state) => { 
-    return { 
-        lists: state.lists,
-    };
-};
-const mapActions = {
-    init: actions.init,
-    loadList: actions.loadList
+    /**
+     * Solicita el cambio de password cuando se hace click en el botón
+     * @param {*} ev 
+     */
+    async resetPassword(ev) {
+        try {
+            // Prevengo submit estandar
+            ev.preventDefault();
+            // Post a la API para que envíe el mail sólo si ha escrito ambos passwords iguales
+            if(this.state.password === this.state.passwordB) {
+                let result = await Axios.post(`/users/reset/${this.state.token}`, null, {
+                    data: { password: this.state.password }
+                });
+                // Si ha ido correcto cambio el estado del componente para que el usuario sea consciente
+                if (result.status === 200) {
+                    this.setState({
+                        reset: true,
+                        error: false
+                    });
+                } else {
+                    this.setState({
+                        error: true,
+                        errorText: 'No se ha podido actualizar el password',
+                    }) 
+                }
+            } else {
+                this.setState({
+                    error: true,
+                    errorText: 'Los passwords introducidos no coinciden',
+                });
+            }
+        } catch (error) {
+            this.setState({
+                error: true,
+                errorText: error,
+            });
+        }
+    }
 }
-
-const Reset = connect(mapState, mapActions)(ResetAux);
-export default Reset;

@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
 import Reset from './containers/Login/Reset';
+import NewUser from './containers/Login/NewUser';
+import Activate from './containers/Login/Activate';
 import ResetRequest from './containers/Login/ResetRequest';
 import { store } from './store/Store';
 /* Import css */
@@ -20,9 +22,12 @@ let reactComp = <Provider store={store}>
                     <Router>
                         <Switch>
                             <Route path='/' exact component={Login} />
+                            <Route path='/new' exact component={NewUser} />
+                            <Route path='/activate/:token' exact component={Activate} />
                             <Route path='/reset' exact component={ResetRequest} />
                             <Route path='/reset/password/:token' exact component={Reset} />
                             <Route path='/home' exact component={Home} />
+                            <Route component={Login} />
                         </Switch>
                     </Router>
                 </Provider>;

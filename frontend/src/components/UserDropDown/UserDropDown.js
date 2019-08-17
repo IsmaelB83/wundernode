@@ -4,13 +4,13 @@ import React from 'react';
 import './UserDropDown.css';
 
 export default class UserBar extends React.Component {
-  
+    
     render() {
         return (
             <div className="userbar">
                 <button className="user">
-                    <img src="http://www.jackedandstrong.com/wp-content/uploads/2016/08/Avatar-Facebook-1.jpg" alt="avatar"></img>
-                    <span>{this.props.username}</span>
+                    <img src={this.props.user.avatar} alt="avatar"></img>
+                    <span>{this.props.user.name}</span>
                     <i className="fas fa-angle-down"></i>
                 </button>
             </div>

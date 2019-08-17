@@ -83,6 +83,7 @@ export default class CreateTask extends React.Component {
         if (listName !== '') {
             try {
                 let result = await Axios.post(`/tasklist`, null, {
+                    //headers: { 'Authorization': "bearer " + user.token },
                     data: {
                         description: listName,
                         icon: 'fas fa-user-friends',

@@ -14,14 +14,14 @@ module.exports = (req, res, next) => {
         // Chequeo token
         req.token = req.headers.authorization.split(' ')[1];
         const payload = jwt.decode(req.token, config.secret_key);
-        if (payload.expires <= moment().unix()) throw 'Forbidden';
+        if (payload.payload.expires <= moment().unix()) throw 'Token expired';
         // Usuario autenticado, paso al siguiente controlador
         req.user = payload.user;
         next();
     } catch (error) {
         return res.status(401).json({
             success: false,
-            description: 'Forbidden'
+            description: `Not Authorized: ${error}`
         });
     }
 };
