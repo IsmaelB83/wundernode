@@ -161,8 +161,6 @@ ctrl.activate = async (req, res, next) => {
             user.expire = '';
             user.active = true;
             user = await user.save();
-            // Creo las cuentas de sistema
-            TaskList.insertSystemTaskLists(user.id);
             // Ok
             res.json({
                 success: true,

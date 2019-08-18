@@ -5,133 +5,118 @@ const moment = require('moment');
 const { TaskList, Task, User } = require('../models');
 const Log = require('../utils/log');
 
-
 moment.updateLocale('en', { week : { dow : 1, doy : 4 } } );
 
 const ctrl = {};
 
-ctrl.all = async (req, res, next) => {
+/**
+ * Obtiene el listado de tasklists de un usuario concreto
+ * @param {Request} req Request de la petición
+ * @param {Response} res Response de la petición
+ * @param {Middleware} next Siguiente middleware a ejecutar
+ */
+ctrl.list = async (req, res, next) => {
     try {
         // Listado
-        TaskList.list(req.query.description, req.query.owner, req.user.id, req.query.active, 
-            req.query.system, parseInt(req.query.limit), parseInt(req.query.skip), req.query.fields, 
-            function(error, results) {
+        TaskList.list(req.query.description, req.query.owner, req.user.id, parseInt(req.query.limit), 
+            parseInt(req.query.skip), req.query.fields, function(error, results) {
                 // Error
                 if (error) {
-                    next(error);
-                    return;
+                    return next(error);
                 }
                 // Ok
-                res.status(200).json({
+                res.json({
                     success: true,
                     count: results.length,
                     results: results
                 });
         });
-        /* // Conformo los arrays de las listas de sistema
-        for (let i = 1; i <= 3; i++) {
-            const list = taskLists[i];
-            switch (list.systemId) {
-                case 1:
-                    // Starred
-                    tasks = await Task.find({
-                        starred: true
-                    });
-                    break;           
-                case 2:
-                    // Due today
-                    tasks = await Task.find({
-                        due: { 
-                            $lte: moment().endOf('day').toDate() 
-                        }
-                    });
-                    break;
-                case 3:
-                    // Due week
-                    tasks = await Task.find({
-                        due: {   
-                            $lte: moment().endOf('week').toDate() 
-                        }
-                    });
-                    break;
-            }
-            list._id = taskLists[0]._id;
-            tasks.forEach(t => { 
-                list.tasks.push(t._id)
-                if (t.starred) list.starred.push(t._id);
-            });
-        }*/
     } catch (error) {
-        // Los errores de validación de usuario NO me interesa loguerarlos
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
     }
 }
 
+/**
+ * Crea una nueva tarea para el usuario logueado actualmente
+ * @param {Request} req Request de la petición
+ * @param {Response} res Response de la petición
+ * @param {Middleware} next Siguiente middleware a ejecutar
+ */
 ctrl.create = async (req, res, next) => {
     try {
         let taskList = new TaskList({...req.body});
-        taskList.active = true;
         taskList.members.push(req.user.id);
         taskList.owner = req.user.id;
         await taskList.save();
         res.json({
             success: true,
-            description: 'TaskList created',
             result: taskList
         });
     } catch (error) {
-        Log.fatal(`Error incontrolado: ${error}`);
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
     }
 }
 
+/**
+ * Obtiene una lista de tareas en base a su id. Sólo devuelve la información en caso
+ * de que seas miembro de esa lista.
+ * @param {Request} req Request de la petición
+ * @param {Response} res Response de la petición
+ * @param {Middleware} next Siguiente middleware a ejecutar
+ */
 ctrl.getById = async (req, res, next) => {
     try {
-        let taskList = await TaskList.findOne({_id: req.params.id});
-        if (!taskList) {
-            res.status(404).json({
-                status: 'error', 
-                description: 'Number of taskList lists found is 0',
-                result: {}
-            });
-            return ;
+        const result = await TaskList.findById(req.params.id);
+        if (result) {
+            const i = result.members.indexOf(req.user.id);
+            if (i !== -1) {
+                return res.json({
+                    success: true,
+                    result: result
+                });
+            }
+            return next({status: 401, description: 'Tasklist not authorized'});
         }
-        res.json({
-            status: 'ok',
-            description: `taskList list found`,
-            result: taskList
-        });
+        next ({status: 404, description: 'Not found'});
     } catch (error) {
-        Log.fatal(`Error incontrolado: ${error}`);
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);
     }
 }
 
+/**
+ * Actualiza el listao de tareas sólo en caso de que el usuario logueado
+ * sea miembro de la lista
+ * @param {Request} req Request de la petición
+ * @param {Response} res Response de la petición
+ * @param {Middleware} next Siguiente middleware a ejecutar
+ */
 ctrl.updateById = async (req, res, next) => {
     try {
-        let taskList = await TaskList.findOne({_id: req.params.id});
-        if (!taskList) {
-            res.status(404).json({
-                status: 'error',
-                description: `taskList not found`,
-                result: {}
-            }); 
-            return;
+        let result = await TaskList.findOne({_id: req.params.id});
+        if (result) {
+            const i = result.members.indexOf(req.user.id);
+            if (i !== -1) {
+                result.description = req.body.description || result.description;
+                result.members = req.body.members || result.members;
+                result = await result.save();
+                return res.json({
+                    success: true, 
+                    result: result
+                });
+            }
+            return next({status: 401, description: 'Tasklist not authorized'});
         }
-        taskList.description = req.body.description;
-        taskList.active = req.body.active;
-        taskList = await taskList.save();
-        if (!taskList) {
-            res.json({
-                status: 'error',
-                description: `Error updating the task`,
-                result: {}
-            }); 
-            return;
-        }
-        res.json({status: 'ok', result: taskList});
+        next({
+            status: 404,
+            description: 'Tasklist not found',
+        });
+        
     } catch (error) {
-        Log.fatal(`Error incontrolado: ${error}`);
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);
     }
 }
 

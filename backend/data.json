@@ -17,13 +17,20 @@
    ],
    "TaskLists": [
       {  
-         "description": "List carrefour",
-         "owner": 0,
-         "active": true,
-         "icon": "",
-         "color": "",
-         "system": false,
-         "systemId": 0
+         "description": "Lista carrefour",
+         "owner": 0
+      },
+      {  
+         "description": "Lista mercadona",
+         "owner": 0
+      },
+      {  
+         "description": "Lista amazon",
+         "owner": 0
+      },
+      {  
+         "description": "Lista Bershka",
+         "owner": 1
       }
    ],
    "Tasks": [
@@ -34,6 +41,10 @@
       {
          "list": 0,
          "description": "Comprar cafe"
+      },
+      {
+         "list": 1,
+         "description": "Comprar ropa"
        }
    ]
  }

@@ -6,8 +6,8 @@ import utils from './utils';
 // App initial state
 const initialState = {
     user: {},
-    lists: [],
     selected: 0,
+    lists: [],
     todos: [],
     switch: false, // Hack to force update in nested structures such as taskLists
 }
@@ -25,6 +25,14 @@ export const actions = {
     login: (user) => {
         return {
             type: 'LOGIN',
+            payload: {
+                user: user,
+            }
+        }
+    },
+    logoff: (user) => {
+        return {
+            type: 'LOGOFF',
             payload: {
                 user: user,
             }
@@ -96,6 +104,11 @@ function charReducer(state, action) {
             newState = {...state};
             newState.user = action.payload.user;
             localStorage.setItem('user', JSON.stringify(newState.user));
+            return newState;
+        case 'LOGOFF':
+            newState = {...state};
+            newState.user = {};
+            localStorage.clear('user');
             return newState;
         case 'INIT':
             newState = {...state};

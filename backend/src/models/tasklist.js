@@ -13,11 +13,6 @@ const TaskListSchema = new Schema(
         owner: { type: Schema.Types.ObjectId, ref: 'User' },
         members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-        active: { type: Boolean, default: true, select: false },
-        icon: { type: String },
-        color: { type: String },
-        system: { type: Boolean, default: false },
-        systemId: { type: Number },
         __v: { type: Number, select: false}
     },
     {
@@ -27,23 +22,27 @@ const TaskListSchema = new Schema(
 
 /**
 * Función estática para listar anuncios de la base de datos
+* @param {String} id Para filtrado por id
 * @param {String} description Para filtrado por descripción
 * @param {String} owner Para filtrado por tasklists de un propietario concreto
-* @param {String} member Para filtrado por tasklists de un miembro concreto
-* @param {Boolean} active Para filtrado por tasks favoritas
-* @param {Boolean} system Para filtrado por tasks de un usuario
+* @param {String} members Para filtrado por tasklists de un miembro concreto
+* @param {Number} limit Para limitar el número de resultados a obtener
+* @param {Number} skip Para saltar (paginar) los resultados obtenidos
+* @param {Boolean} fields Para indicar los campos a obtener
+* @param {Function} callback Función a llamar al terminar la consulta
 */
-TaskListSchema.statics.list = function(description, owner, member, active, system, limit, skip, fields, callback) {
+TaskListSchema.statics.list = function(description, owner, members, limit, skip, fields, callback) {
     try {
         // Genero filtrado
         let filter = {}
         if (description) filter.description = { '$regex': `^${description}`, '$options': 'i' };
         if (owner) filter.owner = owner;
-        if (member) filter.member = member;
-        if (active) filter.active = active;
-        if (system) filter.system = system;
+        if (members) filter.members = members;
         // Preparo la query
-        let queryDB = TaskList.find(filter).populate('tasks').populate('members').populate('owner');
+        let queryDB = TaskList.find(filter)
+            .populate('tasks', '-createdAt -updatedAt' )
+            .populate('members', '-avatar -password -token -createdAt -updatedAt')
+            .populate('owner', '-avatar -password -token -createdAt -updatedAt');
         queryDB.limit(limit);
         queryDB.skip(skip);
         queryDB.select(fields);
@@ -86,6 +85,7 @@ TaskListSchema.statics.insertAll = async function(taskLists) {
 * Función estática para crear las listas por defecto de un usuario: inbox, starred, today y week
 * @param {ObjectId} owner Identificador del owner de las tareas
 */
+/*
 TaskListSchema.statics.insertSystemTaskLists = async function(owner) {
     try {
         // Lista por defecto INBOX
@@ -123,11 +123,11 @@ TaskListSchema.statics.insertSystemTaskLists = async function(owner) {
         Log.fatal('Error insertando taskLists por defecto.');
         Log.fatal(error);
     }
-};
+}; */
 
 /**
 * Función estática para actualizar los datos de una task list
-* @param {String} id ID que representa a una task list en MongoDB
+* @param {ObjectId} id ID que representa a una task list en MongoDB
 * @param {TaskList} newTaskList Objeto con los datos a modificar
 */
 TaskListSchema.statics.updateTaskList = async function(id, newTaskList) {
