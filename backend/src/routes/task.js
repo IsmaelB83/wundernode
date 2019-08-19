@@ -8,10 +8,9 @@ const { Auth } = require('../middlewares');
 
 module.exports = () => {
     const router = express.Router();
-    // Rutas de tasks
-    router.get('/:id', Auth, TaskCtrl.all);
+    router.get('/', Auth, TaskCtrl.list);
+    router.get('/:id', Auth, TaskCtrl.get);
     router.post('/', Auth, TaskCtrl.create);
-    router.put('/:id', Auth, TaskCtrl.modify);
-
+    router.put('/:id', Auth, TaskCtrl.update);
     return router;
 }

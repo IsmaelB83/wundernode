@@ -8,7 +8,6 @@ const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 // Own imports
 const { user, task, tasklist } = require('./routes/index');
-const { passport } = require('./config');
 const { Error } = require('./middlewares');
 
 

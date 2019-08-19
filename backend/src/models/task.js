@@ -1,13 +1,14 @@
 "use strict";
 // Node imports
 const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId; 
 const { Schema } = mongoose;
-
+// Own imports
+const { Log } = require('../utils');
 
 // Task
 const TaskSchema = new Schema(
     {  
-        taskList: { type: Schema.Types.ObjectId, ref: 'TaskList', select: false},
         description: { type: String, maxlength: 200 },
         due: { type: Date },
         reminder: { type: Date },
@@ -21,7 +22,7 @@ const TaskSchema = new Schema(
 );
 
 /**
-* Función estática para listar anuncios de la base de datos
+* Función estática para listar tareas de la base de datos
 * @param {String} taskList Para filtrado por lista de tareas asociada
 * @param {String} description Para filtrado por tasks por descripción
 * @param {Date} due Para filtrado por tasks con fecha de vencimiento
@@ -34,7 +35,7 @@ TaskSchema.statics.list = function(taskList, description, due, reminder, starred
     try {
         // Genero filtrado
         let filter = {}
-        if (taskList) filter.taskList = taskList;
+        if (taskList) filter.taskList = new ObjectId("5d5ac3ffc79b56153c637d46");
         if (description) filter.description = { '$regex': `^${description}`, '$options': 'i' };
         if (due) filter.due = due;
         if (reminder) filter.reminder = reminder;
@@ -49,7 +50,6 @@ TaskSchema.statics.list = function(taskList, description, due, reminder, starred
         queryDB.exec(callback);        
     } catch (error) {
         Log.fatal('Error ejecutando consulta.');
-        Log.fatal(error); 
         callback(error);
     }
 }
@@ -63,19 +63,6 @@ TaskSchema.statics.insert = async function(task) {
         return await task.save();
     } catch (error) {
         Log.fatal('Error insertando task.');
-        Log.fatal(error);
-    }
-};
-
-/**
-* Función estática para insertar todas las tasks pasadas
-* @param {Array} tasks Lista de tareas a instertar en la base de datos 
-*/
-TaskSchema.statics.insertAll = async function(tasks) {
-    try {
-        return await Task.insertMany(tasks);
-    } catch (error) {
-        Log.fatal('Error insertando tasks.');
         Log.fatal(error);
     }
 };
@@ -116,5 +103,4 @@ TaskSchema.statics.deleteAll = async function() {
     }
 };
 
-const Task = mongoose.model('Task', TaskSchema);
-module.exports = Task;
+module.exports = TaskSchema;

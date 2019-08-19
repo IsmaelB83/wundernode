@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 // Own imports
+const Task = require('./task');
 const { Log } = require('../utils');
 
 
@@ -12,7 +13,7 @@ const TaskListSchema = new Schema(
         description: { type: String },
         owner: { type: Schema.Types.ObjectId, ref: 'User' },
         members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-        tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
+        tasks: [Task],
         __v: { type: Number, select: false}
     },
     {
@@ -40,7 +41,6 @@ TaskListSchema.statics.list = function(description, owner, members, limit, skip,
         if (members) filter.members = members;
         // Preparo la query
         let queryDB = TaskList.find(filter)
-            .populate('tasks', '-createdAt -updatedAt' )
             .populate('members', '-avatar -password -token -createdAt -updatedAt')
             .populate('owner', '-avatar -password -token -createdAt -updatedAt');
         queryDB.limit(limit);
@@ -69,63 +69,6 @@ TaskListSchema.statics.insert = async function(taskList) {
 };
 
 /**
-* Función estática para insertar todas las task lists pasadas
-* @param {Array} taskLists Listas de tareas a crear
-*/
-TaskListSchema.statics.insertAll = async function(taskLists) {
-    try {
-        return await TaskList.insertMany(taskLists);
-    } catch (error) {
-        Log.fatal('Error insertando taskLists lists.');
-        Log.fatal(error);
-    }
-};
-
-/**
-* Función estática para crear las listas por defecto de un usuario: inbox, starred, today y week
-* @param {ObjectId} owner Identificador del owner de las tareas
-*/
-/*
-TaskListSchema.statics.insertSystemTaskLists = async function(owner) {
-    try {
-        // Lista por defecto INBOX
-        let taskList = {
-            description: 'Inbox',
-            owner: owner,
-            members: [owner],
-            icon: 'fas fa-inbox',
-            color: 'blue',
-            system: true,
-            systemId: 0,
-        };
-        await TaskList.insert(new TaskList({...taskList}));
-        // Lista por defecto STARRED
-        taskList.description = 'Starred';
-        taskList.icon = 'far fa-star';
-        taskList.color = 'red';
-        taskList.systemId++;
-        await TaskList.insert(new TaskList({...taskList}));
-        // Lista por defecto TODAY
-        taskList.description = 'Today';
-        taskList.icon = 'far fa-calendar-minus';
-        taskList.color = 'green';
-        taskList.systemId++;
-        await TaskList.insert(new TaskList({...taskList}));
-        // Lista por defecto WEEK
-        taskList.description = 'Week';
-        taskList.icon = 'far fa-calendar-alt';
-        taskList.color = 'orange';
-        taskList.systemId++;
-        await TaskList.insert(new TaskList({...taskList}));
-        // Ok
-        return true;
-    } catch (error) {
-        Log.fatal('Error insertando taskLists por defecto.');
-        Log.fatal(error);
-    }
-}; */
-
-/**
 * Función estática para actualizar los datos de una task list
 * @param {ObjectId} id ID que representa a una task list en MongoDB
 * @param {TaskList} newTaskList Objeto con los datos a modificar
@@ -140,6 +83,7 @@ TaskListSchema.statics.updateTaskList = async function(id, newTaskList) {
             oldTaskList.reminder = newTaskList.reminder || oldTaskList.reminder;
             oldTaskList.starred = newTaskList.starred || oldTaskList.starred;
             oldTaskList.completed = newTaskList.completed || oldTaskList.completed;
+            oldTaskList.tasks = newTaskList.tasks || oldTaskList.tasks;
             return await oldTaskList.save();
         }
         return false;

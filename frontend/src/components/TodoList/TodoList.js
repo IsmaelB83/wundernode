@@ -5,10 +5,15 @@ import Axios from 'axios';
 /* Import own modules */
 import { actions } from '../../store/Store';
 import Todo from '../Todo/Todo';
+import Config from '../../config/index';
 /* Import own css */
-import './TodoPanel.css';
+import './TodoList.css';
 
-class TodoPanelAux extends React.Component { 
+// Completed audio
+const audio = new Audio(`${process.env.PUBLIC_URL}${Config.sounds.completed}`);
+
+
+class TodoListAux extends React.Component { 
 
     constructor(props) {
         super(props);
@@ -21,6 +26,7 @@ class TodoPanelAux extends React.Component {
         return (
             <ol id={this.props.id} className={`todoList ${this.props.completed?'todoList--done':''}`}>
             { this.props.selected.tasks && 
+                ( ( this.props.completed && this.props.showCompleted ) || !this.props.completed ) && 
                 this.props.selected.tasks.map((value, index) => {
                     if (value.completed === this.props.completed) {
                         return <li key={index} onClick={this.clickLine.bind(this)} data-index={index}>
@@ -29,8 +35,9 @@ class TodoPanelAux extends React.Component {
                                             active={this.state.selected===index?true:false} 
                                             due={value.due}
                                             star={value.starred}
-                                            starredClick={this.todoStarredClick.bind(this)}
                                             index={index}
+                                            eventStarred={this.handlerStarred.bind(this)}
+                                            handlerComplete={this.handlerComplete.bind(this)}
                                     />
                                 </li>
                     } else {
@@ -46,17 +53,18 @@ class TodoPanelAux extends React.Component {
         this.setState({ selected: parseInt(ev.currentTarget.dataset.index) });
     }
 
-    async todoStarredClick(ev) {
+    async handlerStarred(ev) {
         ev.preventDefault();
         try {
+            // Call API to starred task
             let index = ev.currentTarget.dataset.index;
             if (index >= 0) {
                 let todo = this.props.selected.tasks[index];
                 let result = await Axios.put(`/tasklist/task/${todo._id}`, null, {
-                    headers: { 'Authorization': "bearer " + this.props.user.token },
                     data: { starred: !todo.starred }
                 });
                 if (result.status === 200) {
+                    // Update state
                     this.props.starredTodo(index, !todo.starred);
                 }
             }
@@ -64,20 +72,45 @@ class TodoPanelAux extends React.Component {
             console.log(error)
         }   
     }
+
+    async handlerComplete(ev) {
+        ev.preventDefault();
+        try {
+            // Call API to complete task
+            let index = ev.currentTarget.dataset.index;
+            if (index >= 0) {
+                let todo = this.props.selected.tasks[index];
+                let result = await Axios.put(`/tasklist/task/${todo._id}`, null, {
+                    data: { completed: !todo.completed }
+                });
+                if (result.status === 200) {
+                    // Audio
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.play();     
+                    // Update state
+                    this.props.completeTodo(index, !todo.completed);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 // React-Redux
 const mapState = (state) => { 
     return {
-        user: state.user,
         selected: state.selected,
         switch: state.switch
     };
 };
+
 const mapActions = { 
     reloadList: actions.reloadList,
     starredTodo: actions.starredTodo,
+    completeTodo: actions.completeTodo,
 };
 
-const TodoPanel = connect(mapState, mapActions)(TodoPanelAux);
-export default TodoPanel;
+const TodoList = connect(mapState, mapActions)(TodoListAux);
+export default TodoList;

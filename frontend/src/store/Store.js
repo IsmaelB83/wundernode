@@ -6,9 +6,8 @@ import utils from './utils';
 // App initial state
 const initialState = {
     user: {},
-    selected: 0,
     lists: [],
-    todos: [],
+    selected: {},
     switch: false, // Hack to force update in nested structures such as taskLists
 }
 
@@ -63,13 +62,11 @@ export const actions = {
             }
         }
     },
-    loadList: (selected, list, todos) => {
+    loadList: (list) => {
         return {
             type: 'LOAD_LIST',
             payload: {
-                selected: selected,
                 list: list,
-                todos: todos
             }
         }
     },
@@ -124,15 +121,13 @@ function charReducer(state, action) {
         case 'RELOAD_LIST':
             newState = {...state};
             newState.lists[newState.selected] = action.payload.list;
-            newState.todos = action.payload.todos;
+            newState.selected = action.payload.list;
+            newState.todos = action.payload.list.tasks;
             newState.switch = !newState.switch;
             return newState;
         case 'LOAD_LIST':
             newState = {...state};
-            newState.selected = action.payload.selected;
-            newState.lists[action.payload.selected] = action.payload.list;
-            newState.todos = action.payload.todos;
-            newState.switch = !newState.switch;
+            newState.selected = action.payload.list;
             return newState;
         case 'ADD_TODO':
             newState = {...state};

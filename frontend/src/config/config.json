@@ -1,0 +1,32 @@
+{
+    "lists": {
+        "icon": "fas fa-user-friends",
+        "color": "blue"
+    },
+    "system_lists": [
+        {
+            "description": "Inbox",
+            "icon": "fas fa-inbox",
+            "color": "blue"
+        },
+        {
+            "description": "Starred",
+            "icon": "far fa-star",
+            "color": "red"   
+        },
+        { 
+            "description": "Today",
+            "icon": "far fa-calendar-minus",
+            "color": "green"
+        },
+        {
+            "description": "Week",
+            "icon": "far fa-calendar-alt",
+            "color": "orange"
+        }
+    ],
+    "sounds": {
+        "completed": "/audio/completed.ogg", 
+        "notification": "/audio/notification.ogg"
+    }
+}

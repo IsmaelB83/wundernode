@@ -3,13 +3,20 @@ import React from 'react';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 /* Import own modules */
+import { Config } from '../../config';
 import { actions } from '../../store/Store';
-import Task from '../Task/Task';
+import TaskList from '../Task/Task';
 /* Import css*/
 import './TaskPanel.css';
 
+/**
+ * Panel de listas de tareas
+ */
 class TaskPanelAux extends React.Component {
 
+    /**
+     * Renderiza el componente
+     */
     render() {
         return (
             <ul className='tasklist'>
@@ -18,15 +25,15 @@ class TaskPanelAux extends React.Component {
                     return  <li key={index} 
                                 className={`tasklist-li ${index===this.props.selected?'tasklist-li--active':''}`}
                                 onClick={this.taskListClick.bind(this)} 
-                                data-index={index}
+                                data-id={value._id}
                             >
-                                <Task   id={value._id} 
-                                        icon={value.icon} 
-                                        text={value.description} 
-                                        color={value.color}
-                                        // starred={value.starred.length}
-                                        tasks={value.tasks.length}
-                                        active={index===this.props.selected?true:false}
+                                <TaskList   id={value._id} 
+                                            icon={Config.lists.icon} 
+                                            text={value.description} 
+                                            color={Config.lists.color}
+                                            // starred={value.starred.length}
+                                            tasks={value.tasks.length}
+                                            active={index===this.props.selected?true:false}
                                 />
                             </li>
                 })
@@ -35,24 +42,19 @@ class TaskPanelAux extends React.Component {
         );
     };
 
+    /**
+     * Cuando se hace click en una lista se cargan sus tareas en el estado
+     * @param {Cuando se} ev 
+     */
     async taskListClick(ev) {
-        ev.preventDefault();
-        let index = ev.currentTarget.dataset.index
-        let taskList = this.props.lists[index];
-        let url = '/tasklist/task/';
-        /* Las búsquedas de todos de las listas de sistema son una excepción */
-        switch (taskList.systemId) {
-            case 1:   url += 'starred';     break;
-            case 2:   url += 'today';       break;
-            case 3:   url += 'week';        break;
-            default:  url += taskList._id;
-        }
-        let response = await Axios.get(url, { headers: { 'Authorization': "bearer " + this.props.user.token } });
-        if (response.status === 200) {
-            let json = await response.json();
-            if (json) {
-                this.props.loadList(parseInt(index), taskList, json.result); 
-            }
+        try {
+            ev.preventDefault();
+            let response = await Axios.get(`/tasklists/${ev.currentTarget.dataset.id}`, { headers: { 'Authorization': "bearer " + this.props.user.token } });
+            if (response.status === 200) {
+                this.props.loadList(response.data.result);
+            }               
+        } catch (error) {
+            console.log(error);
         }
     }
 }
@@ -61,9 +63,7 @@ class TaskPanelAux extends React.Component {
 const mapState = (state) => { 
     return { 
         user: state.user,
-        selected: state.selected,
         lists: state.lists,
-        switch: state.switch,
     };
 };
 

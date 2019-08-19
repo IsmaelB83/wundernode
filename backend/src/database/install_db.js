@@ -20,7 +20,6 @@ async function initDB() {
         await database.connectToMongo(config.mongodb);
         // Borro los datos de las colecciones
         await User.deleteAll();
-        await Task.deleteAll();
         await TaskList.deleteAll();
         // Creo los datos desde el json
         let dump = JSON.parse(fs.readFileSync('data.json', 'utf8'));
@@ -31,25 +30,12 @@ async function initDB() {
             users.push (user);
         }
         // Tasklists
-        let taskLists = [];
         for (let i = 0; i < dump.TaskLists.length; i++) {
             let taskList = new TaskList({...dump.TaskLists[i]});
             taskList.owner = users[dump.TaskLists[i].owner].id;
             taskList.members = [users[dump.TaskLists[i].owner].id];
-            taskLists.push (taskList);
-        }
-        taskLists = await TaskList.insertAll(taskLists);
-        // Tasks
-        let tasks = [];
-        for (let i = 0; i < dump.Tasks.length; i++) {
-            let task = new Task({...dump.Tasks[i]});
-            let taskList = taskLists[dump.Tasks[i].list];
-            task.taskList = taskList.id;
-            taskList.tasks.push(task);
             await taskList.save();
-            tasks.push (task);
         }
-        tasks = await Task.insertAll(tasks);
         // Log
         Log.info(`Base de datos inicializada con exito. Puede arrancar la API mediante "npm start".`);        
     } catch (error) {

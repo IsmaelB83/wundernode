@@ -9,8 +9,8 @@ const options = {
     timestampFormat:'YYYY-MM-DD HH:mm:ss.SSS'
 };
 
-const log = SimpleNodeLogger.createSimpleLogger(options);
-log.setLevel('info');
+const Log = SimpleNodeLogger.createSimpleLogger(options);
+Log.setLevel('info');
 
 // Export the logger
-module.exports = log;
+module.exports = Log;

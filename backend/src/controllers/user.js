@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 // Own imports
-const { User, TaskList } = require('../models');
+const { User } = require('../models');
 const { Mail, Log } = require('../utils');
 const { config } = require('../config');
 

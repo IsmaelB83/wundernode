@@ -18,11 +18,24 @@
    "TaskLists": [
       {  
          "description": "Lista carrefour",
-         "owner": 0
+         "owner": 0,
+         "tasks": [
+            {
+               "description": "Comprar leche"
+            },
+            {
+               "description": "Comprar cafe"
+            }
+         ]
       },
       {  
          "description": "Lista mercadona",
-         "owner": 0
+         "owner": 0,
+         "tasks": [
+            {
+               "description": "Comprar rosquilletas"
+            }
+         ]
       },
       {  
          "description": "Lista amazon",
@@ -30,21 +43,12 @@
       },
       {  
          "description": "Lista Bershka",
-         "owner": 1
+         "owner": 1,
+         "tasks": [
+            {
+               "description": "Comprar ropa"
+            }
+         ]
       }
-   ],
-   "Tasks": [
-      {
-         "list": 0,
-         "description": "Comprar leche"
-      },
-      {
-         "list": 0,
-         "description": "Comprar cafe"
-      },
-      {
-         "list": 1,
-         "description": "Comprar ropa"
-       }
    ]
  }
