@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './assets/js/serviceWorker';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux'; 
 /* Import own modules */
 import Home from './containers/Home/Home';
@@ -21,13 +21,13 @@ import './assets/css/index.css';
 let reactComp = <Provider store={store}>
                     <Router>
                         <Switch>
-                            <Route path='/' exact component={Login} />
+                            <Route path='/login' exact component={Login} />
                             <Route path='/new' exact component={NewUser} />
                             <Route path='/activate/:token' exact component={Activate} />
                             <Route path='/reset' exact component={ResetRequest} />
                             <Route path='/reset/password/:token' exact component={Reset} />
-                            <Route path='/home' exact component={Home} />
-                            <Route component={Login} />
+                            <Route path='/' exact component={Home} />
+                            <Redirect to="/login"/>
                         </Switch>
                     </Router>
                 </Provider>;

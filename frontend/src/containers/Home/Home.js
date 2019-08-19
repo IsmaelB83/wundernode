@@ -14,6 +14,10 @@ class HomeAux extends React.Component {
     
     componentDidMount() {
         try {
+            console.log(this.props.user);
+            if (!this.props.user.id) {
+                this.props.history.push("/login");
+            }
             // Temporal, hasta que funcione el storage
             Axios.get('/tasklists', { headers: { 'Authorization': "bearer " + this.props.user.token }})
             .then (response => {

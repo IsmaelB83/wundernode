@@ -9,14 +9,14 @@ const { User } = require('../models/');
 // Authorization
 module.exports = (req, res, next) => {
     try {
-
         // DEV == Para poder testear sin necesidad de login
-        User.findOne()
+        User.findOne({name: "Ismael"})
         .then((user) => {
             req.user =  user;
             next();  
         })
         .catch((error) => {
+            console.log(error);
         });
 
         /* // Sin cabecera de authorización error

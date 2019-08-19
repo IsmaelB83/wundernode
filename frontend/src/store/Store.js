@@ -109,9 +109,7 @@ function charReducer(state, action) {
             return newState;
         case 'INIT':
             newState = {...state};
-            newState.selected = 0;
             newState.lists = action.payload.lists;
-            newState.switch = !newState.switch;
             return newState;
         case 'RELOAD_LISTS':
             newState = {...state};

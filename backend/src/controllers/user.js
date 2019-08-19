@@ -33,18 +33,19 @@ ctrl.login = async (req, res, next) => {
                     avatar: user.avatar,
                     expires: moment().add(14, 'days').unix()
                 };
-                const token = jwt.sign({payload}, config.secret_key);
+                const jwtoken = jwt.sign({payload}, config.secret_key);
+                user.jwt = jwtoken;
+                user.save();
                 // Retorno el token al usuario
                 return res.json({
                     success: true,
                     description: 'Authorization successful',
-                    token: token,
                     user: {
                         id: user.id,
                         name: user.name,
                         email: user.email,
-                        token: token,
-                        avatar: user.avatar
+                        avatar: user.avatar,
+                        token: user.jwt,
                     },
                 });
             } else {
@@ -53,7 +54,7 @@ ctrl.login = async (req, res, next) => {
             }
         }
         // No autorizado
-        next({status: 401, error: 'No autorizado'});
+        next({status: 404, error: 'Usuario no encontrado'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);   
@@ -61,16 +62,31 @@ ctrl.login = async (req, res, next) => {
 }
 
 /**
- * Chequeo el token si sigue siendo valido. Así la aplicación cliente puede decidir si vuelve
- * a solicitar crendenciales sobre la API o no
+ * Trato de hacer login con el token y mail asociado.
+ * @param {Request} req Request web
+ * @param {Response} res Response web
+ * @param {Middleware} next Siguiente middleware al que llamar
  */
-ctrl.checkToken = async (req, res, next) => {
+ctrl.loginWithToken = async (req, res, next) => {
     try {
-        // Si llego aquí ya se que es un token valido (ha pasado el middleware auth).
-        return res.json({
-            success: true,
-            description: 'Token valido',
-    })
+        const user = await User.findById(req.user.id);
+        if (user && req.user.jwt === user.jwt) {
+            return res.json({
+                success: true,
+                description: 'Authorization successful',
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    avatar: user.avatar,
+                    token: user.jwt
+                },
+            });
+        }
+        next({
+            status: 401,
+            description: 'No authorized'
+        });
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);  
