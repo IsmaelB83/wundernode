@@ -12,7 +12,7 @@ import './UserDropDown.css';
 /**
  * Dropdown de la cuenta de usuario
  */
-class UserBarAux extends React.Component {
+class UserDropDownAux extends React.Component {
     
     /**
      * Constructor
@@ -97,5 +97,5 @@ const mapActions = {
     logoff: actions.logoff,
 }
 
-const UserBar = connect(mapState, mapActions)(UserBarAux);
-export default withRouter(UserBar);
+const UserDropDown = connect(mapState, mapActions)(UserDropDownAux);
+export default withRouter(UserDropDown);

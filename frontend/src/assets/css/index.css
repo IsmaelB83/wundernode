@@ -13,6 +13,7 @@ a {
   font-weight: bold;
 }
 
+input:focus, input:active, input:hover,
 button:focus, button:active, button:hover {
   outline: 0 !important;
   box-shadow: none !important;
