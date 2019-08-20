@@ -1,7 +1,7 @@
 {
     "lists": {
         "icon": "fas fa-user-friends",
-        "color": "blue"
+        "color": "taskitem-icon--grey"
     },
     "system_lists": [
         {

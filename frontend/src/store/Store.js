@@ -13,14 +13,6 @@ const initialState = {
 
 // Actions
 export const actions = {
-    start: (user) => {
-        return {
-            type: 'START',
-            payload: {
-                user: user
-            }
-        }
-    },
     login: (user) => {
         return {
             type: 'LOGIN',
@@ -37,28 +29,11 @@ export const actions = {
             }
         }
     },
-    init: (lists) => {
+    loadLists: (lists) => {
         return {
-            type: 'INIT',
+            type: 'LOAD_LISTS',
             payload: { 
                 lists: lists,
-            }
-        }
-    },
-    reloadLists: (lists) => {
-        return {
-            type: 'RELOAD_LISTS',
-            payload: { 
-                lists: lists,
-            }
-        }
-    },
-    reloadList: (list, todos) => {
-        return {
-            type: 'RELOAD_LIST',
-            payload: { 
-                list: list,
-                todos: todos,
             }
         }
     },
@@ -93,10 +68,6 @@ export const actions = {
 function charReducer(state, action) {
     let newState = {};
     switch (action.type) {
-        case 'START': 
-            newState = {...state};
-            newState.user = action.payload.user;
-            return newState;
         case 'LOGIN':
             newState = {...state};
             newState.user = action.payload.user;
@@ -107,21 +78,10 @@ function charReducer(state, action) {
             newState.user = {};
             localStorage.clear('user');
             return newState;
-        case 'INIT':
+        case 'LOAD_LISTS':
             newState = {...state};
             newState.lists = action.payload.lists;
-            return newState;
-        case 'RELOAD_LISTS':
-            newState = {...state};
-            newState.lists = action.payload.lists;
-            newState.switch = !newState.switch;
-            return newState;
-        case 'RELOAD_LIST':
-            newState = {...state};
-            newState.lists[newState.selected] = action.payload.list;
-            newState.selected = action.payload.list;
-            newState.todos = action.payload.list.tasks;
-            newState.switch = !newState.switch;
+            newState.selected = action.payload.lists[0];
             return newState;
         case 'LOAD_LIST':
             newState = {...state};

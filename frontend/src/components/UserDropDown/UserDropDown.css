@@ -7,30 +7,28 @@
     align-items: center;
 }
 
-.userbar-actions {
-    display: flex;
-    flex-direction: row;
+.user-caret, .userbar .user-caret:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: black !important;
 }
 
-.userbar button {
-    background-color: transparent;
-    border: none;
-}
-
-.userbar button:first-child {
-    float: left;
-}
-
-.userbar span {
-    margin: 0 10px;
-    font-size: 15px;
-    line-height: 32px;
-    font-weight: 500;
+.user-caret span {
     color: #262626;
+    text-transform: lowercase;
 }
 
-.userbar img {
+.user-caret img {
     width: 32px;
     height: 32px;
     border-radius: 100px;
+}
+
+.userbar .dropdown-menu {
+    font-size: .8rem;
+}
+
+.userbar .dropdown-menu i {
+    margin-right: 7px;
+    color: #858383;
 }

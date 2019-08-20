@@ -48,9 +48,9 @@
     width: 25px;
     margin-right: 10px;
     font-size: 20px;
-    color:  lightgrey;
 }
-.taskitem-icon.blue   { color: #2b8dec; }
-.taskitem-icon.red    { color: #d74e48; }
-.taskitem-icon.green  { color: #5fa004; }
-.taskitem-icon.orange { color: #e29600; }
+.taskitem-icon--grey  { color: #c0c0c0; }
+.taskitem-icon--blue   { color: #2b8dec; }
+.taskitem-icon--red    { color: #d74e48; }
+.taskitem-icon--green  { color: #5fa004; }
+.taskitem-icon--orange { color: #e29600; }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 /* Import own modules */
 import { Config } from '../../config';
 import { actions } from '../../store/Store';
-import TaskList from '../Task/Task';
+import Task from '../Task/Task';
 /* Import css*/
 import './TaskPanel.css';
 
@@ -27,7 +27,7 @@ class TaskPanelAux extends React.Component {
                                 onClick={this.taskListClick.bind(this)} 
                                 data-id={value._id}
                             >
-                                <TaskList   id={value._id} 
+                                <Task   id={value._id} 
                                             icon={Config.lists.icon} 
                                             text={value.description} 
                                             color={Config.lists.color}

@@ -10,28 +10,14 @@ import { actions } from '../../store/Store';
 import './Home.css';
 
 
+/**
+ * Pagina principal de wundernode
+ */
 class HomeAux extends React.Component {
     
-    componentDidMount() {
-        try {
-            console.log(this.props.user);
-            if (!this.props.user.id) {
-                this.props.history.push("/login");
-            }
-            // Temporal, hasta que funcione el storage
-            Axios.get('/tasklists', { headers: { 'Authorization': "bearer " + this.props.user.token }})
-            .then (response => {
-                if (response.status === 200) {
-                    this.props.init(response.data.results);
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        } catch (error) {
-        }
-    }
-
+    /**
+     * Render
+     */
     render() {
         return (
             <div className="wrapper"> 
@@ -39,6 +25,27 @@ class HomeAux extends React.Component {
                 <MainContainer/>
             </div>
         );
+    }
+
+    /**
+     * Cuando el componente se monta
+     */
+    componentDidMount() {
+        try {
+            // Si no hay usuario logueado redirigo al login
+            if (!this.props.user.id) {
+                this.props.history.push("/login");
+            }
+            // Cargar listado de tareas
+            Axios.get('/tasklists', { headers: { 'Authorization': "bearer " + this.props.user.token }})
+            .then (response => {
+                if (response.status === 200) {
+                    this.props.loadLists(response.data.results);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
@@ -51,8 +58,7 @@ const mapState = (state) => {
 };
 
 const mapActions = {
-    init: actions.init,
-    loadList: actions.loadList
+    loadLists: actions.loadLists,
 }
 
 const Home = connect(mapState, mapActions)(HomeAux);

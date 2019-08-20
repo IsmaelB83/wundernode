@@ -57,37 +57,37 @@ class LoginAux extends React.Component {
     render() {
         return (
             <div>
-            { this.state.redirect && <Redirect to='/home' /> }
-            <div className="alert alert-info small text-center" role="alert">
-            This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
-            </div>
-            <img className='logo' src={`${process.env.PUBLIC_URL}/img/nodejs.jpg`} alt='icon'></img>
-            <div className="login-wrapper">
-            <form className='login' action="/users/login" method='POST' onSubmit={this.onLogin.bind(this)}>
-            { this.state.error &&
-                <div className="alert alert-danger small text-center mt-0 p-1" role="alert">
-                {this.state.errorText}
+                { this.state.redirect && <Redirect to='/home' /> }
+                <div className="alert alert-info small text-center" role="alert">
+                    This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
                 </div>
-            }
-            <div className="form-group">
-            <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
-            type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
-            </InputIcon>
-            </div>
-            <div className="form-group">
-            <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
-            type="password" name="password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
-            </InputIcon>
-            </div>
-            <button type="submit" className="btn btn-block btn-primary">Iniciar Sesión</button>
-            <div className="mt-2">
-            <a href="/reset" className=''>¿Has olvidado tu contraseña?</a>
-            </div>
-            </form>
-            </div>
-            <div className="mt-2 text-center">
-            ¿No tienes cuenta? <a href="/new" className=''>Crear cuenta</a>
-            </div>
+                <img className='logo' src={`${process.env.PUBLIC_URL}/img/nodejs.jpg`} alt='icon'></img>
+                <div className="login-wrapper">
+                    <form className='login' action="/users/login" method='POST' onSubmit={this.onLogin.bind(this)}>
+                        { this.state.error &&
+                            <div className="alert alert-danger small text-center mt-0 p-1" role="alert">
+                                {this.state.errorText}
+                            </div>
+                        }
+                        <div className="form-group">
+                            <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
+                                type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
+                            </InputIcon>
+                        </div>
+                        <div className="form-group">
+                            <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                type="password" name="password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
+                            </InputIcon>
+                        </div>
+                        <button type="submit" className="btn btn-block btn-primary">Iniciar Sesión</button>
+                        <div className="mt-2">
+                            <a href="/reset" className=''>¿Has olvidado tu contraseña?</a>
+                        </div>
+                    </form>
+                </div>
+                <div className="mt-2 text-center">
+                ¿No tienes cuenta? <a href="/new" className=''>Crear cuenta</a>
+                </div>
             </div>
         );
     }
