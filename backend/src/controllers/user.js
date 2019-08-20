@@ -27,7 +27,7 @@ ctrl.login = async (req, res, next) => {
             if (bcrypt.compareSync(req.body.password, user.password)) {
                 // Creo el payload y firmo el token
                 const payload = {
-                    user: user._id,
+                    id: user._id,
                     name: user.name,
                     email: user.email,
                     avatar: user.avatar,
@@ -70,7 +70,7 @@ ctrl.login = async (req, res, next) => {
 ctrl.loginWithToken = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
-        if (user && req.user.jwt === user.jwt) {
+        if (user) {
             return res.json({
                 success: true,
                 description: 'Authorization successful',

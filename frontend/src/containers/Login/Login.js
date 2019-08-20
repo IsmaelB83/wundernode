@@ -27,8 +27,6 @@ class LoginAux extends React.Component {
             // Input Fields
             email: '', 
             password: '',
-            // Login Ok
-            redirect: false,
         };
     }
 
@@ -57,7 +55,6 @@ class LoginAux extends React.Component {
     render() {
         return (
             <div>
-                { this.state.redirect && <Redirect to='/home' /> }
                 <div className="alert alert-info small text-center" role="alert">
                     This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
                 </div>
@@ -111,7 +108,7 @@ class LoginAux extends React.Component {
                 if (result.status === 200) {
                     // Salvar el token en la sesión del navegador y redirect
                     this.props.login(result.data.user);
-                    this.setState({redirect: true});
+                    this.props.history.push('/home');
                 } else {
                     this.setState({
                         error: true,

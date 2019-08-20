@@ -42,10 +42,10 @@ class UserDropDownAux extends React.Component {
                     <DropdownMenu>
                         <DropdownItem disabled>Last sync 8 minutes ago</DropdownItem>
                         <DropdownItem disabled>{this.props.user.email}</DropdownItem>
-                        <DropdownItem onClick={this.syncNow}><i class="fas fa-sync"></i>Sync now</DropdownItem>
+                        <DropdownItem onClick={this.syncNow}><i className="fas fa-sync"></i>Sync now</DropdownItem>
                         <DropdownItem divider />
-                        <DropdownItem onClick={this.accountSettings}><i class="fas fa-user-circle"></i>Account Settings</DropdownItem>
-                        <DropdownItem onClick={this.signOut}><i class="fas fa-sign-out-alt"></i>Sign Out</DropdownItem>
+                        <DropdownItem onClick={this.accountSettings}><i className="fas fa-user-circle"></i>Account Settings</DropdownItem>
+                        <DropdownItem onClick={this.signOut}><i className="fas fa-sign-out-alt"></i>Sign Out</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
