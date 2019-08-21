@@ -11,6 +11,14 @@ import './MainContainer.css';
 
 export default class MainContainer extends React.Component {
 
+    /**
+     * State
+     */
+    state={showCompleted: false};
+
+    /**
+     * Render
+     */
     render() {
         return (
             <div className='mainContainer'>
@@ -19,8 +27,8 @@ export default class MainContainer extends React.Component {
                     <TodoBar id='todoBar'/>
                     <div className='showCompleted'>
                         <TodoPanel id='todosPending' completed={false}/>
-                        <ButtonHeading/>
-                        <TodoPanel id='todosDone' completed={true}/>
+                        <ButtonHeading onClick={ev=>{this.setState({showCompleted: !this.state.showCompleted});}}/>
+                        <TodoPanel id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
                     </div>
                 </div>
             </div>

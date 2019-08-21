@@ -2,7 +2,6 @@
 import React from 'react';
 import Axios from 'axios';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom'
 /* Import own modules */
 import { store, actions } from '../../store/Store';
 import InputIcon from '../../components/Inputs/InputIcon';
@@ -43,9 +42,11 @@ class LoginAux extends React.Component {
                     store.dispatch(actions.login(result.data.user));
                     this.props.history.push("/");
                 });
+            } else {
+                localStorage.clear();
             }
-        } catch (e) {
-            alert(e.message);
+        } catch (error) {
+            alert(error);
         }
     }
 
@@ -68,12 +69,12 @@ class LoginAux extends React.Component {
                         }
                         <div className="form-group">
                             <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
-                                type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
+                                type="email" name="email" autoComplete="username" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
                             </InputIcon>
                         </div>
                         <div className="form-group">
                             <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
-                                type="password" name="password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
+                                type="password" name="password" autoComplete="current-password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
                             </InputIcon>
                         </div>
                         <button type="submit" className="btn btn-block btn-primary">Iniciar Sesión</button>

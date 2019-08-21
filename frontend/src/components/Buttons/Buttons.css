@@ -25,6 +25,7 @@
     padding: 3px 10px;
     text-transform: uppercase;
     display: inline-block;
+    border: none;
     border-radius: 3px;
     text-rendering: optimizeLegibility;
     letter-spacing: 1px;

@@ -15,6 +15,17 @@ import './TaskPanel.css';
 class TaskPanelAux extends React.Component {
 
     /**
+     * Constructor
+     * @param {*} props 
+     */
+    constructor(props) {
+        super(props);
+        this.state = {
+            selected: 0,
+        };
+    }
+    
+    /**
      * Renderiza el componente
      */
     render() {
@@ -23,17 +34,19 @@ class TaskPanelAux extends React.Component {
             {   this.props.lists.length > 0 && 
                 this.props.lists.map((value, index) => {
                     return  <li key={index} 
-                                className={`tasklist-li ${index===this.props.selected?'tasklist-li--active':''}`}
+                                className={`tasklist-li ${index===this.state.selected?'tasklist-li--active':''}`}
                                 onClick={this.taskListClick.bind(this)} 
+                                data-index={index}
                                 data-id={value._id}
                             >
                                 <Task   id={value._id} 
-                                            icon={Config.lists.icon} 
-                                            text={value.description} 
-                                            color={Config.lists.color}
-                                            // starred={value.starred.length}
-                                            tasks={value.tasks.length}
-                                            active={index===this.props.selected?true:false}
+                                        data-index={index}
+                                        icon={Config.lists.icon} 
+                                        text={value.description} 
+                                        color={Config.lists.color}
+                                        // starred={value.starred.length}
+                                        tasks={value.tasks.length}
+                                        active={index===this.props.selected?true:false}
                                 />
                             </li>
                 })
@@ -49,8 +62,10 @@ class TaskPanelAux extends React.Component {
     async taskListClick(ev) {
         try {
             ev.preventDefault();
-            let response = await Axios.get(`/tasklists/${ev.currentTarget.dataset.id}`, { headers: { 'Authorization': "bearer " + this.props.user.token } });
+            const index = parseInt(ev.currentTarget.dataset.index);
+            const response = await Axios.get(`/tasklists/${ev.currentTarget.dataset.id}`, { headers: { 'Authorization': "bearer " + this.props.user.token } });
             if (response.status === 200) {
+                this.setState({selected: index});
                 this.props.loadList(response.data.result);
             }               
         } catch (error) {

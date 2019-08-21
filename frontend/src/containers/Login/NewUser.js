@@ -51,17 +51,17 @@ export default class NewUser extends React.Component {
                             </div>
                             <div className="form-group">
                                 <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
-                                    type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
+                                    type="email" name="email" autoComplete="username" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
                                 </InputIcon>
                             </div>
                             <div className="form-group">
                                 <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
-                                    type="password" name="password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
+                                    type="password" name="password" autoComplete="new-password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
                                 </InputIcon>
                             </div>
                             <div className="form-group">
                                 <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Repite la contraseña"
-                                    type="password" name="passwordB" required onChange={(ev) => {this.setState({passwordB: ev.target.value});}}>
+                                    type="password" name="passwordB" autoComplete="new-password" required onChange={(ev) => {this.setState({passwordB: ev.target.value});}}>
                                 </InputIcon>
                             </div>
                             <button type="submit" className="btn btn-block btn-primary">Crear cuenta</button>

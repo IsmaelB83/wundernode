@@ -10,7 +10,7 @@ export default class InputIcon extends React.Component {
                 <i className={`input_icon-icon ${this.props.icon}`}></i>
                 <input className={`input_icon-input ${this.props.input}`} placeholder={this.props.placeholder}
                     type={this.props.type} name={this.props.name} required={this.props.required||false}
-                    onChange={this.props.onChange}>
+                    onChange={this.props.onChange} autoComplete={this.props.autoComplete}>
                 </input>
             </div>
         );

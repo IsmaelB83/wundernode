@@ -29,7 +29,7 @@ module.exports = function(app) {
     app.use(bodyParser.urlencoded({extended: true}));
     // Routers
     app.use('/users', user());
-    app.use('/tasks', task());
+    app.use('/tasklists/tasks', task());
     app.use('/tasklists', tasklist());
     app.get('/favicon.ico', (req, res) => res.status(204));
     // catch 404 and forward to error handler

@@ -34,7 +34,7 @@ class HomeAux extends React.Component {
         try {
             // Si no hay usuario logueado redirigo al login
             if (!this.props.user.id) {
-                this.props.history.push("/login");
+                return this.props.history.push("/login");
             }
             // Cargar listado de tareas
             Axios.get('/tasklists', { headers: { 'Authorization': "bearer " + this.props.user.token }})

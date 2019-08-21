@@ -47,7 +47,7 @@ export default class ResetRequest extends React.Component {
                                 }
                                 <div className="form-group">
                                     <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
-                                        type="email" name="email" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
+                                        type="email" name="email" autoComplete="username" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
                                     </InputIcon>
                                 </div>
                                 <button type="submit" className="btn btn-block btn-primary"> Solicitar restablecer contraseña</button>

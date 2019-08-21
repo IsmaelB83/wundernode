@@ -2,7 +2,6 @@
 // Node imports
 const moment = require('moment');
 var mongoose = require('mongoose');
-
 // Own imports
 const { Task, TaskList, User } = require('../models');
 const { Log } = require('../utils');
@@ -52,18 +51,20 @@ ctrl.list = async (req, res, next) => {
  */
 ctrl.get = async (req, res, next) => {
     try {
-        const result = await TaskList.find({"tasks._id": mongoose.Types.ObjectId(req.params.id)});
+        // Busco la tasklist que contiene esa tarea, siempre y cuando el usuario sea miembro de la lista
+        const result = await TaskList.findOne(
+            { 'tasks._id': req.params.id, 'members': req.user.id },
+            { 'tasks.$': 1 },
+        );
+        // Encontrado y con permisos
         if (result) {
-            const i = result.taskList.members.indexOf(req.user.id);
-            if (i !== -1) {
-                return res.json({
-                    success: true,
-                    result: result
-                });
-            }
-            return next({status: 401, description: 'Task not authorized'});
+            return res.json({
+                success: true,
+                result: result
+            });
         }
-        next ({status: 404, description: 'Not found'});
+        // No encontrado o sin permisos
+        return next({status: 404, description: 'Not found'});        
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
@@ -110,30 +111,31 @@ ctrl.create = async (req, res, next) => {
  */
 ctrl.update = async (req, res, next) => {
     try {
-        let task = await Task.findById(req.params.id);
-        if (!task) {
-            res.status(404).json({
-                status: 'error', 
-                description: 'Task not found',
-                result: {}
-            });
-            return ;
+        // Busco la tasklist que contiene esa tarea, siempre y cuando el usuario sea miembro de la lista
+        const result = await TaskList.findOne(
+            { 'tasks._id': req.params.id, 'members': req.user.id },
+            { 'tasks.$': 1 },
+        );
+        // Encontrado y con permisos. Actualizo y reenvio.
+        if (result) {
+            result.tasks[0].description = req.body.description || result.tasks[0].description;
+            result.tasks[0].due = req.body.due || result.tasks[0].due;
+            result.tasks[0].reminder = req.body.reminder || result.tasks[0].reminder;
+            result.tasks[0].starred = typeof(req.body.starred)!==undefined?req.body.starred:result.tasks[0].starred;
+            result.tasks[0].completed = typeof(req.body.completed)!==undefined?req.body.completed:result.tasks[0].completed;
+            const aux = await TaskList.update(result);
+            if (aux.ok === 1) {
+                return res.json({
+                    success: true,
+                    result: result
+                });   
+            }
+            return next('Error actualizando task');
         }
-        let oldStarred = task.starred;
-        task.description = req.body.description?req.body.description:task.description;
-        task.due = req.body.due?req.body.due:task.due;
-        task.reminder = req.body.reminder?req.body.reminder:task.reminder;
-        task.starred = req.body.starred;
-        task.completed = req.body.completed;
-        task = await task.save();
-        let taskList = await TaskList.findById(task.taskList._id);
-        if (taskList && oldStarred !== task.starred) {
-            if (task.starred) taskList.starred.push(task);
-            else taskList.starred.splice(taskList.starred.indexOf(task._id), 1 );
-            await taskList.save();
-        }
-        let tasks = await Task.find({taskList: taskList._id});
-        res.json({status: 'ok', result: {taskList, tasks}});
+        // No encontrado o sin permisos
+        return next({status: 404, description: 'Not found'});    
+
+        
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);

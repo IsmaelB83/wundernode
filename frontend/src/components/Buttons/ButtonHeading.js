@@ -7,7 +7,7 @@ export default class ButtonHeading extends React.Component {
     
     render() {
         return (
-            <a href='/' className='buttonHeading button--blue mt-2'>Show completed to-dos</a>
+            <button className='buttonHeading button--blue mt-2' onClick={this.props.onClick}>Show completed to-dos</button>
         );
     };
     
