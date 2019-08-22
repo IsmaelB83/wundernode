@@ -46,6 +46,7 @@ TaskListSchema.statics.list = function(description, owner, members, limit, skip,
         queryDB.limit(limit);
         queryDB.skip(skip);
         queryDB.select(fields);
+        queryDB.sort({ createdAt: 1 })
         // Query
         queryDB.exec(callback);        
     } catch (error) {

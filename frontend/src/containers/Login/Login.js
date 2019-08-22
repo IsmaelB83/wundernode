@@ -43,18 +43,20 @@ class LoginAux extends React.Component {
                     this.props.history.push("/");
                 })
                 .catch(error => {
+                    localStorage.clear();
                     this.setState({
                         error: true,
-                        errorText: JSON.stringify(error.data)
+                        errorText: JSON.stringify(error)
                     });   
                 });
             } else {
                 localStorage.clear();
             }
         } catch (error) {
+            localStorage.clear();
             this.setState({
                 error: true,
-                errorText: JSON.stringify(error.data)
+                errorText: JSON.stringify(error)
             });   
         }
     }
