@@ -11,7 +11,11 @@ import './TodoBar.css';
 class TodoBarAux extends React.Component {
   
     constructor(props) {
+        // Superclass constructors
         super(props);
+        // Events
+        this.addTodo = this.addTodoEventHandler.bind(this);
+        // State
         this.state = {
             focus: false,
             starred: false,
@@ -24,7 +28,7 @@ class TodoBarAux extends React.Component {
             <div className='addTask'>
                 <div className='addTask-actions--left'>
                     { this.state.focus && <ButtonLight className='btn' color='white' icon='fas fa-microphone'/> }
-                    { !this.state.focus && <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTaskToList.bind(this)}/> } 
+                    { !this.state.focus && <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTodo}/> } 
                 </div>
                 <div className='addTask-actions--right'>
                     <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt'/>
@@ -37,30 +41,28 @@ class TodoBarAux extends React.Component {
                         onBlur={()=>{this.setState({focus:false})}}
                         value={this.state.input}
                         onChange={ev => { this.setState({input: ev.target.value})}}
-                        onKeyPress={ev => { if(ev.key==='Enter') { this.addTaskToList.bind(this)() }}}
+                        onKeyPress={ev => { if(ev.key==='Enter') { this.addTodo() }}}
                 >
                 </input>
             </div>
         );
     };
 
-    async addTaskToList(ev) {
+    async addTodoEventHandler(ev) {
         if (this.state.input === '') {
             this.setState({focus: true});
         } else {
             try {
-                let result = await Axios.post(`/tasklist/task`, null, {
+                let result = await Axios.post(`/tasklists/tasks`, null, {
                     headers: { 'Authorization': "bearer " + this.props.user.token },
                     data: {
-                        id: this.props.list._id,
+                        id: this.props.list.id,
                         description: this.state.input,
                         starred: this.state.starred,
                     }
                 });
                 if (result.status === 200) {
-                    this.props.addTodo(
-                        result.data.result.tasks.slice(-1)[0]
-                    );
+                    this.props.addTodo(result.data.result);
                 }
                 this.setState({
                     input: '',
@@ -77,7 +79,8 @@ class TodoBarAux extends React.Component {
 const mapState = (state) => { 
     return {
         user: state.user,
-        list: state.lists[state.selected],
+        list: state.selected,
+        switch: state.switch,
     };
 };
 const mapActions = { 

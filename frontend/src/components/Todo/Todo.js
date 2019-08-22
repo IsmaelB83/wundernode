@@ -5,6 +5,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 /* Import own modules */
 import { Config } from '../../config';
+import { actions } from '../../store/Store';
 /* Import own css */
 import './Todo.css';
 
@@ -53,13 +54,16 @@ class TodoAux extends React.Component {
     async starredEventHanlder(ev) {
         try {
             ev.preventDefault();
-            // Call API to starred task
-            let result = await Axios.put(`/tasklists/tasks/${this.props.id}`, null, {
-                headers: { 'Authorization': "bearer " + this.props.user.token },
-                data: { starred: !this.state.starred }
-            });
-            if (result.status === 200) {
-                this.setState({starred: !this.state.starred})
+            if (!this.state.completed) {
+                // Call API to starred task
+                let result = await Axios.put(`/tasklists/tasks/${this.props.id}/star`, null, {
+                    headers: { 'Authorization': "bearer " + this.props.user.token },
+                    data: { starred: !this.state.starred }
+                });
+                if (result.status === 200) {
+                    this.setState({starred: !this.state.starred});
+                    this.props.starTodo(this.props.id, this.state.starred);
+                }
             }
         } catch (error) {
             console.log(error)
@@ -71,13 +75,15 @@ class TodoAux extends React.Component {
             // Call API to complete task
             ev.preventDefault();
             // Call API to starred task
-            let result = await Axios.put(`/tasklists/tasks/${this.props.id}`, null, {
+            let result = await Axios.put(`/tasklists/tasks/${this.props.id}/complete`, null, {
                 headers: { 'Authorization': "bearer " + this.props.user.token },
                 data: { completed: !this.state.completed }
             });
             if (result.status === 200) {
-                audio.pause(); audio.currentTime = 0; audio.play();     
+                audio.currentTime = 0; 
+                audio.play();     
                 this.setState({completed: !this.state.completed})
+                this.props.completeTodo(this.props.id, this.state.starred);
             }
         } catch (error) {
             console.log(error);
@@ -93,6 +99,8 @@ const mapState = (state) => {
 };
 
 const mapActions = { 
+    starTodo: actions.starTodo,
+    completeTodo: actions.completeTodo,
 };
 
 const Todo = connect(mapState, mapActions)(TodoAux);

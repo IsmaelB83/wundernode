@@ -1,14 +1,13 @@
 // Import redux
 import { createStore } from 'redux';
-// Import own modules
-import utils from './utils';
+
 
 // App initial state
 const initialState = {
     user: {},
     lists: [],
     selected: {},
-    switch: false, // Hack to force update in nested structures such as taskLists
+    switch: false
 }
 
 // Actions
@@ -53,12 +52,21 @@ export const actions = {
             }
         }
     },
-    starredTodo: (index, starred) => {
+    starTodo: (id, starred) => {
         return {
-            type: 'STARRED_TODO',
+            type: 'STAR_TODO',
             payload: {
-                index: index,
+                id: id,
                 starred: starred
+            }
+        }
+    },
+    completeTodo: (id, completed) => {
+        return {
+            type: 'COMPLETE_TODO',
+            payload: {
+                id: id,
+                completed: completed
             }
         }
     },
@@ -80,32 +88,88 @@ function charReducer(state, action) {
             return newState;
         case 'LOAD_LISTS':
             newState = {...state};
-            newState.lists = action.payload.lists;
-            newState.selected = action.payload.lists[0];
+            // Genero el array de listas
+            newState.lists = [];
+            action.payload.lists.forEach(l => {
+                newState.lists.push({
+                    id: l._id,
+                    description: l.description,
+                    starred: parseInt(l.tasks.filter(task => task.starred && !task.completed).length),
+                    tasks: parseInt(l.tasks.filter(task => !task.completed).length)
+                });
+            });
+            // Genero el objeto de la lista actual
+            let index = 0;
+            if (newState.selected.id) {
+                index = newState.lists.findIndex(l => l.id === newState.selected.id);
+            }
+            newState.selected['id'] = action.payload.lists[index]._id;
+            newState.selected['tasks'] = [];
+            action.payload.lists[index].tasks.forEach(t => {
+                newState.selected.tasks.push({
+                    id: t._id,
+                    description: t.description,
+                    completed: t.completed,
+                    starred: t.starred
+                });
+            });
             return newState;
         case 'LOAD_LIST':
             newState = {...state};
-            newState.selected = action.payload.list;
+            // Genero el objeto de la lista actual
+            newState.selected['id'] = action.payload.list._id;
+            newState.selected['tasks'] = [];
+            action.payload.list.tasks.forEach(t => {
+                newState.selected.tasks.push({
+                    id: t._id,
+                    description: t.description,
+                    completed: t.completed,
+                    starred: t.starred
+                });
+            });
             return newState;
         case 'ADD_TODO':
             newState = {...state};
-            let list = newState.lists[newState.selected];
-            if (newState.selected <= 3) list = newState.lists[0];
-            list.tasks.push(action.payload.todo._id);
-            newState.todos.push(action.payload.todo);
-            utils.updateListsStarred(newState.lists[1], newState.lists[2], newState.lists[3], list, action.payload.todo);
-            return newState;
-        case 'STARRED_TODO': 
-            newState = {...state};
-            newState.todos[action.payload.index].starred = action.payload.starred;
-            for (let i = 0; i < newState.lists.length; i++) {
-                if (newState.lists[i]._id === newState.todos[action.payload.index].taskList) {
-                    utils.updateListsStarred(newState.lists[1], newState.lists[2], newState.lists[3], newState.lists[i], newState.todos[action.payload.index]);
-                    break;
-                }
+            // Añado un todo a la lista actual
+            newState.selected.tasks.push({
+                id: action.payload.todo._id,
+                description: action.payload.todo.description,
+                completed: false,
+                starred: action.payload.todo.starred
+            });
+            // Añado un todo al panel de listas
+            index = newState.lists.findIndex(l => l.id === newState.selected.id);
+            if (index >= 0) {
+                newState.lists[index].tasks++;
+                newState.lists[index].starred+=action.payload.todo.starred?1:0;
             }
+            // Forzar el render
             newState.switch = !newState.switch;
             return newState;
+        case 'STAR_TODO': {
+            newState = {...state};
+            // Busco la tarea en la lista seleccionada y la actualizo
+            const i = newState.selected.tasks.findIndex(t => t.id === action.payload.id);
+            newState.selected.tasks[i].starred = action.payload.starred;
+            // Busco la lista en el array de listas y lo sobreescribo
+            const j = newState.lists.findIndex(l => l.id === newState.selected.id);
+            newState.lists[j].starred += action.payload.starred?1:-1;
+            // Forzar el render
+            newState.switch = !newState.switch;
+            return newState;
+        }
+        case 'COMPLETE_TODO': {
+            newState = {...state};
+            // Busco la tarea en la lista seleccionada y la actualizo
+            const i = newState.selected.tasks.findIndex(t => t.id === action.payload.id);
+            newState.selected.tasks[i].completed = action.payload.completed;
+            // Busco la lista en el array de listas y lo sobreescribo
+            const j = newState.lists.findIndex(l => l.id === newState.selected.id);
+            newState.lists[j].tasks += action.payload.completed?-1:1;
+            // Forzar el render
+            newState.switch = !newState.switch;
+            return newState;
+        }
         default:
             return state;
     }

@@ -48,13 +48,12 @@ ctrl.login = async (req, res, next) => {
                         token: user.jwt,
                     },
                 });
-            } else {
-                // No autorizado
-                return next({status: 401, error: 'No autorizado'});
             }
         }
-        // No autorizado
-        next({status: 404, error: 'Usuario no encontrado'});
+        return next({
+            status: 401,
+            description: 'No authorized'
+        });
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);   

@@ -20,8 +20,8 @@ module.exports = (req, res, next) => {
         next();
     } catch (error) {
         return res.status(401).json({
-            success: false,
-            description: `Not Authorized: ${error}`
+            status: 404,
+            data: `Not Authorized: ${error}`
         });
     }
 };

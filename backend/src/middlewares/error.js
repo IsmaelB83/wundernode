@@ -2,16 +2,18 @@
 
 // Authorization
 module.exports = (error, req, res, next) => {
-    // Validation error
+    // Error template
+    const jsonError = {
+        status: error.status || 500,
+        data: error.description || 'Uncontrolled error'
+    }
+    // Validation errors
     if (error.array) { 
-        error.status = 422;
         const errInfo = error.array({ onlyFirstError: true })[0];
-        error.error = `No válido - ${errInfo.param} ${errInfo.msg}`;
+        jsonError.status = 422;
+        jsonError.data = `Validation failed: ${errInfo.param} ${errInfo.msg}`;
     }
     // status 500 si no se indica lo contrario
-    res.status(error.status || 500);
-    res.json({
-        success: false, 
-        error: error
-    });
+    res.status(jsonError.status);
+    res.json(jsonError);
 };

@@ -11,6 +11,7 @@ module.exports = () => {
     router.get('/', Auth, TaskCtrl.list);
     router.get('/:id', Auth, TaskCtrl.get);
     router.post('/', Auth, TaskCtrl.create);
-    router.put('/:id', Auth, TaskCtrl.update);
+    router.put('/:id/complete', Auth, TaskCtrl.complete);
+    router.put('/:id/star', Auth, TaskCtrl.star);
     return router;
 }

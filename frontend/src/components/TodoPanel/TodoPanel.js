@@ -27,17 +27,17 @@ class TodoPanelAux extends React.Component {
     render() {
         return (
             <ol id={this.props.id} className={`todoList ${this.props.completed?'todoList--done':''}`}>
-            { this.props.selected.tasks && 
+            { this.props.todos && 
                 ( ( this.props.completed && this.props.showCompleted ) || !this.props.completed ) && 
-                this.props.selected.tasks.map((value, index) => {
-                    if (value.completed === this.props.completed) {
+                this.props.todos.map((todo, index) => {
+                    if (todo.completed === this.props.completed) {
                         return <li  key={index} data-index={index}
                                     onClick={ev => { this.setState({ selected: parseInt(ev.currentTarget.dataset.index) })}}>
-                                    <Todo   text={value.description} 
+                                    <Todo   text={todo.description} 
                                             active={this.state.selected===index?true:false} 
-                                            starred={value.starred}
-                                            completed={value.completed} 
-                                            id={value._id}
+                                            starred={todo.starred}
+                                            completed={todo.completed} 
+                                            id={todo.id}
                                     />
                                 </li>
                     } else {
@@ -54,7 +54,7 @@ class TodoPanelAux extends React.Component {
 const mapState = (state) => { 
     return {
         user: state.user,
-        selected: state.selected,
+        todos: state.selected.tasks,
         switch: state.switch
     };
 };

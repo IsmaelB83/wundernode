@@ -41,12 +41,21 @@ class LoginAux extends React.Component {
                 .then(result => {
                     store.dispatch(actions.login(result.data.user));
                     this.props.history.push("/");
+                })
+                .catch(error => {
+                    this.setState({
+                        error: true,
+                        errorText: JSON.stringify(error.data)
+                    });   
                 });
             } else {
                 localStorage.clear();
             }
         } catch (error) {
-            alert(error);
+            this.setState({
+                error: true,
+                errorText: JSON.stringify(error.data)
+            });   
         }
     }
 
@@ -110,17 +119,12 @@ class LoginAux extends React.Component {
                     // Salvar el token en la sesión del navegador y redirect
                     this.props.login(result.data.user);
                     this.props.history.push('/home');
-                } else {
-                    this.setState({
-                        error: true,
-                        errorText: result.data.description 
-                    });
                 }
             } catch (error) {
                 this.setState({
                     error: true,
-                    errorText: 'No autorizado'
-                });
+                    errorText: JSON.stringify(error.response)
+                });   
             }
         }
     }

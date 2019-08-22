@@ -26,7 +26,7 @@ ctrl.list = async (req, res, next) => {
                 if (error || !results.length) {
                     return next({
                         status: 404,
-                        description: `Tasklist ${req.query.taskList} not found`
+                        data: `Tasklist ${req.query.taskList} not found`
                     })
                 }
                 // Ok
@@ -38,7 +38,7 @@ ctrl.list = async (req, res, next) => {
         });
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
-        next(error);
+        next({status: 500, data: error});
     }
 }
 
@@ -64,45 +64,85 @@ ctrl.get = async (req, res, next) => {
             });
         }
         // No encontrado o sin permisos
-        return next({status: 404, description: 'Not found'});        
+        return next({status: 404, data: 'Not found'});        
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
-        next(error);
+        next({data: error});
     }
 }
 
 /**
  * Crea una tarea
+ * @param {Request} req Request de la petición
+ * @param {Response} res Response de la petición
+ * @param {Middleware} next Siguiente middleware a ejecutar
  */
 ctrl.create = async (req, res, next) => {
     try {
-        let taskList = await TaskList.findById(req.body.id);
-        if (!taskList || ( taskList.system && taskList.systemId !== 0)) {
-            res.status(404).json({
-                status: 'error', 
-                description: 'Task list not found',
-                result: {}
-            });
-            return ;
+        // Añado un task a la lista indicada
+        const task = { description: req.body.description, starred: req.body.starred };
+        const result = await TaskList.findOneAndUpdate(
+            { _id: req.body.id, 'members': req.user.id },
+            { $push: { tasks: task } },
+            { new: true }
+        );
+        if (result) {
+            return res.json({
+                success: true,
+                result: result.tasks.pop()
+            });   
         }
-        let task = new Task({...req.body});
-        let user = await User.findOne({email: 'ismaelbernal83@gmail.com'});
-        if (user) {
-            task.owner = user;
-        }
-        task.taskList = taskList;
-        taskList.tasks.push(task);
-        if (task.starred) {
-            taskList.starred.push(task);
-        }
-        task = await task.save();
-        await taskList.save();
-        taskList = await TaskList.findById(req.body.id);
-        let tasks = await Task.find({taskList: taskList._id});
-        res.json({status: 'ok', result: {taskList, tasks}});
+        return next({status: 404, data: 'Not found'});    
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
-        next(error);
+        next({data: error});
+    }
+}
+
+/**
+ * Marca como completada una task
+ */
+ctrl.complete = async (req, res, next) => {
+    try {
+        // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
+        const result = await TaskList.update(
+            { 'tasks._id': req.params.id, 'members': req.user.id },
+            { $set: { 'tasks.$.completed': req.body.completed }  }
+        );
+        if (result) {
+            return res.json({
+                success: true,
+                result: result
+            });   
+        }
+        return next({status: 404, data: 'Not found'});    
+    } catch (error) {
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next({description: error});
+    }
+}
+
+/**
+ * Marca como starred una task
+ */
+ctrl.star = async (req, res, next) => {
+    try {
+        // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
+        const result = await TaskList.update(
+            { 'tasks._id': req.params.id, 'members': req.user.id },
+            { $set: { 'tasks.$.starred': req.body.starred }  }
+        );
+        if (result) {
+            return res.json({
+                success: true,
+                result: result
+            });   
+        }
+        return next({status: 404, data: 'Not found'});
+    } catch (error) {
+        console.log(error);
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next({description: error});
     }
 }
 
@@ -111,12 +151,11 @@ ctrl.create = async (req, res, next) => {
  */
 ctrl.update = async (req, res, next) => {
     try {
-        // Busco la tasklist que contiene esa tarea, siempre y cuando el usuario sea miembro de la lista
-        const result = await TaskList.findOne(
+        // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
+        const result = await TaskList.update(
             { 'tasks._id': req.params.id, 'members': req.user.id },
-            { 'tasks.$': 1 },
+            { $set: { 'tasks.$.starred': req.body.starred }  }
         );
-        // Encontrado y con permisos. Actualizo y reenvio.
         if (result) {
             result.tasks[0].description = req.body.description || result.tasks[0].description;
             result.tasks[0].due = req.body.due || result.tasks[0].due;
@@ -130,15 +169,15 @@ ctrl.update = async (req, res, next) => {
                     result: result
                 });   
             }
-            return next('Error actualizando task');
+            return next({data: 'Error actualizando task'});
         }
         // No encontrado o sin permisos
-        return next({status: 404, description: 'Not found'});    
+        return next({status: 404, data: 'Not found'});    
 
         
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
-        next(error);
+        next({data: error});
     }
 }
 

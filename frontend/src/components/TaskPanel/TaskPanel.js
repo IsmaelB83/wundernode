@@ -37,15 +37,15 @@ class TaskPanelAux extends React.Component {
                                 className={`tasklist-li ${index===this.state.selected?'tasklist-li--active':''}`}
                                 onClick={this.taskListClick.bind(this)} 
                                 data-index={index}
-                                data-id={value._id}
+                                data-id={value.id}
                             >
-                                <Task   id={value._id} 
+                                <Task   id={value.id} 
                                         data-index={index}
                                         icon={Config.lists.icon} 
                                         text={value.description} 
                                         color={Config.lists.color}
-                                        // starred={value.starred.length}
-                                        tasks={value.tasks.length}
+                                        starred={value.starred}
+                                        tasks={value.tasks}
                                         active={index===this.props.selected?true:false}
                                 />
                             </li>
@@ -57,7 +57,7 @@ class TaskPanelAux extends React.Component {
 
     /**
      * Cuando se hace click en una lista se cargan sus tareas en el estado
-     * @param {Cuando se} ev 
+     * @param {Event} ev 
      */
     async taskListClick(ev) {
         try {
@@ -79,6 +79,7 @@ const mapState = (state) => {
     return { 
         user: state.user,
         lists: state.lists,
+        switch: state.switch
     };
 };
 
