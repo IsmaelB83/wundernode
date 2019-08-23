@@ -56,22 +56,31 @@
     margin-bottom: 5px;
 }
 
-.tab-options a {
+.tab-options span {
     font-size: 10px;
     margin-right: 5px;
     text-transform: uppercase;
     color: #737272;
 }
 
-.tab-options a:active {
-    color: black;
-    font-weight: bold;
-} 
-
 .popup-owner {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
     margin: 10px 0;
     border-top: 1px solid grey;
     padding: 10px;
+}
+
+.popup-owner img {
+    width: 50px;
+    margin-right: 20px; 
+}
+
+.popup-owner span {
+    text-transform: capitalize;
+    font-weight: bold;
 }
 
 .owner-avatar img {

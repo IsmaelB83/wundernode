@@ -83,7 +83,7 @@ class TodoAux extends React.Component {
                 audio.currentTime = 0; 
                 audio.play();     
                 this.setState({completed: !this.state.completed})
-                this.props.completeTodo(this.props.id, this.state.starred);
+                this.props.completeTodo(this.props.id, this.state.completed, this.state.starred);
             }
         } catch (error) {
             console.log(error);

@@ -61,15 +61,24 @@ export const actions = {
             }
         }
     },
-    completeTodo: (id, completed) => {
+    completeTodo: (id, completed, starred) => {
         return {
             type: 'COMPLETE_TODO',
             payload: {
                 id: id,
-                completed: completed
+                completed: completed,
+                starred: starred
             }
         }
     },
+    addTaskList: (taskList) => {
+        return {
+            type: 'ADD_TASKLIST',
+            payload: {
+                taskList: taskList,
+            }
+        }
+    }
 }
     
 // Reducers: definen como cambia el estado para cada acción: estado + acción ==> acción
@@ -165,11 +174,28 @@ function charReducer(state, action) {
             newState.selected.tasks[i].completed = action.payload.completed;
             // Busco la lista en el array de listas y lo sobreescribo
             const j = newState.lists.findIndex(l => l.id === newState.selected.id);
-            newState.lists[j].tasks += action.payload.completed?-1:1;
+            newState.lists[j].tasks += action.payload.completed?-1:1;  
+            if (action.payload.completed && action.payload.starred) {
+                newState.lists[j].starred--;
+            } else if(!action.payload.completed && action.payload.starred) {
+                newState.lists[j].starred++;
+            }
             // Forzar el render
             newState.switch = !newState.switch;
             return newState;
         }
+        case 'ADD_TASKLIST': {
+            newState = {...state};
+            // Añado lista al panel de listas
+            newState.lists.push({
+                id: action.payload.taskList._id,
+                description: action.payload.taskList.description,
+                starred: 0,
+                tasks: 0,
+            });
+            newState.switch = !newState.switch;
+            return newState;
+        }   
         default:
             return state;
     }

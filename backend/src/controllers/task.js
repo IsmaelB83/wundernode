@@ -105,7 +105,7 @@ ctrl.create = async (req, res, next) => {
 ctrl.complete = async (req, res, next) => {
     try {
         // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
-        const result = await TaskList.update(
+        const result = await TaskList.updateOne(
             { 'tasks._id': req.params.id, 'members': req.user.id },
             { $set: { 'tasks.$.completed': req.body.completed }  }
         );
@@ -128,7 +128,7 @@ ctrl.complete = async (req, res, next) => {
 ctrl.star = async (req, res, next) => {
     try {
         // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
-        const result = await TaskList.update(
+        const result = await TaskList.updateOne(
             { 'tasks._id': req.params.id, 'members': req.user.id },
             { $set: { 'tasks.$.starred': req.body.starred }  }
         );

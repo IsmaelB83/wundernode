@@ -72,7 +72,7 @@ ctrl.get = async (req, res, next) => {
  */
 ctrl.create = async (req, res, next) => {
     try {
-        let taskList = new TaskList({...req.body});
+        const taskList = new TaskList({...req.body});
         taskList.members.push(req.user.id);
         taskList.owner = req.user.id;
         await taskList.save();
@@ -95,7 +95,7 @@ ctrl.create = async (req, res, next) => {
  */
 ctrl.update = async (req, res, next) => {
     try {
-        let result = await TaskList.findOne({_id: req.params.id});
+        const result = await TaskList.findOne({_id: req.params.id});
         if (result) {
             const i = result.members.indexOf(req.user.id);
             if (i !== -1) {
