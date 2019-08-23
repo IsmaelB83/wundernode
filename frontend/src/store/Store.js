@@ -87,13 +87,17 @@ function charReducer(state, action) {
     switch (action.type) {
         case 'LOGIN':
             newState = {...state};
+            // Cargo el usuario en el store y en el localstorag
             newState.user = action.payload.user;
             localStorage.setItem('user', JSON.stringify(newState.user));
             return newState;
         case 'LOGOFF':
             newState = {...state};
+            // Reseteo el estado
             newState.user = {};
-            localStorage.clear('user');
+            newState.lists = [];
+            newState.selected = {};
+            localStorage.clear();
             return newState;
         case 'LOAD_LISTS':
             newState = {...state};
