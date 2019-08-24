@@ -32,17 +32,18 @@ const TaskListSchema = new Schema(
 * @param {Boolean} fields Para indicar los campos a obtener
 * @param {Function} callback Función a llamar al terminar la consulta
 */
-TaskListSchema.statics.list = function(description, owner, members, limit, skip, fields, callback) {
+TaskListSchema.statics.list = function(id, description, owner, members, limit, skip, fields, callback) {
     try {
         // Genero filtrado
         let filter = {}
+        if (id) filter._id = { '_id': id };
         if (description) filter.description = { '$regex': `^${description}`, '$options': 'i' };
         if (owner) filter.owner = owner;
         if (members) filter.members = members;
         // Preparo la query
         let queryDB = TaskList.find(filter)
-            .populate('members', '-avatar -password -token -createdAt -updatedAt')
-            .populate('owner', '-avatar -password -token -createdAt -updatedAt');
+            .populate('members', '-_id -password -token -createdAt -updatedAt')
+            .populate('owner', '-_id -password -token -createdAt -updatedAt');
         queryDB.limit(limit);
         queryDB.skip(skip);
         queryDB.select(fields);

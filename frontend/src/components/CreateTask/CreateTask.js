@@ -11,58 +11,7 @@ import { actions } from '../../store/Store';
 import './CreateTask.css';
 
 // Imagine you have a list of languages that you'd like to autosuggest.
-const members = [
-    {
-        avatar: '/public/img/avatars/tam.png',
-        name: 'Tamara Mazuela',
-        email: 'tamara@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/olivia.png',
-        name: 'Olivia Bernal',
-        email: 'olivia@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/tam.png',
-        name: 'Isabel Albillos',
-        email: 'isabela@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/olivia.png',
-        name: 'Isabel Bernal',
-        email: 'isabelb@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/isma.png',
-        name: 'Rodrigo Bernal',
-        email: 'rodrigob@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/isma.png',
-        name: 'Lucas Bernal',
-        email: 'lucasb@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/isma.png',
-        name: 'Teofilo Mazuela',
-        email: 'teofilom@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/tam.png',
-        name: 'Claudia Mazuela',
-        email: 'claudiam@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/tam.png',
-        name: 'Aurora Gallo',
-        email: 'aurorag@gmail.com'
-    },
-    {
-        avatar: '/public/img/avatars/isma.png',
-        name: 'Ismael Bernal',
-        email: 'ismaelb@gmail.com'
-    }
-];
+let members = [];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = value => {
@@ -114,6 +63,21 @@ class CreateTaskAux extends React.Component {
             // Autosuggestion input field
             value: '',
             suggestions: []
+        }
+    }
+    
+    componentDidMount() {
+        if (this.props.user.token) {
+            members = [];
+            Axios.get('/users/friends', { headers: { 'Authorization': "bearer " + this.props.user.token }})
+            .then (result => {
+                result.data.results.forEach(u => {
+                    members.push(u);
+                });
+            })
+            .catch(error => {
+                alert('No se han encontrado amigos');
+            });
         }
     }
     
@@ -179,34 +143,34 @@ class CreateTaskAux extends React.Component {
                                                 inputProps={inputProps}
                                         />
                                         <button className='member-button' onClick={this.addMember}>
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            <i className="fa fa-plus" aria-hidden="true"></i>
                                         </button>
                                     </div>
-                                    <div className='tab-members'>
-                                        <div className='popup-owner'>   
+                                    <ol className='tab-members'>
+                                        <li className='popup-owner'>   
                                             <img src={this.props.user.avatar} alt="avatar"></img>
                                             <div className='popup-ownerdata'>
                                                 <p className='user'>{this.props.user.name}<span className='owner'>owner</span></p>
                                                 <p className='email'>{this.props.user.email}</p>
                                             </div>
-                                        </div>    
+                                        </li>    
                                         {
                                             this.state.members.map((member, index) => {
-                                                return  <div className='member'>
+                                                return  <li className='member'>
                                                             <div className='popup-owner'>   
                                                                 <img src={member.avatar} alt="avatar"></img>
                                                                 <div className='popup-ownerdata'>
-                                                                    <p className='user'>{member.name}<span className='member red'>not sent</span></p>
+                                                                    <p className='user'>{member.name}<span className='member member--red'>not sent</span></p>
                                                                     <p className='email'>{member.email}</p>
                                                                 </div>
                                                             </div> 
                                                             <button className='member-button' data-index={index} onClick={this.removeMember}>
-                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                <i className="fa fa-trash" aria-hidden="true"></i>
                                                             </button>
-                                                        </div>
+                                                        </li>
                                             })
                                         }
-                                    </div>
+                                    </ol>
                                 </div>
                             </div>
                         <div className='popup-footer'>
@@ -223,25 +187,22 @@ class CreateTaskAux extends React.Component {
             try {
                 if (this.state.taskListName) {
                     const members = [];
-                    this.state.members.forEach(m => members.push(m.email));
+                    this.state.members.forEach(m => members.push(m._id));
                     const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
-                    data: { 
-                        description: this.state.taskListName,
-                        members
-                    }
-                });
-                if (result.status === 200) {
-                    this.props.addTaskList(result.data.result);
-                    this.setState({
-                        taskListName: '',
-                        popup: false
+                        data: { description: this.state.taskListName, members }
                     });
+                    if (result.status === 200) {
+                        this.props.addTaskList(result.data.result);
+                        this.setState({
+                            taskListName: '',
+                            popup: false
+                        });
+                    }
                 }
+            } catch (error) {
+                console.log(error)
             }
-        } catch (error) {
-            console.log(error)
         }
-    }
        
     /**
     * Añadir un miembro a la lista

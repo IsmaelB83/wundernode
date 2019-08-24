@@ -18,7 +18,7 @@ const ctrl = {};
 ctrl.list = async (req, res, next) => {
     try {
         // Listado
-        TaskList.list(req.query.description, req.query.owner, req.user.id, parseInt(req.query.limit), 
+        TaskList.list(req.query.id, req.query.description, req.query.owner, req.user.id, parseInt(req.query.limit), 
             parseInt(req.query.skip), req.query.fields, function(error, results) {
                 // Error
                 if (error) {
@@ -46,18 +46,19 @@ ctrl.list = async (req, res, next) => {
  */
 ctrl.get = async (req, res, next) => {
     try {
-        const result = await TaskList.findById(req.params.id);
-        if (result) {
-            const i = result.members.indexOf(req.user.id);
-            if (i !== -1) {
-                return res.json({
+        // Listado
+        TaskList.list(req.params.id, null, null, req.user.id, 1, 0, null, 
+            function(error, result) {
+                // Error
+                if (error) {
+                    return next(error);
+                }
+                // Ok
+                res.json({
                     success: true,
-                    result: result
+                    result: result[0]
                 });
-            }
-            return next({status: 401, description: 'Tasklist not authorized'});
-        }
-        next ({status: 404, description: 'Not found'});
+        });
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);
@@ -96,7 +97,7 @@ ctrl.create = async (req, res, next) => {
 }
 
 /**
- * Actualiza el listao de tareas sólo en caso de que el usuario logueado
+ * Actualiza el lista de tareas sólo en caso de que el usuario logueado
  * sea miembro de la lista
  * @param {Request} req Request de la petición
  * @param {Response} res Response de la petición
@@ -104,25 +105,29 @@ ctrl.create = async (req, res, next) => {
  */
 ctrl.update = async (req, res, next) => {
     try {
-        const result = await TaskList.findOne({_id: req.params.id});
-        if (result) {
-            const i = result.members.indexOf(req.user.id);
-            if (i !== -1) {
-                result.description = req.body.description || result.description;
-                result.members = req.body.members || result.members;
-                result = await result.save();
-                return res.json({
-                    success: true, 
-                    result: result
-                });
-            }
-            return next({status: 401, description: 'Tasklist not authorized'});
+        // Añado los miembros indicados
+        const members = [];
+        if (req.body.members) {
+            const users = await User.find();
+            users.forEach(u => {
+                if (req.body.members.indexOf(u.email) > -1) {
+                    members.push(u._id);
+                }
+            });
         }
-        next({
-            status: 404,
-            description: 'Tasklist not found',
-        });
-        
+        // Añado los nuevos miembros a la lista
+        const result = await TaskList.findOneAndUpdate(
+            { _id: req.params.id, 'members': req.user.id },
+            { $push: { members: members } },
+            { new: true }
+        );
+        if (result) {
+            return res.json({
+                success: true, 
+                result: result
+            });
+        }
+        return next({status: 401, description: 'Tasklist not authorized'});
     } catch (error) {
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next(error);

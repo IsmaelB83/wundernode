@@ -116,28 +116,32 @@ function charReducer(state, action) {
             if (newState.selected.id) {
                 index = newState.lists.findIndex(l => l.id === newState.selected.id);
             }
-            newState.selected['id'] = action.payload.lists[index]._id;
-            newState.selected['tasks'] = [];
+            newState.selected.id = action.payload.lists[index]._id;
+            newState.selected.members = action.payload.lists[index].members;
+            newState.selected.owner = action.payload.lists[index].owner;
+            newState.selected.tasks = [];
             action.payload.lists[index].tasks.forEach(t => {
                 newState.selected.tasks.push({
                     id: t._id,
                     description: t.description,
                     completed: t.completed,
-                    starred: t.starred
+                    starred: t.starred,
                 });
             });
             return newState;
         case 'LOAD_LIST':
             newState = {...state};
             // Genero el objeto de la lista actual
-            newState.selected['id'] = action.payload.list._id;
-            newState.selected['tasks'] = [];
+            newState.selected.id = action.payload.list._id;
+            newState.selected.members = action.payload.list.members;
+            newState.selected.owner = action.payload.list.owner;
+            newState.selected.tasks = [];
             action.payload.list.tasks.forEach(t => {
                 newState.selected.tasks.push({
                     id: t._id,
                     description: t.description,
                     completed: t.completed,
-                    starred: t.starred
+                    starred: t.starred,
                 });
             });
             return newState;

@@ -15,6 +15,8 @@ module.exports = () => {
     if (process.env.NODE_ENV || 'dev') {
         router.get('/', UserCtrl.list);
     }
+    // Listado de amigos (por el momento devuelve todos los usuarios)
+    router.get('/friends', Auth, UserCtrl.listFriends);
     // Nueva cuenta de usuario y activación vía token recibido en el mail indicado
     router.post('/', [
         body('name').isLength({min:1, max: 30}).withMessage('debe estar entre 1 y 30 carácteres'),

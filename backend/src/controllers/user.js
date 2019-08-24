@@ -122,6 +122,27 @@ ctrl.list = async (req, res, next) => {
 }
 
 /**
+ * Listado de usuarios con los que tenemos relación de amistad
+ * @param {Request} req Request web
+ * @param {Response} res Response web
+ * @param {Middleware} next Siguiente middleware al que llamar
+ */
+ctrl.listFriends = async (req, res, next) => {
+    try {
+        // Listado
+        const results = await User.find().select('-_id -token -password -jwt -createdAt -updatedAt');
+        res.json({
+            success: true,
+            count: results.length,
+            results: results
+        });
+    } catch (error) {
+        if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
+        next(error);
+    }
+}
+
+/**
  * Crear un nuevo usuario en la base de datos, y enviar mail para solicitar activación
  * @param {Request} req Request web
  * @param {Response} res Response web

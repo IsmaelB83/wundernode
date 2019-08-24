@@ -104,14 +104,9 @@
     text-transform: uppercase;
 }
 
-.popup-ownerdata .member--red {
+.popup-ownerdata .member {
     border-color: red;
     color: red;
-}
-
-.popup-ownerdata .member--blue {
-    border-color: blue;
-    color: blue;
 }
 
 .popup-owner--result {
