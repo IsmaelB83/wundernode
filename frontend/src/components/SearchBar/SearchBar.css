@@ -17,3 +17,8 @@
     color: white;
     padding: 0 5px;
 }
+
+.search-input:focus, .search-input:active, .search-input:hover {
+  outline: 0 !important;
+  box-shadow: none !important;
+}

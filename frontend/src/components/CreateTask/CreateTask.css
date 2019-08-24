@@ -68,9 +68,8 @@
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    margin: 10px 0;
-    border-top: 1px solid grey;
-    padding: 10px;
+    margin: 5px 0;
+    padding: 0 5px;
 }
 
 .popup-owner img {
@@ -78,9 +77,40 @@
     margin-right: 20px; 
 }
 
-.popup-owner span {
-    text-transform: capitalize;
+.popup-ownerdata {
+    flex-direction: column;
+}
+
+.popup-ownerdata p {
+    font-size: .8rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.popup-ownerdata .user {
     font-weight: bold;
+}
+
+.popup-ownerdata .owner, 
+.popup-ownerdata .member {
+    border: 1px solid blue;
+    color: blue;
+    border-radius: 7px;
+    padding: .5px 5px;
+    line-height: 1.1rem;
+    font-size: .5rem;
+    margin-left: 5px;
+    text-transform: uppercase;
+}
+
+.popup-ownerdata .member {
+    border-color: red;
+    color: red;
+}
+
+.popup-owner--result {
+    cursor: pointer;
 }
 
 .owner-avatar img {
@@ -100,4 +130,56 @@
 
 .popup-input--block {
     width: 100%;
+}
+
+.tab-members {
+    margin-top: 15px;
+    border-top: 1px solid grey;
+    padding-top: 5px;
+}
+
+.member {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.member-button {
+    background-color: transparent;
+    padding: 5px 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin-left: 30px;
+    font-size: .9rem;
+}
+
+.member-button:hover {
+    background-color: lightgray;
+    color: white;
+}
+
+.autosuggest-wrapper {
+    display: flex;
+    align-items: flex-start;
+}
+
+.autosuggest-wrapper .react-autosuggest__input {
+    padding: 6px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #d6d6d6;
+    width: 100%;
+}
+
+.autosuggest-wrapper .react-autosuggest__container {
+    width: 100%;
+    flex-grow: 1;
+}
+
+.autosuggest-wrapper button {
+    margin-left: 10px;
 }

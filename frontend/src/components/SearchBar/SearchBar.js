@@ -20,8 +20,7 @@ export default class SearchBar extends React.Component {
                 <input  className='search-input'
                         onFocus={()=>{this.setState({focus:true})}}
                         onBlur={()=>{this.setState({focus:false})}}
-                >
-                </input>
+                />
                 <ButtonLight icon={this.state.focus?'fas fa-times':'fas fa-search'} color='white'/>
             </div>
         );

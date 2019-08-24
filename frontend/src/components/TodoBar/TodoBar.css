@@ -16,6 +16,11 @@
     color: #A7BDC4;
 }
 
+.addTask-input:focus, .addTask-input:active, .addTask-input:hover {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
 /* Posicionamiento de los botones dentro del input*/
 .addTask-actions--left {
     position: absolute;

@@ -1,37 +1,154 @@
 /* Import node modules */
 import React from 'react';
-import Modal from 'react-awesome-modal';
-import { connect } from 'react-redux';
 import Axios from 'axios';
+import { connect } from 'react-redux';
+import Modal from 'react-awesome-modal';
+import Autosuggest from 'react-autosuggest';
 /* Import own modules */
-import InputIcon from '../Inputs/InputIcon';
 import ButtonBase from '../Buttons/ButtonBase';
 import { actions } from '../../store/Store';
 /* Import own css */
 import './CreateTask.css';
 
-/**
- * 
- */
-class CreateTaskAux extends React.Component {
+// Imagine you have a list of languages that you'd like to autosuggest.
+const members = [
+    {
+        avatar: '/public/img/avatars/tam.png',
+        name: 'Tamara Mazuela',
+        email: 'tamara@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/olivia.png',
+        name: 'Olivia Bernal',
+        email: 'olivia@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/tam.png',
+        name: 'Isabel Albillos',
+        email: 'isabela@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/olivia.png',
+        name: 'Isabel Bernal',
+        email: 'isabelb@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/isma.png',
+        name: 'Rodrigo Bernal',
+        email: 'rodrigob@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/isma.png',
+        name: 'Lucas Bernal',
+        email: 'lucasb@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/isma.png',
+        name: 'Teofilo Mazuela',
+        email: 'teofilom@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/tam.png',
+        name: 'Claudia Mazuela',
+        email: 'claudiam@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/tam.png',
+        name: 'Aurora Gallo',
+        email: 'aurorag@gmail.com'
+    },
+    {
+        avatar: '/public/img/avatars/isma.png',
+        name: 'Ismael Bernal',
+        email: 'ismaelb@gmail.com'
+    }
+];
 
+// Teach Autosuggest how to calculate suggestions for any given input value.
+const getSuggestions = value => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+    
+    return inputLength === 0 ? [] : members.filter(lang =>
+        lang.name.toLowerCase().slice(0, inputLength) === inputValue
+    );
+};
+    
+// When suggestion is clicked, Autosuggest needs to populate the input
+// based on the clicked suggestion. Teach Autosuggest how to calculate the
+// input value for every given suggestion.
+const getSuggestionValue = suggestion => suggestion.email;
+    
+// Use your imagination to render suggestions.
+const renderSuggestion = suggestion => (
+    <div className='popup-owner popup-owner--result'>   
+        <img src={suggestion.avatar} alt="avatar"></img>
+        <div className='popup-ownerdata'>
+            <p className='user'>{suggestion.name}</p>
+            <p className='email'>{suggestion.email}</p>
+        </div>
+    </div>   
+);
+        
+/**
+* 
+*/
+class CreateTaskAux extends React.Component {
+    
     /**
-     * Constructor
-     * @param {*} props 
-     */
+    * Constructor
+    * @param {*} props 
+    */
     constructor(props) {
         // Superclass
         super(props);
         // Event handlers
+        this.removeMember = this.removeMemberEventHandler.bind(this);
+        this.addMember = this.addMemberEventHandler.bind(this);
         this.createList = this.createListEventHandler.bind(this);
         // Estado
         this.state = {
             popup : false,
             taskListName: '',
+            members: [],
+            // Autosuggestion input field
+            value: '',
+            suggestions: []
         }
     }
-
+    
+    onChange = (event, { newValue }) => {
+        this.setState({
+            value: newValue
+        });
+    };
+    
+    // Autosuggest will call this function every time you need to update suggestions.
+    // You already implemented this logic above, so just use it.
+    onSuggestionsFetchRequested = ({ value }) => {
+        this.setState({
+            suggestions: getSuggestions(value)
+        });
+    };
+    
+    // Autosuggest will call this function every time you need to clear suggestions.
+    onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    };
+    
+    
     render() {
+        // Capture state variables
+        const { value, suggestions } = this.state;
+        // Autosuggest will pass through all these props to the input.
+        const inputProps = {
+            placeholder: `Enter the user's name`,
+            value,
+            onChange: this.onChange
+        };
+        
         return (
             <div className='createbutton'>
                 <button className='createbutton-link' href='' onClick={ev => this.setState({popup: true})}>
@@ -42,28 +159,56 @@ class CreateTaskAux extends React.Component {
                         <div className='popup-header'>
                             <h3 className='popup-title'>Create New List</h3>
                             <input className='popup-input popup-input--block' 
-                                   placeholder='List Name'
-                                   onChange={ev=>this.setState({taskListName: ev.currentTarget.value})}
-                                   onKeyPress={(ev) => { if(ev.key==='Enter') { this.createList()}}}
+                                placeholder='List Name'
+                                onChange={ev=>this.setState({taskListName: ev.currentTarget.value})}
+                                onKeyPress={(ev) => { if(ev.key==='Enter') { this.createList()}}}
                             />
-                        </div>
-                        <div className='popup-body'>
-                            <div className='tab-panel'>
-                                <div className='tab-options'>
-                                    <span>List members</span>
-                                </div>
-                                <div className='tab-members'>
-                                    <InputIcon  input='popup-input popup-input--block' 
-                                                icon='fas fa-user-plus' 
-                                                placeholder='Name or email address...'
-                                                size='lg'/>
-                                    <div className='popup-owner'>   
-                                        <img src={this.props.user.avatar} alt="avatar"></img>
-                                        <span>{this.props.user.name}</span>
-                                    </div>                                                
+                            </div>
+                            <div className='popup-body'>
+                                <div className='tab-panel'>
+                                    <div className='tab-options'>
+                                        <span>List members</span>
+                                    </div>
+                                    <div className='autosuggest-wrapper'>
+                                        <Autosuggest
+                                                suggestions={suggestions}
+                                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                                                getSuggestionValue={getSuggestionValue}
+                                                renderSuggestion={renderSuggestion}
+                                                inputProps={inputProps}
+                                        />
+                                        <button className='member-button' onClick={this.addMember}>
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div className='tab-members'>
+                                        <div className='popup-owner'>   
+                                            <img src={this.props.user.avatar} alt="avatar"></img>
+                                            <div className='popup-ownerdata'>
+                                                <p className='user'>{this.props.user.name}<span className='owner'>owner</span></p>
+                                                <p className='email'>{this.props.user.email}</p>
+                                            </div>
+                                        </div>    
+                                        {
+                                            this.state.members.map((member, index) => {
+                                                return  <div className='member'>
+                                                            <div className='popup-owner'>   
+                                                                <img src={member.avatar} alt="avatar"></img>
+                                                                <div className='popup-ownerdata'>
+                                                                    <p className='user'>{member.name}<span className='member red'>not sent</span></p>
+                                                                    <p className='email'>{member.email}</p>
+                                                                </div>
+                                                            </div> 
+                                                            <button className='member-button' data-index={index} onClick={this.removeMember}>
+                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <div className='popup-footer'>
                             <ButtonBase className='mr-2' onClick={ev => this.setState({popup: false})} text='Cancel'/>
                             <ButtonBase onClick={this.createList} text='Save' color='lightblue'/>
@@ -71,14 +216,19 @@ class CreateTaskAux extends React.Component {
                     </div>
                 </Modal>
             </div>
-        );
-    };
-
-    async createListEventHandler() {
-        try {
-            if (this.state.taskListName) {
-                const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
-                    data: { description: this.state.taskListName }
+            );
+        };
+        
+        async createListEventHandler() {
+            try {
+                if (this.state.taskListName) {
+                    const members = [];
+                    this.state.members.forEach(m => members.push(m.email));
+                    const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
+                    data: { 
+                        description: this.state.taskListName,
+                        members
+                    }
                 });
                 if (result.status === 200) {
                     this.props.addTaskList(result.data.result);
@@ -92,30 +242,29 @@ class CreateTaskAux extends React.Component {
             console.log(error)
         }
     }
-
+       
     /**
-     * Autocompletar miembros posibles para la lista
-     * @param {Event} ev Evento generado
-     */
-    async autocompleteMemberEventHandler(ev) {
-        try {
-            
-        } catch (error) {
-            
+    * Añadir un miembro a la lista
+    * @param {Event} ev Evento generado
+    */
+    addMemberEventHandler() {
+        const member =  members.find(m => m.email === this.state.value);
+        if(member) {
+            const stateMembers = this.state.members;
+            stateMembers.push(member);
+            this.setState({members: stateMembers});
         }
     }
 
     /**
-     * Añadir un miembro a la lista
-     * @param {Event} ev Evento generado
-     */
-    async addMemberEventHandler(ev) {
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
+    * Añadir un miembro a la lista
+    * @param {Event} ev Evento generado
+    */
+    removeMemberEventHandler(ev) {
+        const members = this.state.members;
+        members.splice(ev.currentTarget.dataset.index,1);
+        this.setState({members});
+    } 
 }
 
 // React-Redux

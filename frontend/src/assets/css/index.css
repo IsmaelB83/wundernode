@@ -1,8 +1,7 @@
 /**
  * Generic styles 
  **/
-
-*, *::before, *::after {
+*, *::before, *::after, p {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -11,12 +10,6 @@
 a { 
   text-decoration: none !important;
   font-weight: bold;
-}
-
-input:focus, input:active, input:hover,
-button:focus, button:active, button:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
 }
 
 ul, li {
