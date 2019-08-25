@@ -7,7 +7,7 @@ import ButtonHeading from '../../components/Buttons/ButtonHeading/ButtonHeading'
 import TodoBar from '../../components/TodoBar/TodoBar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import ToolBar from '../../components/ToolBar/ToolBar';
-import TodoPanel from '../../containers/TodoPanel/TodoPanel';
+import TodoListContainer from '../../containers/TodoListContainer/TodoListContainer';
 import ModalTaskList from '../../containers/ModalTaskList/ModalTaskList';
 import { actions } from '../../store/Store';
 /* Import css */
@@ -26,6 +26,7 @@ class AppAux extends React.Component {
     constructor(props){
         super(props);
         this.modal = React.createRef();
+        this.listCompleted = React.createRef();
         this.state = {
             modalTask: false,
             modalType: null,
@@ -70,9 +71,9 @@ class AppAux extends React.Component {
                     <div className='App-main_wrapper'>
                         <TodoBar id='todoBar' addTodo={this.addTodo}/>
                         <div className='MainContainer-todos'>
-                            <TodoPanel id='todosPending' completed={false}/>
+                            <TodoListContainer id='todosPending' completed={false}/>
                             <ButtonHeading text='Show completed to-dos' onClick={ev=>this.setState({showCompleted: !this.state.showCompleted})}/>
-                            <TodoPanel id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
+                            <TodoListContainer id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
                         </div>
                     </div>
                 </div>

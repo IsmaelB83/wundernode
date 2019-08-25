@@ -25,7 +25,7 @@ ctrl.list = async (req, res, next) => {
                     return next(error);
                 }
                 // Ok
-                res.json({
+                return res.json({
                     success: true,
                     count: results.length,
                     results: results
@@ -54,6 +54,7 @@ ctrl.get = async (req, res, next) => {
                     return next(error);
                 }
                 // Ok
+                console.log(result[0]);
                 res.json({
                     success: true,
                     result: result[0]

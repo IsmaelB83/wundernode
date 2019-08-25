@@ -132,7 +132,7 @@ function charReducer(state, action) {
                 });
             });
             // Genero el objeto de la lista actual
-            if (newState.lists.length>0) {
+            if (newState.lists.length > 0) {
                 let index = 0;
                 if (newState.selected.id) {
                     index = newState.lists.findIndex(l => l.id === newState.selected.id);
@@ -167,7 +167,7 @@ function charReducer(state, action) {
                     completed: t.completed,
                     starred: t.starred,
                 });
-            });
+            });                
             return newState;
         case 'ADD_TODO':
             newState = {...state};

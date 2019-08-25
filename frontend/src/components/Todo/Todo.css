@@ -1,5 +1,5 @@
-/* Todo */
-.todo {
+/* To-do */
+.Todo {
     position: relative;
     height: 46px;
     padding: 7.5px 15px;
@@ -10,12 +10,12 @@
     cursor: pointer;
 }
 
-.todo a,
-.todo a:hover {
+.Todo a,
+.Todo a:hover {
     color: rgba(0, 0, 0, 0.35);
 }
 
-.todo-star {
+.Todo-star {
     position: absolute;
     top: 0;
     right: 12px;
@@ -27,7 +27,7 @@
     align-items: center;
 }
 
-.todo-star a {
+.Todo-star a {
     cursor: pointer;
 }
 
@@ -35,8 +35,8 @@
     width: 20px;
 }
 
-/* Contenedor del nombre del todo y fecha de fin del todo */
-.todo-nameWrapper {
+/* Contenedor del nombre del Todo y fecha de fin del Todo */
+.Todo-nameWrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@
 }
 
 /**/
-.todo-due {
+.Todo-due {
     display: block;
     width: 80px;
     font-size: 12px;
@@ -55,35 +55,35 @@
 }
 
 /* Estilos dependiendes de estados */
-.todoList--done .todo {
+.TodoList--done .Todo {
     background-color: #BDCDD2;
 }
 
-.todoList--done .todo-name {
+.TodoList--done .Todo-name {
     line-height: 18px;
 }
 
 
-.todo-star--starred {
+.Todo-star--starred {
     background-color: #d74e48;
     clip-path: polygon(0 0, 100% 0%, 100% 100%, 50% 85%, 0 100%);
 }
 
-.todoList--done .todo-star--starred {
+.TodoList--done .Todo-star--starred {
     background-color: #A26162;
 }
 
-.todo--active {
+.Todo--active {
     background-color: #E1F2FE;
 }
 
-.todo--done .todo-done {
+.Todo--done .Todo-done {
     font-size: .65rem;
     line-height: .65rem;
     color: #1E333A;
 }
 
-.todo--done .todo-name {
+.Todo--done .Todo-name {
     font-size: .9rem;
     text-decoration: line-through;
     margin: 0;
