@@ -34,7 +34,7 @@ export default class TodoBar extends React.Component {
                     { !this.state.focus && <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTodo}/> } 
                 </div>
                 <div className='TodoBar-actions--right'>
-                    <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt'/>
+                    <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt' onClick={ev=>alert('Not implemented yet')}/>
                     <ButtonLight className='btn' color='white' icon={this.state.starred?'fas fa-star':'far fa-star'} onClick={ev=>this.setState({starred: !this.state.starred})} />
                 </div>
                 <input  type='text'

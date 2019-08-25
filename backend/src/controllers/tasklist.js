@@ -76,15 +76,9 @@ ctrl.create = async (req, res, next) => {
         const taskList = new TaskList();
         // Configuro la lista
         taskList.description = req.body.description;
-        taskList.members = [req.user.id]
         taskList.owner = req.user.id;
-        // Añado al resto de miembros indicados
-        const users = await User.find();
-        users.forEach(u => {
-            if (req.body.members.indexOf(u.email) > -1) {
-                taskList.members.push(u._id);
-            }
-        });
+        taskList.members = [req.user.id]
+        if (req.body.members) req.body.members.forEach(m => taskList.members.push(m.id));
         await taskList.save();
         res.json({
             success: true,

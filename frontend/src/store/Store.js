@@ -101,7 +101,12 @@ function charReducer(state, action) {
             // TEMPORAL
             newState.user.friends = [];
             Axios.get('/users/friends', { headers: { 'Authorization': "bearer " + newState.user.token }})
-            .then (result => result.data.results.forEach(u => newState.user.friends.push(u)))
+            .then (result => result.data.results.forEach(u => newState.user.friends.push({
+                id: u._id,
+                name: u.name,
+                email: u.email,
+                avatar: u.avatar
+            })))
             .catch(error => alert('No se han encontrado amigos'));
             // Register user in local storage (TEMPORAL. Not secure)
             localStorage.setItem('user', JSON.stringify(newState.user));
@@ -127,23 +132,25 @@ function charReducer(state, action) {
                 });
             });
             // Genero el objeto de la lista actual
-            let index = 0;
-            if (newState.selected.id) {
-                index = newState.lists.findIndex(l => l.id === newState.selected.id);
-            }
-            newState.selected.id = action.payload.lists[index]._id;
-            newState.selected.description = action.payload.lists[index].description;
-            newState.selected.members = action.payload.lists[index].members;
-            newState.selected.owner = action.payload.lists[index].owner;
-            newState.selected.tasks = [];
-            action.payload.lists[index].tasks.forEach(t => {
-                newState.selected.tasks.push({
-                    id: t._id,
-                    description: t.description,
-                    completed: t.completed,
-                    starred: t.starred,
+            if (newState.lists.length>0) {
+                let index = 0;
+                if (newState.selected.id) {
+                    index = newState.lists.findIndex(l => l.id === newState.selected.id);
+                }
+                newState.selected.id = action.payload.lists[index]._id;
+                newState.selected.description = action.payload.lists[index].description;
+                newState.selected.members = action.payload.lists[index].members;
+                newState.selected.owner = action.payload.lists[index].owner;
+                newState.selected.tasks = [];
+                action.payload.lists[index].tasks.forEach(t => {
+                    newState.selected.tasks.push({
+                        id: t._id,
+                        description: t.description,
+                        completed: t.completed,
+                        starred: t.starred,
+                    });
                 });
-            });
+            }
             return newState;
         case 'LOAD_LIST':
             newState = {...state};
@@ -172,7 +179,7 @@ function charReducer(state, action) {
                 starred: action.payload.todo.starred
             });
             // Añado un todo al panel de listas
-            index = newState.lists.findIndex(l => l.id === newState.selected.id);
+            let index = newState.lists.findIndex(l => l.id === newState.selected.id);
             if (index >= 0) {
                 newState.lists[index].tasks++;
                 newState.lists[index].starred+=action.payload.todo.starred?1:0;

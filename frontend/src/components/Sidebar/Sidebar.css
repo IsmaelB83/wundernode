@@ -6,3 +6,25 @@
     grid-template-rows: auto auto 1fr 90px;
     overflow: hidden;
 }
+
+.createbutton {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.createbutton-link {
+    display: inline-block;
+    position: relative;
+    padding: 9px 50px;
+    border: none;
+    font-weight: 400;
+    text-align: left;
+    background-color: transparent; 
+    color: #328ad6;
+}
+
+.createbutton-link i {
+    position: absolute;
+    font-size: 18px;
+    left: 20px;
+    top: 12px;
+}

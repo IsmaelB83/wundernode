@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import TaskPanel from '../../containers/TaskPanel/TaskPanel';
 import UserBar from '../../containers/UserBar/UserBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import CreateTask from '../../containers/CreateTask/CreateTask';
 /* Import css */
 import './Sidebar.css';
 
@@ -23,7 +22,11 @@ export default class Sidebar extends Component {
                 <SearchBar/>
                 <UserBar/>
                 <TaskPanel selected={this.props.selected}/>
-                <CreateTask/>
+                <div className='createButton'>
+                    <button className='createbutton-link' href='' onClick={this.props.onCreate}>
+                        <i className='fa fa-plus'></i>Create List
+                    </button>  
+                </div>
             </div>
         );
     }

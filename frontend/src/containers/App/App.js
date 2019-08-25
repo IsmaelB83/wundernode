@@ -8,7 +8,7 @@ import TodoBar from '../../components/TodoBar/TodoBar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import ToolBar from '../../components/ToolBar/ToolBar';
 import TodoPanel from '../../containers/TodoPanel/TodoPanel';
-import ShareTask from '../../containers/ShareTask/ShareTask'
+import ModalTaskList from '../../containers/ModalTaskList/ModalTaskList';
 import { actions } from '../../store/Store';
 /* Import css */
 import './App.css';
@@ -25,42 +25,12 @@ class AppAux extends React.Component {
      */
     constructor(props){
         super(props);
-        // Event Handlers
-        this.addTodo = this.addTodoEventHandler.bind(this);
-        // Estado inicial
+        this.modal = React.createRef();
         this.state = {
-            modalShare: false,
-            modalCreate: false,
+            modalTask: false,
+            modalType: null,
             showCompleted: false
         }
-    }
-
-    /**
-     * Render
-     */
-    render() {
-        return (
-            <div className='App'> 
-                <Sidebar className='App-sidebar'/>
-                <div className='App-main'>
-                    <ToolBar id='toolBar' description={this.props.selected.description} 
-                        onShare={() => this.setState({modal: true})}
-                        onSort={() => alert('Not implemented yet')}
-                        onMore={() => alert('Not implemented yet')}
-                        />
-                    <div className='App-main_wrapper'>
-                        <TodoBar id='todoBar' addTodo={this.addTodo}/>
-                        <div className='MainContainer-todos'>
-                            <TodoPanel id='todosPending' completed={false}/>
-                            <ButtonHeading text='Show completed to-dos' onClick={ev=>this.setState({showCompleted: !this.state.showCompleted})}/>
-                            <TodoPanel id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
-                        </div>
-                    </div>
-                </div>
-                <ShareTask visible={this.state.modalShare} selected={this.props.selected} friends={this.props.user.friends} 
-                           close={() => this.setState({modalShare: false})}/>
-            </div>
-        );
     }
 
     /**
@@ -85,46 +55,126 @@ class AppAux extends React.Component {
     }
 
     /**
-     * Compartir la lista con los nuevos miembros indicados
-     * @param {*} newMembers 
+     * Render
      */
-    async shareTask(newMembers) {
-        try {
-            if (newMembers.length > 0) {
-                const members = [];
-                newMembers.forEach(m => members.push(m.email));           
-                // Actualizo la lista       
-                const result = await Axios.put(`/tasklists/${this.state.id}`, null, { 
-                    headers: { 'Authorization': "bearer " + this.props.token },
-                    data: { members }
-                });
-                if (result.status === 200) {
-                    this.props.addMembers(newMembers);
-                }
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
+    render() {
+        return (
+            <div className='App'> 
+                <Sidebar className='App-sidebar' onCreate={this.createTaskListClick}/>
+                <div className='App-main'>
+                    <ToolBar id='toolBar' description={this.props.selected.description} 
+                        onShare={this.shareTaskListClick}
+                        onSort={() => alert('Not implemented yet')}
+                        onMore={() => alert('Not implemented yet')}
+                        />
+                    <div className='App-main_wrapper'>
+                        <TodoBar id='todoBar' addTodo={this.addTodo}/>
+                        <div className='MainContainer-todos'>
+                            <TodoPanel id='todosPending' completed={false}/>
+                            <ButtonHeading text='Show completed to-dos' onClick={ev=>this.setState({showCompleted: !this.state.showCompleted})}/>
+                            <TodoPanel id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
+                        </div>
+                    </div>
+                </div>
+                <ModalTaskList ref={this.modal}
+                               visible={this.state.modalTask}
+                               type={this.state.modalType}
+                               title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
+                               taskListName={this.state.modalType==='UPDATE'?this.props.selected.description:''}
+                               friends={this.props.user.friends} 
+                               members={this.state.modalType==='UPDATE'?this.props.selected.members:[{
+                                    id: this.props.user.id, 
+                                    name: this.props.user.name,
+                                    email: this.props.user.email, 
+                                    avatar: this.props.user.avatar}]
+                               }
+                               owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
+                               onClose={() => this.setState({modalTask: false, modalType: null})} 
+                               onAccept={this.modalTaskListAccept}/>
+            </div>
+        );
     }
 
     /**
-     * Crear una tasklist con los miembros indicados
-     * @param {String} description Nombre de la tasklist
-     * @param {Array} members Arrany de miembros de la tasklist
+     * Click en compartir task list
      */
-    async createTaskList(description, members) {
+    shareTaskListClick = () => {
+        // Sólo se permite modificar una tarea de la que seas propietario
+        if(this.props.selected.owner && this.props.selected.owner.email === this.props.user.email) {
+            this.modal.current.refreshData(
+                'UPDATE', 
+                'Share TaskList with your friends', 
+                this.props.selected.description,
+                this.props.selected.owner, 
+                this.props.selected.members, 
+                this.props.user.friends
+            );
+            this.setState({modalTask: true, modalType: 'UPDATE'});
+        } else {
+            alert('Sólo el propietario de la lista puede invitar a otras personas');
+        } 
+    }
+
+    /**
+     * Click en crear una tasklist
+     */
+    createTaskListClick = () => {
+        this.modal.current.refreshData(
+            'CREATE', 
+            'Create a new TaskList',
+            '',
+            this.props.user, 
+            [{  id: this.props.user.id, 
+                name: this.props.user.name,
+                email: this.props.user.email, 
+                avatar: this.props.user.avatar}
+            ], 
+            this.props.user.friends
+        );
+        this.setState({modalTask: true, modalType: 'CREATE'})
+    }
+
+    /**
+     * 
+     * Gestiona el evento de aceptación del modal de tasklist (creación o edición de lista)
+     * @param {String} members Nombre descriptivo de la lista
+     * @param {Array} members Miembros a añadir a la lista
+     */
+    modalTaskListAccept = async (description, members) => {
         try {
-            if (description) {
-                const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
-                    data: { description: description, members }
-                });
-                if (result.status === 200) {
-                    this.props.addTaskList(result.data.result);
-                    this.setState({modalCreate: false});
+            switch (this.state.modalType) {
+                // Creo una nueva lista 
+                case 'CREATE': {
+                    const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
+                        data: { description: description, members }
+                    });
+                    if (result.status === 200) {
+                        this.props.addTaskList(result.data.result);
+                        this.setState({modalTask: false});
+                    }
+                    break;      
+                }      
+                // Actualizo la lista       
+                case 'UPDATE': {
+                    const result = await Axios.put(`/tasklists/${this.state.id}`, null, { 
+                        headers: { 'Authorization': "bearer " + this.props.token },
+                        data: { members }
+                    });
+                    if (result.status === 200) {
+                        this.props.addMembers(members);
+                        this.setState({modalTask: false});
+                    }
+                    break; 
+                }
+                // Error incontrolado
+                default: { 
+                    alert('Error incontrolado'); 
+                    break;           
                 }
             }
-        } catch (error) {
+            
+        }
+        catch (error) {
             console.log(error)
         }
     }
@@ -133,7 +183,7 @@ class AppAux extends React.Component {
      * Añadir un todo a la lista actual
      * @param {String} description Nombre del todo a crear 
      */
-    async addTodoEventHandler(description) {
+    addTodo = async (description) => {
         if (this.state.input === '') {
             this.setState({focus: true});
         } else {
@@ -172,6 +222,7 @@ const mapState = (state) => {
 
 const mapActions = {
     loadLists: actions.loadLists,
+    addTaskList: actions.addTaskList,
     addTodo: actions.addTodo,
     addMembers: actions.addMembers,
 }

@@ -53,7 +53,7 @@
 }
 
 .tab-options {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .tab-options span {
@@ -132,19 +132,12 @@
     width: 100%;
 }
 
-.tab-members {
-    margin-top: 15px;
-    border-top: 1px solid grey;
-    padding-top: 5px;
-}
-
 .member {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
-
 
 .member-button {
     background-color: transparent;

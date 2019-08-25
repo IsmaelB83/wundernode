@@ -28,12 +28,12 @@ export default class SearchBar extends Component {
     render() {
         return (
             <div className='SearchBar'>
-                <ButtonLight icon='fas fa-bars' color='white'/>
+                <ButtonLight icon='fas fa-bars' color='white' onClick={ev=>alert('Not implemented yet')}/>
                 <input  className='SearchBar-input'
                         onFocus={()=>{this.setState({focus:true})}}
                         onBlur={()=>{this.setState({focus:false})}}
                 />
-                <ButtonLight icon={this.state.focus?'fas fa-times':'fas fa-search'} color='white'/>
+                <ButtonLight icon={this.state.focus?'fas fa-times':'fas fa-search'} color='white' onClick={ev=>alert('Not implemented yet')}/>
             </div>
         );
     };
