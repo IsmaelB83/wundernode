@@ -239,12 +239,8 @@ function charReducer(state, action) {
         case 'ADD_MEMBERS': {
             newState = {...state};
             // Añado miembros a la lista actual
-            const i = newState.lists.findIndex(l => l.id === newState.selected.id);
-            action.payload.members.forEach(m => {
+            action.payload.members.filter(m=>m.newMember).forEach(m => {
                 newState.selected.members.push(m);
-                if (i >= 0) {
-                    newState.lists[i].members.push(m);
-                }
             });
             // Forzar el render
             newState.switch = !newState.switch;

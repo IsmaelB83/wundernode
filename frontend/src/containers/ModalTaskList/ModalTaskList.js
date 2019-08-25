@@ -150,7 +150,7 @@ export default class ModalTaskList extends React.Component {
         if (ev.currentTarget.value!==this.state.owner.email) {
             const members = this.state.members;
             members.splice(ev.currentTarget.dataset.index,1);
-            this.setState({members});   
+            this.setState({members});
         } else {
             alert('No puede eliminar el propietario de la lista');
         }

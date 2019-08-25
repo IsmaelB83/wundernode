@@ -127,8 +127,8 @@ class AppAux extends React.Component {
             [{  id: this.props.user.id, 
                 name: this.props.user.name,
                 email: this.props.user.email, 
-                avatar: this.props.user.avatar}
-            ], 
+                avatar: this.props.user.avatar,
+            }], 
             this.props.user.friends
         );
         this.setState({modalTask: true, modalType: 'CREATE'})
@@ -142,11 +142,16 @@ class AppAux extends React.Component {
      */
     modalTaskListAccept = async (description, members) => {
         try {
+            // Creo un array de miembros unicamente con el _id
+            const membersFiltered = [];
+            members.filter(m=>m.newMember).map(m=>membersFiltered.push(m.id));
+            // Dependiendo de la operación
             switch (this.state.modalType) {
                 // Creo una nueva lista 
                 case 'CREATE': {
-                    const result = await Axios.post('/tasklists', null, { headers: { 'Authorization': "bearer " + this.props.user.token },
-                        data: { description: description, members }
+                    const result = await Axios.post('/tasklists', null, { 
+                        headers: { 'Authorization': "bearer " + this.props.user.token },
+                        data: { description: description, members: membersFiltered }
                     });
                     if (result.status === 200) {
                         this.props.addTaskList(result.data.result);
@@ -156,9 +161,9 @@ class AppAux extends React.Component {
                 }      
                 // Actualizo la lista       
                 case 'UPDATE': {
-                    const result = await Axios.put(`/tasklists/${this.state.id}`, null, { 
-                        headers: { 'Authorization': "bearer " + this.props.token },
-                        data: { members }
+                    const result = await Axios.put(`/tasklists/${this.props.selected.id}`, null, { 
+                        headers: { 'Authorization': "bearer " + this.props.user.token },
+                        data: { members: membersFiltered }
                     });
                     if (result.status === 200) {
                         this.props.addMembers(members);

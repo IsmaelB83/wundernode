@@ -99,20 +99,10 @@ ctrl.create = async (req, res, next) => {
  */
 ctrl.update = async (req, res, next) => {
     try {
-        // Añado los miembros indicados
-        const members = [];
-        if (req.body.members) {
-            const users = await User.find();
-            users.forEach(u => {
-                if (req.body.members.indexOf(u.email) > -1) {
-                    members.push(u._id);
-                }
-            });
-        }
         // Añado los nuevos miembros a la lista
         const result = await TaskList.findOneAndUpdate(
             { _id: req.params.id, 'members': req.user.id },
-            { $push: { members: members } },
+            { $push: { members: req.body.members } },
             { new: true }
         );
         if (result) {
