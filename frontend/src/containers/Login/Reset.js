@@ -2,7 +2,7 @@
 import React from 'react';
 import Axios from 'axios';
 /* Own modules */
-import InputIcon from '../../components/Inputs/InputIcon';
+import Input from '../../components/Inputs/Input';
 /* Import css */
 import './Styles.css';
 
@@ -49,14 +49,14 @@ export default class Reset extends React.Component {
                                 </div>
                             }
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                <Input size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
                                     type="password" name="password" autoComplete="new-password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                <Input size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
                                     type="password" name="passwordB" autoComplete="new-password" required onChange={(ev) => {this.setState({passwordB: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <button type="submit" className="btn btn-block btn-primary">Restablecer contraseña</button>
                             <div className="mt-2">

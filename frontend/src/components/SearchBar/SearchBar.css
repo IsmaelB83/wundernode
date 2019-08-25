@@ -1,4 +1,4 @@
-.search {
+.SearchBar {
     padding: 10px 15px 10px 20px;
     display: flex;
     align-items: center;
@@ -9,7 +9,7 @@
     overflow: hidden;
 }
 
-.search-input {
+.SearchBar-input {
     margin: 0 5px;
     width: 100%;
     border: none;
@@ -18,7 +18,7 @@
     padding: 0 5px;
 }
 
-.search-input:focus, .search-input:active, .search-input:hover {
+.SearchBar-input:focus, .SearchBar-input:active, .SearchBar-input:hover {
   outline: 0 !important;
   box-shadow: none !important;
 }

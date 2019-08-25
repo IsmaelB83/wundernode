@@ -1,0 +1,7 @@
+/* Button transparent */
+.ButtonLight { 
+    border: none;
+    background-color: transparent;
+    text-transform: uppercase;
+    display: inline-block;
+}

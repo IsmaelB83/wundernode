@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 /* Import own modules */
 import { actions } from '../../store/Store';
 import UserDropDown from '../UserDropDown/UserDropDown';
-import ButtonLight from '../Buttons/ButtonLight';
+import ButtonLight from '../../components/Buttons/ButtonLight/ButtonLight';
 /* Import css */
 import './UserBar.css';
 

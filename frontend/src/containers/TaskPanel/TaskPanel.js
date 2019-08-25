@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 /* Import own modules */
 import { Config } from '../../config';
 import { actions } from '../../store/Store';
-import Task from '../Task/Task';
+import Task from '../../components/Task/Task';
 /* Import css*/
 import './TaskPanel.css';
 

@@ -1,5 +1,6 @@
 // Import redux
 import { createStore } from 'redux';
+import Axios from 'axios';
 
 
 // App initial state
@@ -78,6 +79,14 @@ export const actions = {
                 taskList: taskList,
             }
         }
+    },
+    addMembers: (members) => {
+        return {
+            type: 'ADD_MEMBERS',
+            payload: {
+                members: members,
+            }
+        }
     }
 }
     
@@ -89,6 +98,12 @@ function charReducer(state, action) {
             newState = {...state};
             // Cargo el usuario en el store y en el localstorag
             newState.user = action.payload.user;
+            // TEMPORAL
+            newState.user.friends = [];
+            Axios.get('/users/friends', { headers: { 'Authorization': "bearer " + newState.user.token }})
+            .then (result => result.data.results.forEach(u => newState.user.friends.push(u)))
+            .catch(error => alert('No se han encontrado amigos'));
+            // Register user in local storage (TEMPORAL. Not secure)
             localStorage.setItem('user', JSON.stringify(newState.user));
             return newState;
         case 'LOGOFF':
@@ -117,6 +132,7 @@ function charReducer(state, action) {
                 index = newState.lists.findIndex(l => l.id === newState.selected.id);
             }
             newState.selected.id = action.payload.lists[index]._id;
+            newState.selected.description = action.payload.lists[index].description;
             newState.selected.members = action.payload.lists[index].members;
             newState.selected.owner = action.payload.lists[index].owner;
             newState.selected.tasks = [];
@@ -133,6 +149,7 @@ function charReducer(state, action) {
             newState = {...state};
             // Genero el objeto de la lista actual
             newState.selected.id = action.payload.list._id;
+            newState.selected.description = action.payload.list.description;
             newState.selected.members = action.payload.list.members;
             newState.selected.owner = action.payload.list.owner;
             newState.selected.tasks = [];
@@ -167,10 +184,14 @@ function charReducer(state, action) {
             newState = {...state};
             // Busco la tarea en la lista seleccionada y la actualizo
             const i = newState.selected.tasks.findIndex(t => t.id === action.payload.id);
-            newState.selected.tasks[i].starred = action.payload.starred;
+            if (i >= 0) {
+                newState.selected.tasks[i].starred = action.payload.starred;
+            }
             // Busco la lista en el array de listas y lo sobreescribo
             const j = newState.lists.findIndex(l => l.id === newState.selected.id);
-            newState.lists[j].starred += action.payload.starred?1:-1;
+            if (j >= 0) {
+                newState.lists[j].starred += action.payload.starred?1:-1;
+            }
             // Forzar el render
             newState.switch = !newState.switch;
             return newState;
@@ -179,14 +200,18 @@ function charReducer(state, action) {
             newState = {...state};
             // Busco la tarea en la lista seleccionada y la actualizo
             const i = newState.selected.tasks.findIndex(t => t.id === action.payload.id);
-            newState.selected.tasks[i].completed = action.payload.completed;
+            if (i >= 0) {
+                newState.selected.tasks[i].completed = action.payload.completed;
+            }
             // Busco la lista en el array de listas y lo sobreescribo
             const j = newState.lists.findIndex(l => l.id === newState.selected.id);
-            newState.lists[j].tasks += action.payload.completed?-1:1;  
-            if (action.payload.completed && action.payload.starred) {
-                newState.lists[j].starred--;
-            } else if(!action.payload.completed && action.payload.starred) {
-                newState.lists[j].starred++;
+            if (j >= 0) {
+                newState.lists[j].tasks += action.payload.completed?-1:1;  
+                if (action.payload.completed && action.payload.starred) {
+                    newState.lists[j].starred--;
+                } else if(!action.payload.completed && action.payload.starred) {
+                    newState.lists[j].starred++;
+                }
             }
             // Forzar el render
             newState.switch = !newState.switch;
@@ -201,6 +226,20 @@ function charReducer(state, action) {
                 starred: 0,
                 tasks: 0,
             });
+            newState.switch = !newState.switch;
+            return newState;
+        }
+        case 'ADD_MEMBERS': {
+            newState = {...state};
+            // Añado miembros a la lista actual
+            const i = newState.lists.findIndex(l => l.id === newState.selected.id);
+            action.payload.members.forEach(m => {
+                newState.selected.members.push(m);
+                if (i >= 0) {
+                    newState.lists[i].members.push(m);
+                }
+            });
+            // Forzar el render
             newState.switch = !newState.switch;
             return newState;
         }   

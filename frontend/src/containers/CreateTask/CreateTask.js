@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-awesome-modal';
 import Autosuggest from 'react-autosuggest';
 /* Import own modules */
-import ButtonBase from '../Buttons/ButtonBase';
+import ButtonBase from '../../components/Buttons/ButtonBase/ButtonBase';
 import { actions } from '../../store/Store';
 /* Import own css */
 import './CreateTask.css';

@@ -1,41 +1,44 @@
 /* Import node modules */
 import React from 'react';
-import { connect } from 'react-redux';
-import Axios from 'axios';
 /* Import own modules */
-import ButtonLight from '../Buttons/ButtonLight';
-import { actions } from '../../store/Store';
+import ButtonLight from '../../components/Buttons/ButtonLight/ButtonLight';
 /* Import css */
 import './TodoBar.css';
 
-class TodoBarAux extends React.Component {
+
+/**
+ * Componente para la barra de tareas de un nuevo todo
+ */
+export default class TodoBar extends React.Component {
   
+    /**
+     * Constructor
+     */
     constructor(props) {
-        // Superclass constructors
         super(props);
-        // Events
         this.addTodo = this.addTodoEventHandler.bind(this);
-        // State
         this.state = {
             focus: false,
             starred: false,
-            input: '',
         }
     }
 
+    /**
+     * Render
+     */
     render() {
         return (
-            <div className='addTask'>
-                <div className='addTask-actions--left'>
+            <div className='TodoBar'>
+                <div className='TodoBar-actions--left'>
                     { this.state.focus && <ButtonLight className='btn' color='white' icon='fas fa-microphone'/> }
                     { !this.state.focus && <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTodo}/> } 
                 </div>
-                <div className='addTask-actions--right'>
+                <div className='TodoBar-actions--right'>
                     <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt'/>
                     <ButtonLight className='btn' color='white' icon={this.state.starred?'fas fa-star':'far fa-star'} onClick={ev=>this.setState({starred: !this.state.starred})} />
                 </div>
                 <input  type='text'
-                        className='addTask-input' 
+                        className='TodoBar-input' 
                         placeholder={`Add a to-do to ${this.props.taskList && this.props.taskList.system?'in "Inbox"':''}`}
                         onFocus={()=>{this.setState({focus:true})}}
                         onBlur={()=>{this.setState({focus:false})}}
@@ -48,45 +51,16 @@ class TodoBarAux extends React.Component {
         );
     };
 
-    async addTodoEventHandler(ev) {
-        if (this.state.input === '') {
-            this.setState({focus: true});
-        } else {
-            try {
-                let result = await Axios.post(`/tasklists/tasks`, null, {
-                    headers: { 'Authorization': "bearer " + this.props.user.token },
-                    data: {
-                        id: this.props.list.id,
-                        description: this.state.input,
-                        starred: this.state.starred,
-                    }
-                });
-                if (result.status === 200) {
-                    this.props.addTodo(result.data.result);
-                }
-                this.setState({
-                    input: '',
-                    starred: false
-                });
-            } catch (error) {
-                console.log(error)
-            }
+    /**
+     * Propaga el evento al container para que gestione el nuevo todo
+     */
+    addTodoEventHandler() {
+        if (this.state.input.length > 0) {
+            this.props.addTodo(this.state.input);
+            this.setState({
+                focus: false,
+                input: ''
+            });
         }
     }
 }
-
-// React-Redux
-const mapState = (state) => { 
-    return {
-        user: state.user,
-        list: state.selected,
-        switch: state.switch,
-    };
-};
-const mapActions = { 
-    addTodo: actions.addTodo,
-};
-
-
-const TodoBar = connect(mapState, mapActions)(TodoBarAux);
-export default TodoBar;

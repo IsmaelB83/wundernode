@@ -3,7 +3,7 @@ import React from 'react';
 import Axios from 'axios';
 import { Redirect } from 'react-router-dom'
 /* Import own modules */
-import InputIcon from '../../components/Inputs/InputIcon';
+import Input from '../../components/Inputs/Input';
 /* Import css */
 import './Styles.css';
 
@@ -45,24 +45,24 @@ export default class NewUser extends React.Component {
                                 </div>
                             }
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-user' input='d-block w-100' placeholder="Nombre de usuario"
+                                <Input size='lg' icon='fas fa-user' input='d-block w-100' placeholder="Nombre de usuario"
                                     type="name" name="name" required onChange={(ev) => {this.setState({name: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
+                                <Input size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
                                     type="email" name="email" autoComplete="username" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                                <Input size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
                                     type="password" name="password" autoComplete="new-password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <div className="form-group">
-                                <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Repite la contraseña"
+                                <Input size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Repite la contraseña"
                                     type="password" name="passwordB" autoComplete="new-password" required onChange={(ev) => {this.setState({passwordB: ev.target.value});}}>
-                                </InputIcon>
+                                </Input>
                             </div>
                             <button type="submit" className="btn btn-block btn-primary">Crear cuenta</button>
                         </form>

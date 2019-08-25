@@ -1,0 +1,13 @@
+/* Button base */
+.ButtonBase {
+    position: relative;
+    color: #737272;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    padding: 8px 12px;
+    background: #fafafa;
+    box-shadow: inset 0 0 0 1px #d6d6d6;
+    border: none;
+    border-radius: 3px;
+}

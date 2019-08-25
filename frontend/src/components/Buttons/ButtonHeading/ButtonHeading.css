@@ -1,0 +1,14 @@
+/* Button type heading */
+.ButtonHeading {
+    padding: 3px 10px;
+    text-transform: uppercase;
+    display: inline-block;
+    border: none;
+    border-radius: 3px;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 1px;
+    font-weight: 400;
+    color: white !important;
+    line-height: 16px;
+    font-size: 11px;
+}

@@ -5,7 +5,7 @@ import * as serviceWorker from './assets/js/serviceWorker';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux'; 
 /* Import own modules */
-import Home from './containers/Home/Home';
+import App from './containers/App/App';
 import Login from './containers/Login/Login';
 import Reset from './containers/Login/Reset';
 import NewUser from './containers/Login/NewUser';
@@ -26,7 +26,7 @@ let reactComp = <Provider store={store}>
                             <Route path='/activate/:token' exact component={Activate} />
                             <Route path='/reset' exact component={ResetRequest} />
                             <Route path='/reset/password/:token' exact component={Reset} />
-                            <Route path='/' exact component={Home} />
+                            <Route path='/' exact component={App} />
                             <Redirect to="/login"/>
                         </Switch>
                     </Router>

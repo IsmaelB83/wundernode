@@ -1,4 +1,4 @@
-.wrapper {
+.App {
     height: 100vh;   
     overflow: hidden;
     display: grid;
@@ -9,4 +9,10 @@
                         #4C7885 45%, 
                         #A1C0C5 60%, 
                         #f5f5f5 100%);
+}
+
+/* Scrollable panel */
+.App-main_wrapper {
+    padding: 15px;
+    height: 100vh;
 }

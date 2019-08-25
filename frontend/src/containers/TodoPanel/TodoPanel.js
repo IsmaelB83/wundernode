@@ -53,7 +53,6 @@ class TodoPanelAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return {
-        user: state.user,
         todos: state.selected.tasks,
         switch: state.switch
     };

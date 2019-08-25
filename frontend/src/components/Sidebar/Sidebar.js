@@ -1,16 +1,22 @@
 /* Import node modules */
-import React from 'react';
+import React, { Component } from 'react';
 /* Import own modules */
-import TaskPanel from '../../components/TaskPanel/TaskPanel';
-import UserBar from '../../components/UserBar/UserBar';
+import TaskPanel from '../../containers/TaskPanel/TaskPanel';
+import UserBar from '../../containers/UserBar/UserBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import CreateTask from '../../components/CreateTask/CreateTask';
+import CreateTask from '../../containers/CreateTask/CreateTask';
 /* Import css */
 import './Sidebar.css';
 
 
-export default class Sidebar extends React.Component {
+/**
+ * Componente de barra lateral
+ */
+export default class Sidebar extends Component {
     
+    /**
+     * Render
+     */
     render() {
         return (
             <div className="sidebar" role="navigation">

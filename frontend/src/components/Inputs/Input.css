@@ -1,9 +1,9 @@
-.input_icon {
+.Input {
     position: relative;
     width: 100%;
 }
 
-.input_icon-icon {
+.Input-icon {
     position: absolute;   
     top: 5px;
     left: 5px;
@@ -11,7 +11,7 @@
     color: #007bff;
 }
 
-.input_icon-input {
+.Input-input {
     padding-left: 30px;
     border-radius: 3px;
     background-color: none;
@@ -19,12 +19,12 @@
 }
 
 /* Estilos por estado */
-.input_icon--lg .input_icon-icon {
+.Input--lg .Input-icon {
     font-size: 20px;
     top: 13px;
     left: 12px;
 }
 
-.input_icon--lg .input_icon-input {
+.Input--lg .Input-input {
     padding: 10px 10px 10px 45px;
 }

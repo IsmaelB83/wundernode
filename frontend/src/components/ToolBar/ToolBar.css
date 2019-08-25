@@ -1,3 +1,14 @@
+/* List header */
+.list-toolbar {
+    background-color: #2F6676;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 45px;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
 /* Toolbar in top */
 .list-title {
     font-size: 20px;

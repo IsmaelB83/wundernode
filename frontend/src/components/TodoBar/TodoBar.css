@@ -1,9 +1,9 @@
-.addTask {
+.TodoBar {
     position: relative;
     color: #A7BDC4 !important;
 }
 
-.addTask-input {
+.TodoBar-input {
     padding: 10px 10px 10px 45px;
     background-color: #285E6E;
     border: none;
@@ -12,17 +12,17 @@
     border-radius: 5px;
 }
 
-.addTask-input::placeholder {
+.TodoBar-input::placeholder {
     color: #A7BDC4;
 }
 
-.addTask-input:focus, .addTask-input:active, .addTask-input:hover {
+.TodoBar-input:focus, .TodoBar-input:active, .TodoBar-input:hover {
     outline: 0 !important;
     box-shadow: none !important;
 }
 
 /* Posicionamiento de los botones dentro del input*/
-.addTask-actions--left {
+.TodoBar-actions--left {
     position: absolute;
     top: 2px;
     left: 6px;
@@ -31,7 +31,7 @@
     color: #A7BDC4;
 }
 
-.addTask-actions--right {
+.TodoBar-actions--right {
     position: absolute;
     top: 2px;
     right: 5px;

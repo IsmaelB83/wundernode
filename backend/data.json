@@ -1,18 +1,25 @@
 {
    "Users": [
       {
-         "name": "Ismael",
-         "email": "ismael@gmail.com",
+         "name": "Dimitry Klovov",
+         "email": "dimitry_klokov@gmail.com",
          "password": "qwerty83",
          "active": true,
          "avatar": "/public/img/avatars/isma.png"
       },
       {
-         "name": "Tamara",
-         "email": "tamara@gmail.com",
+         "name": "Aniesgzka Klaxon",
+         "email": "anieszka_klaxon@gmail.com",
          "password": "qwerty83",
          "active": true,
          "avatar": "/public/img/avatars/tam.png"
+      },
+      {
+         "name": "Olive Klokov",
+         "email": "olive_klokov@gmail.com",
+         "password": "qwerty83",
+         "active": true,
+         "avatar": "/public/img/avatars/olivia.png"
       }
    ],
    "TaskLists": [

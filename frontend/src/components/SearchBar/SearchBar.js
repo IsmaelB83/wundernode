@@ -1,11 +1,20 @@
 /* Import node modules */
-import React from 'react';
+import React, { Component } from 'react';
 /* Import own modules */
-import ButtonLight from '../Buttons/ButtonLight';
+import ButtonLight from '../Buttons/ButtonLight/ButtonLight';
+/* Import own CSS */
 import './SearchBar.css';
 
-export default class SearchBar extends React.Component {
+
+/**
+ * Componente para barra de busquedas
+ */
+export default class SearchBar extends Component {
   
+    /**
+     * Constructor
+     * @param {*} props 
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -13,11 +22,14 @@ export default class SearchBar extends React.Component {
         }
     }
 
+    /**
+     * Render
+     */
     render() {
         return (
-            <div className='search'>
+            <div className='SearchBar'>
                 <ButtonLight icon='fas fa-bars' color='white'/>
-                <input  className='search-input'
+                <input  className='SearchBar-input'
                         onFocus={()=>{this.setState({focus:true})}}
                         onBlur={()=>{this.setState({focus:false})}}
                 />

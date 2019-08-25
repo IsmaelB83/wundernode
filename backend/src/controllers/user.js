@@ -130,7 +130,7 @@ ctrl.list = async (req, res, next) => {
 ctrl.listFriends = async (req, res, next) => {
     try {
         // Listado
-        const results = await User.find().select('-_id -token -password -jwt -createdAt -updatedAt');
+        const results = await User.find().select('-token -password -jwt -createdAt -updatedAt');
         res.json({
             success: true,
             count: results.length,

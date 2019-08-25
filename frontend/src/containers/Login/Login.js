@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { connect } from 'react-redux';
 /* Import own modules */
 import { store, actions } from '../../store/Store';
-import InputIcon from '../../components/Inputs/InputIcon';
+import Input from '../../components/Inputs/Input';
 /* Import css */
 import './Styles.css';
 
@@ -79,14 +79,14 @@ class LoginAux extends React.Component {
                             </div>
                         }
                         <div className="form-group">
-                            <InputIcon size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
+                            <Input size='lg' icon='fas fa-envelope' input='d-block w-100' placeholder="Correo electrónico"
                                 type="email" name="email" autoComplete="username" required onChange={(ev) => {this.setState({email: ev.target.value});}}>
-                            </InputIcon>
+                            </Input>
                         </div>
                         <div className="form-group">
-                            <InputIcon size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
+                            <Input size='lg' icon='fas fa-key' input='d-block w-100' placeholder="Contraseña"
                                 type="password" name="password" autoComplete="current-password" required onChange={(ev) => {this.setState({password: ev.target.value});}}>
-                            </InputIcon>
+                            </Input>
                         </div>
                         <button type="submit" className="btn btn-block btn-primary">Iniciar Sesión</button>
                         <div className="mt-2">
