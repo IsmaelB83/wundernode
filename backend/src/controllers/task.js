@@ -140,7 +140,6 @@ ctrl.star = async (req, res, next) => {
         }
         return next({status: 404, data: 'Not found'});
     } catch (error) {
-        console.log(error);
         if (!error.array) Log.fatal(`Error incontrolado: ${error}`);
         next({description: error});
     }

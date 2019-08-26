@@ -12,15 +12,9 @@ import './SearchBar.css';
 export default class SearchBar extends Component {
   
     /**
-     * Constructor
-     * @param {*} props 
+     * Initial state
      */
-    constructor(props) {
-        super(props);
-        this.state = {
-            focus: false
-        }
-    }
+    state = {value: ''}
 
     /**
      * Render
@@ -28,13 +22,20 @@ export default class SearchBar extends Component {
     render() {
         return (
             <div className='SearchBar'>
-                <ButtonLight icon='fas fa-bars' color='white' onClick={ev=>alert('Not implemented yet')}/>
-                <input  className='SearchBar-input'
-                        onFocus={()=>{this.setState({focus:true})}}
-                        onBlur={()=>{this.setState({focus:false})}}
-                />
-                <ButtonLight icon={this.state.focus?'fas fa-times':'fas fa-search'} color='white' onClick={ev=>alert('Not implemented yet')}/>
+                <ButtonLight icon='fas fa-bars' color='white' onClick={this.props.collapseEventHandler}/>
+                <input className='SearchBar-input' value={this.state.value}
+                       onChange={ev=>this.setState({value: ev.currentTarget.value})}/>
+                <ButtonLight icon='fas fa-search' color='white' onClick={this.searchEventHandler}/>
             </div>
         );
     };
+
+    /**
+     * Click en el botón de búsqueda
+     */
+    searchEventHandler = () => {
+        if (this.state.value !== '') {
+            this.props.searchEventHandler(this.state.value);
+        }
+    }
 }

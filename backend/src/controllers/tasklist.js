@@ -54,7 +54,6 @@ ctrl.get = async (req, res, next) => {
                     return next(error);
                 }
                 // Ok
-                console.log(result[0]);
                 res.json({
                     success: true,
                     result: result[0]

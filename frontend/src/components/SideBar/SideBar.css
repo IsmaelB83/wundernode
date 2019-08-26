@@ -1,10 +1,14 @@
 /* Left */
-.sidebar {
+.SideBar {
     height: 100%;
     background-color: #F7F7F7;
     display: grid;
     grid-template-rows: auto auto 1fr 90px;
     overflow: hidden;
+}
+
+.SideBar-collapsed {
+    max-width: 50px;
 }
 
 .createbutton {

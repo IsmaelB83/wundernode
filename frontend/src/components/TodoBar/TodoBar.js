@@ -12,16 +12,9 @@ import './TodoBar.css';
 export default class TodoBar extends React.Component {
   
     /**
-     * Constructor
+     * Initial state
      */
-    constructor(props) {
-        super(props);
-        this.addTodo = this.addTodoEventHandler.bind(this);
-        this.state = {
-            focus: false,
-            starred: false,
-        }
-    }
+    state = { starred: false }
 
     /**
      * Render
@@ -30,8 +23,7 @@ export default class TodoBar extends React.Component {
         return (
             <div className='TodoBar'>
                 <div className='TodoBar-actions--left'>
-                    { this.state.focus && <ButtonLight className='btn' color='white' icon='fas fa-microphone'/> }
-                    { !this.state.focus && <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTodo}/> } 
+                    <ButtonLight className='btn' color='white' icon='fa fa-plus' onClick={this.addTodoEventHandler}/>
                 </div>
                 <div className='TodoBar-actions--right'>
                     <ButtonLight className='btn' color='white' icon='fa fa-calendar-alt' onClick={ev=>alert('Not implemented yet')}/>
@@ -40,11 +32,9 @@ export default class TodoBar extends React.Component {
                 <input  type='text'
                         className='TodoBar-input' 
                         placeholder={`Add a to-do to ${this.props.taskList && this.props.taskList.system?'in "Inbox"':''}`}
-                        onFocus={()=>{this.setState({focus:true})}}
-                        onBlur={()=>{this.setState({focus:false})}}
                         value={this.state.input}
-                        onChange={ev => { this.setState({input: ev.target.value})}}
-                        onKeyPress={ev => { if(ev.key==='Enter') { this.addTodo() }}}
+                        onChange={ev => { this.setState({input: ev.currentTarget.value})}}
+                        onKeyPress={ev => { if(ev.key==='Enter') { this.addTodoEventHandler() }}}
                 >
                 </input>
             </div>
@@ -52,15 +42,12 @@ export default class TodoBar extends React.Component {
     };
 
     /**
-     * Propaga el evento al container para que gestione el nuevo todo
+     * Propaga el evento al container para que gestione la creación del todo
      */
-    addTodoEventHandler() {
-        if (this.state.input.length > 0) {
-            this.props.addTodo(this.state.input);
-            this.setState({
-                focus: false,
-                input: ''
-            });
+    addTodoEventHandler = () => {
+        if (this.state.input!=='') {
+            this.props.todoAddEventHandler(this.state.input, this.state.starred);
+            this.setState({input: '', starred: false});
         }
     }
 }

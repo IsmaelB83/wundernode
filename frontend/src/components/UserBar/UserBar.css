@@ -1,4 +1,4 @@
-.userbar {
+.UserBar {
     height: 50px;
     padding: 0 10px 0 5px;
     display: flex;
@@ -7,28 +7,28 @@
     align-items: center;
 }
 
-.user-caret, .userbar .user-caret:hover {
+.UserBar-caret, .UserBar-caret:hover {
     background-color: transparent !important;
     border: none !important;
     color: black !important;
 }
 
-.user-caret span {
+.UserBar-caret span {
     color: #262626;
     text-transform: lowercase;
 }
 
-.user-caret img {
+.UserBar-caret img {
     width: 32px;
     height: 32px;
     border-radius: 100px;
 }
 
-.userbar .dropdown-menu {
+.UserBar .dropdown-menu {
     font-size: .8rem;
 }
 
-.userbar .dropdown-menu i {
+.UserBar .dropdown-menu i {
     margin-right: 7px;
     color: #858383;
 }

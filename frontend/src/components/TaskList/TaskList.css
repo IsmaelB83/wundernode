@@ -1,18 +1,18 @@
 /* Estilos de cada task */
-.Task {
+.TaskList {
    display: flex;
    flex-direction: row;
    justify-content: space-between;
 }
 
-.Task-name {
+.TaskList-name {
     line-height: 23px;
     color: black;
     display: block;
     width: 100%;;
 }
 
-.Task-badges { 
+.TaskList-badges { 
     font-weight: bold; 
     float: right;
 }
@@ -28,7 +28,7 @@
     background: transparent;
 }
 
-.Task-badges .badge:last-child { margin-left: 3px; }
+.TaskList-badges .badge:last-child { margin-left: 3px; }
 
 /* Estilos de los estados */
 .badge-starred--active {
@@ -43,14 +43,14 @@
 
 
 /* Iconos */
-.Task-icon {
+.TaskList-icon {
     height: 20px;
     width: 25px;
     margin-right: 10px;
     font-size: 20px;
 }
-.Task-icon--grey  { color: #c0c0c0; }
-.Task-icon--blue   { color: #2b8dec; }
-.Task-icon--red    { color: #d74e48; }
-.Task-icon--green  { color: #5fa004; }
-.Task-icon--orange { color: #e29600; }
+.TaskList-icon--grey  { color: #c0c0c0; }
+.TaskList-icon--blue   { color: #2b8dec; }
+.TaskList-icon--red    { color: #d74e48; }
+.TaskList-icon--green  { color: #5fa004; }
+.TaskList-icon--orange { color: #e29600; }

@@ -151,6 +151,7 @@ function charReducer(state, action) {
                     });
                 });
             }
+            newState.switch = !newState.switch;
             return newState;
         case 'LOAD_LIST':
             newState = {...state};
@@ -167,7 +168,8 @@ function charReducer(state, action) {
                     completed: t.completed,
                     starred: t.starred,
                 });
-            });                
+            });        
+            newState.switch = !newState.switch;
             return newState;
         case 'ADD_TODO':
             newState = {...state};

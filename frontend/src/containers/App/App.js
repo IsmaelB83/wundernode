@@ -5,10 +5,10 @@ import Axios from 'axios';
 /* Import own modules */
 import ButtonHeading from '../../components/Buttons/ButtonHeading/ButtonHeading';
 import TodoBar from '../../components/TodoBar/TodoBar';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import ToolBar from '../../components/ToolBar/ToolBar';
-import TodoListContainer from '../../containers/TodoListContainer/TodoListContainer';
-import ModalTaskList from '../../containers/ModalTaskList/ModalTaskList';
+import ModalTaskList from '../ModalTaskList/ModalTaskList';
+import TodoListContainer from '../TodoListContainer/TodoListContainer';
+import SideBarContainer from '../SideBarContainer/SideBarContainer';
 import { actions } from '../../store/Store';
 /* Import css */
 import './App.css';
@@ -61,23 +61,22 @@ class AppAux extends React.Component {
     render() {
         return (
             <div className='App'> 
-                <Sidebar className='App-sidebar' onCreate={this.createTaskListClick}/>
+                <SideBarContainer createTaskListEventHandler={this.createTaskListEventHandler} />
                 <div className='App-main'>
                     <ToolBar id='toolBar' description={this.props.selected.description} 
-                        onShare={this.shareTaskListClick}
-                        onSort={() => alert('Not implemented yet')}
-                        onMore={() => alert('Not implemented yet')}
+                        shareEventHandler={this.shareTaskListClick}
+                        sortEventHandler={this.sortEventHandler}
+                        moreEventHandler={this.moreEventHandler}
                         />
                     <div className='App-main_wrapper'>
-                        <TodoBar id='todoBar' addTodo={this.addTodo}/>
+                        <TodoBar id='todoBar' todoAddEventHandler={this.todoAddEventHandler}/>
                         <div className='MainContainer-todos'>
                             <TodoListContainer id='todosPending' completed={false}/>
                             <ButtonHeading text='Show completed to-dos' onClick={ev=>this.setState({showCompleted: !this.state.showCompleted})}/>
                             <TodoListContainer id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
                         </div>
                     </div>
-                </div>
-                <ModalTaskList ref={this.modal}
+                    <ModalTaskList ref={this.modal}
                                visible={this.state.modalTask}
                                type={this.state.modalType}
                                title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
@@ -92,6 +91,7 @@ class AppAux extends React.Component {
                                owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
                                onClose={() => this.setState({modalTask: false, modalType: null})} 
                                onAccept={this.modalTaskListAccept}/>
+                </div>
             </div>
         );
     }
@@ -119,7 +119,7 @@ class AppAux extends React.Component {
     /**
      * Click en crear una tasklist
      */
-    createTaskListClick = () => {
+    createTaskListEventHandler = () => {
         this.modal.current.refreshData(
             'CREATE', 
             'Create a new TaskList',
@@ -151,7 +151,7 @@ class AppAux extends React.Component {
                 // Creo una nueva lista 
                 case 'CREATE': {
                     const result = await Axios.post('/tasklists', null, { 
-                        headers: { 'Authorization': "bearer " + this.props.user.token },
+                        headers: { 'Authorization': 'bearer ' + this.props.user.token },
                         data: { description: description, members: membersFiltered }
                     });
                     if (result.status === 200) {
@@ -163,7 +163,7 @@ class AppAux extends React.Component {
                 // Actualizo la lista       
                 case 'UPDATE': {
                     const result = await Axios.put(`/tasklists/${this.props.selected.id}`, null, { 
-                        headers: { 'Authorization': "bearer " + this.props.user.token },
+                        headers: { 'Authorization': 'bearer ' + this.props.user.token },
                         data: { members: membersFiltered }
                     });
                     if (result.status === 200) {
@@ -189,31 +189,35 @@ class AppAux extends React.Component {
      * Añadir un todo a la lista actual
      * @param {String} description Nombre del todo a crear 
      */
-    addTodo = async (description) => {
-        if (this.state.input === '') {
-            this.setState({focus: true});
-        } else {
-            try {
-                let result = await Axios.post(`/tasklists/tasks`, null, {
-                    headers: { 'Authorization': "bearer " + this.props.user.token },
-                    data: {
-                        id: this.props.selected.id,
-                        description,
-                        starred: this.state.starred,
-                    }
-                });
-                if (result.status === 200) {
-                    this.props.addTodo(result.data.result);
+    todoAddEventHandler = async (description, starred) => {
+        try {
+            const result = await Axios.post(`/tasklists/tasks`, null, {
+                headers: { 'Authorization': 'bearer ' + this.props.user.token },
+                data: {
+                    id: this.props.selected.id,
+                    description,
+                    starred,
                 }
-                this.setState({
-                    input: '',
-                    starred: false
-                });
-            } catch (error) {
-                console.log(error)
+            });
+            if (result.status === 200) {
+                this.props.addTodo(result.data.result);
             }
+        } catch (error) {
+            console.log(error)
         }
     }
+
+    /**
+     * Sort To-Dos
+     * (NOT IMPLEMENTED YET. Issue #5 )
+     */
+    sortEventHandler = () => alert('Sort todos not implemented yet');
+
+    /**
+     * More options event
+     * (NOT IMPLEMENTED YET. Issue #5 )
+     */
+    moreEventHandler = () => alert('More options not implemented yet');
 }
 
 // React-Redux
@@ -227,6 +231,7 @@ const mapState = (state) => {
 };
 
 const mapActions = {
+    loadList: actions.loadList,
     loadLists: actions.loadLists,
     addTaskList: actions.addTaskList,
     addTodo: actions.addTodo,

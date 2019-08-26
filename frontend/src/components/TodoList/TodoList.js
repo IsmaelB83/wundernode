@@ -12,15 +12,9 @@ import './TodoList.css';
 export default class TodoList extends Component { 
 
     /**
-     * Constructor
-     * @param {*} props 
+     * Initial state
      */
-    constructor(props) {
-        super(props);
-        this.state = { 
-            selected: 0,
-        }
-    }
+    state = { selected: 0 }
 
     /**
      * Render
@@ -32,14 +26,14 @@ export default class TodoList extends Component {
                 ( ( this.props.completed && this.props.showCompleted ) || !this.props.completed ) && 
                 this.props.todos.filter(t=>t.completed===this.props.completed).map((todo, index) => {
                     return <li  key={index} data-index={index}
-                                onClick={this.todoSelected}>
+                                onClick={this.todoSelectedEventHandler}>
                                 <Todo   text={todo.description} 
                                         active={this.state.selected===index?true:false} 
                                         starred={todo.starred}
                                         completed={todo.completed} 
                                         id={todo.id}
-                                        onStarred={this.props.onStarred}
-                                        onDone={this.props.onDone}
+                                        starredEventHanlder={this.props.starredEventHanlder}
+                                        doneEventHandler={this.props.doneEventHandler}
                                 />
                             </li>
                     })
@@ -52,16 +46,5 @@ export default class TodoList extends Component {
      * Se selecciona un todo
      * @param {Event} ev Evento que origina el click
      */
-    todoSelected = (ev) => {
-        this.setState({ 
-            selected: parseInt(ev.currentTarget.dataset.index) 
-        });
-    }
-
-    /**
-     * Muestra u oculta los completados
-     */
-    showCompleted(){
-        this.setState({showCompleted: !this.state.showCompleted});
-    }
+    todoSelectedEventHandler = (ev) => this.setState({selected: parseInt(ev.currentTarget.dataset.index)});
 }

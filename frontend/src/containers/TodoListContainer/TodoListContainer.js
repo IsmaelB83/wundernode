@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import { actions } from '../../store/Store';
 import { Config } from '../../config';
 import TodoList from '../../components/TodoList/TodoList';
-/* Import own css */
-import './TodoListContainer.css';
+
 
 /**
  * Container component to handle the functionality of a To-Do list
@@ -21,9 +20,7 @@ class TodoListContainerAux extends Component {
     constructor(props) {
         super(props);
         this.audio = new Audio(`${process.env.PUBLIC_URL}${Config.sounds.completed}`);
-        this.state = {
-            selected: 0,
-        }
+        this.state = { selected: 0 }
     }
 
     /**
@@ -34,18 +31,23 @@ class TodoListContainerAux extends Component {
             <TodoList todos={this.props.todos}
                       completed={this.props.completed}
                       showCompleted={this.props.showCompleted}
-                      onStarred={this.starredEventHanlder} 
-                      onDone={this.doneEventHandler} 
+                      starredEventHanlder={this.starredEventHanlder} 
+                      doneEventHandler={this.doneEventHandler} 
             />
         );
     };
 
+    /**
+     * Marcar como importante un todo
+     * @param {String} id ObjectId del Todo
+     * @param {Boolean} starred Todo important (true/false)
+     */
     starredEventHanlder = async (id, starred) => {
         try {
             // Call API to starred task
             let result = await Axios.put(`/tasklists/tasks/${id}/star`, null, {
                 headers: { 'Authorization': "bearer " + this.props.user.token },
-                data: { starred: !starred }
+                data: { starred }
             });
             if (result.status === 200) {
                 this.props.starTodo(id, starred);
@@ -55,6 +57,12 @@ class TodoListContainerAux extends Component {
         }   
     }
 
+    /**
+     * Marcar como completado un todo
+     * @param {String} id ObjectId del Todo
+     * @param {Boolean} completed Todo completado (true/false)
+     * @param {Boolean} starred Todo important (true/false)
+     */
     doneEventHandler = async (id, completed, starred) => {
         try {
             // Call API to starred task
@@ -83,7 +91,6 @@ const mapState = (state) => {
 };
 
 const mapActions = { 
-    reloadList: actions.reloadList,
     starTodo: actions.starTodo,
     completeTodo: actions.completeTodo
 };

@@ -6,6 +6,7 @@ const juice = require('juice');
 const pug = require('pug');
 // Own imports
 const emailConfig = require('../config/email');
+const { Log } = require('../utils/');
 
 
 let transport = nodemailer.createTransport({
@@ -35,7 +36,7 @@ exports.send = (options) => {
         }
         transport.sendMail(mailOptions);
     } catch (error) {
-        console.log(error);
+        Log.fatal(`Error incontrolado: ${error}`);
     }
     
 }

@@ -1,5 +1,5 @@
 /* Estilos de la lista */
-.tasklist {
+.TaskListPanel {
     padding: 0;
     list-style-type: none;
     font-size: 14px;
@@ -9,11 +9,11 @@
     letter-spacing: .3px;
 }
 
-.tasklist-li {
+.TaskListPanel-li {
     padding: 10px 20px;
     cursor: pointer;
 }
 
-.tasklist-li--active {
+.TaskListPanel-li--active {
     background-color: #E0EEFA;
 }

@@ -1,5 +1,4 @@
 .App {
-    height: 100vh;   
     overflow: hidden;
     display: grid;
     grid-template-columns: minmax(50px, 280px) 1fr;
