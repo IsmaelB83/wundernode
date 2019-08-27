@@ -30,7 +30,7 @@ class AppAux extends React.Component {
         this.state = {
             modalTask: false,
             modalType: null,
-            showCompleted: false
+            showCompleted: false,
         }
     }
 
@@ -39,6 +39,12 @@ class AppAux extends React.Component {
      */
     componentDidMount() {
         try {
+            // Detectar el ESC para cerrar el import
+            document.addEventListener("keydown", (ev) => { 
+                if (ev.keyCode === 27 && this.state.modalTask) {
+                    this.setState({modalTask: !this.state.modalTask});
+                }
+            } , false);
             // Si no hay usuario logueado redirigo al login
             if (!this.props.user.id) {
                 return this.props.history.push('/login');
@@ -76,21 +82,23 @@ class AppAux extends React.Component {
                             <TodoListContainer id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
                         </div>
                     </div>
-                    <ModalTaskList ref={this.modal}
-                               visible={this.state.modalTask}
-                               type={this.state.modalType}
-                               title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
-                               taskListName={this.state.modalType==='UPDATE'?this.props.selected.description:''}
-                               friends={this.props.user.friends} 
-                               members={this.state.modalType==='UPDATE'?this.props.selected.members:[{
-                                    id: this.props.user.id, 
-                                    name: this.props.user.name,
-                                    email: this.props.user.email, 
-                                    avatar: this.props.user.avatar}]
-                               }
-                               owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
-                               onClose={() => this.setState({modalTask: false, modalType: null})} 
-                               onAccept={this.modalTaskListAccept}/>
+                    { this.props.user.email &&
+                        <ModalTaskList ref={this.modal}
+                                visible={this.state.modalTask}
+                                type={this.state.modalType}
+                                title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
+                                taskListName={this.state.modalType==='UPDATE'?this.props.selected.description:''}
+                                friends={this.props.user.friends} 
+                                members={this.state.modalType==='UPDATE'?this.props.selected.members:[{
+                                        id: this.props.user.id, 
+                                        name: this.props.user.name,
+                                        email: this.props.user.email, 
+                                        avatar: this.props.user.avatar}]
+                                }
+                                owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
+                                onClose={() => this.setState({modalTask: false, modalType: null})} 
+                                onAccept={this.modalTaskListAccept}/>
+                    }
                 </div>
             </div>
         );
@@ -102,14 +110,6 @@ class AppAux extends React.Component {
     shareTaskListClick = () => {
         // Sólo se permite modificar una tarea de la que seas propietario
         if(this.props.selected.owner && this.props.selected.owner.email === this.props.user.email) {
-            this.modal.current.refreshData(
-                'UPDATE', 
-                'Share TaskList with your friends', 
-                this.props.selected.description,
-                this.props.selected.owner, 
-                this.props.selected.members, 
-                this.props.user.friends
-            );
             this.setState({modalTask: true, modalType: 'UPDATE'});
         } else {
             alert('Sólo el propietario de la lista puede invitar a otras personas');
@@ -120,18 +120,6 @@ class AppAux extends React.Component {
      * Click en crear una tasklist
      */
     createTaskListEventHandler = () => {
-        this.modal.current.refreshData(
-            'CREATE', 
-            'Create a new TaskList',
-            '',
-            this.props.user, 
-            [{  id: this.props.user.id, 
-                name: this.props.user.name,
-                email: this.props.user.email, 
-                avatar: this.props.user.avatar,
-            }], 
-            this.props.user.friends
-        );
         this.setState({modalTask: true, modalType: 'CREATE'})
     }
 
@@ -184,7 +172,7 @@ class AppAux extends React.Component {
             console.log(error)
         }
     }
-
+  
     /**
      * Añadir un todo a la lista actual
      * @param {String} description Nombre del todo a crear 

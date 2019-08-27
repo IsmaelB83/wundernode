@@ -14,7 +14,10 @@ export default class TodoBar extends React.Component {
     /**
      * Initial state
      */
-    state = { starred: false }
+    state = { 
+        starred: false,
+        input: ''
+     }
 
     /**
      * Render
@@ -45,8 +48,9 @@ export default class TodoBar extends React.Component {
      * Propaga el evento al container para que gestione la creación del todo
      */
     addTodoEventHandler = () => {
-        if (this.state.input!=='') {
-            this.props.todoAddEventHandler(this.state.input, this.state.starred);
+        const value = this.state.input.trim();
+        if (value!=='') {
+            this.props.todoAddEventHandler(value, this.state.starred);
             this.setState({input: '', starred: false});
         }
     }

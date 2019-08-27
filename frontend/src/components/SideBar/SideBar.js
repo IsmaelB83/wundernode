@@ -36,11 +36,12 @@ export default class SideBar extends Component {
                          syncNowEventHandler={this.props.syncNowEventHandler}
                          accountSettingsEventHandler={this.props.accountSettingsEventHandler}
                          signOutEventHandler={this.props.signOutEventHandler}
+                         manageFriendsEventHandler={this.props.manageFriendsEventHandler}
                 />
                 <TaskListPanel lists={this.props.lists} 
                                taskListSelectedEventHandler={this.props.taskListSelectedEventHandler}/>
                 <div className='createButton'>
-                    <button className='createbutton-link' href='' onClick={this.props.onCreate}>
+                    <button className='createbutton-link' href='' onClick={this.props.createTaskListEventHandler}>
                         <i className='fa fa-plus'></i>Create List
                     </button>  
                 </div>

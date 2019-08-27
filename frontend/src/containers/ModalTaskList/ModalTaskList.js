@@ -21,18 +21,10 @@ export default class ModalTaskList extends React.Component {
     constructor(props) {
         // Superclass
         super(props);
-        // Event handlers
-        this.accept = this.acceptEventHandler.bind(this);
-        this.removeMember = this.removeMemberEventHandler.bind(this);
-        this.addMember = this.addMemberEventHandler.bind(this);
         // Estado
         this.state = {
-            members: this.props.members,
-            friends: this.props.friends,
-            owner: this.props.owner,
-            title: this.props.title,
+            newMembers: [],
             value: '',
-            taskListName: this.props.taskListName,
             suggestions: []
         }
     }
@@ -53,7 +45,7 @@ export default class ModalTaskList extends React.Component {
     onSuggestionsFetchRequested = ({ value }) => {
         let suggestions = []
         if (value.length > 0) {
-            suggestions = this.state.friends.filter(f =>
+            suggestions = this.props.friends.filter(f =>
                 f.name.toLowerCase().slice(0, value.length) === value.trim().toLowerCase()
             );
         }
@@ -66,14 +58,16 @@ export default class ModalTaskList extends React.Component {
      */
     render() {       
         return (
-            <Modal visible={this.props.visible} width="400" effect="fadeInDown" onClickAway={this.props.close}>
+            <Modal visible={this.props.visible} width="400" effect="fadeInDown" 
+                   onClickAway={this.props.close}
+            >
                 <div className='popup-wrapper'>
                     <div className='popup-header'>
-                        <h3 className='popup-title'>{this.state.title}</h3>
+                        <h3 className='popup-title'>{this.props.title}</h3>
                         <input className='popup-input popup-input--block' placeholder='List Name'
                             onChange={ev=>this.setState({taskListName: ev.currentTarget.value})}
                             onKeyPress={(ev) => { if(ev.key==='Enter') { this.acceptEventHandler() }}}
-                            value={this.state.taskListName} disabled={this.state.type!=='CREATE'}/>
+                            value={this.props.taskListName} disabled={this.props.type!=='CREATE'}/>
                     </div>
                     <div className='popup-body'>
                         <div className='tab-panel'>
@@ -95,7 +89,7 @@ export default class ModalTaskList extends React.Component {
                                             onChange: this.onChange
                                         }}
                                 />
-                                <button className='member-button' onClick={this.addMember}>
+                                <button className='member-button' onClick={this.addMemberEventHandler}>
                                     <i className="fa fa-plus" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -104,18 +98,31 @@ export default class ModalTaskList extends React.Component {
                             <div className='tab-options'>
                                 <span>List members</span>
                             </div>
-                            {   // Miembros de la lista
-                                <ol className='tab-members'>
-                                    {   this.state.members && this.state.members.map((member, index) => {
-                                        return  <li key={index}>
-                                                    <MemberResult index={index} name={member.name} avatar={member.avatar} 
-                                                                  email={member.email} owner={member.email===this.state.owner.email} 
-                                                                  alreadyMember={!member.newMember}/>
-                                                </li>})
-                                    }
-                                </ol>
+                            <ol className='tab-members'>
+                            {   this.props.members && this.props.members.map((member, index) => {
+                                    return  <li key={index}>
+                                                <MemberResult index={index} name={member.name} avatar={member.avatar} email={member.email} 
+                                                                owner={member.email===this.props.owner.email} alreadyMember={true}/>
+                                            </li>
+                                })
                             }
+                            </ol>
                         </div>
+                        { this.props.type === 'UPDATE' && this.state.newMembers.length > 0 &&
+                            <div className='tab-panel p-0'>
+                                <div className='tab-options'>
+                                    <span>New members</span>
+                                </div>
+                                <ol className='tab-members'>
+                                {   this.state.newMembers.map((newMember, index) => {
+                                    return  <li key={index}>
+                                                <MemberResult index={index} name={newMember.name} avatar={newMember.avatar} 
+                                                              email={newMember.email} owner={false} alreadyMember={false}/>
+                                            </li>})
+                                }
+                                </ol>
+                            </div>
+                        }
                     </div>
                     <div className='popup-footer'>
                         <ButtonBase onClick={this.props.onClose} text='Cancel' className='mr-2' />
@@ -130,14 +137,14 @@ export default class ModalTaskList extends React.Component {
      * Añadir un miembro a la lista
      * @param {Event} ev Evento generado
      */
-    addMemberEventHandler(ev) {
+    addMemberEventHandler = (ev) => {
         if (this.state.value !== '') {
-            const friend =  this.state.friends.find(m => m.email === this.state.value);
-            const alreadyMember = this.state.members && this.state.members.find(m => m.email === this.state.value);
+            const friend =  this.props.friends.find(m => m.email === this.state.value);
+            const alreadyMember = this.props.members && this.props.members.find(m => m.email === this.state.value);
             if(friend && !alreadyMember) {
-                const members = this.state.members;
-                members.push({...friend, newMember: true});
-                this.setState({members, value: ''});
+                const newMembers = this.state.newMembers;
+                newMembers.push({...friend, newMember: true});
+                this.setState({newMembers, value: ''});
             }
         }
     }
@@ -146,11 +153,11 @@ export default class ModalTaskList extends React.Component {
     * Añadir un miembro a la lista
     * @param {Event} ev Evento generado
     */
-    removeMemberEventHandler(ev) {
+    removeMemberEventHandler = (ev) => {
         if (ev.currentTarget.value!==this.state.owner.email) {
-            const members = this.state.members;
-            members.splice(ev.currentTarget.dataset.index,1);
-            this.setState({members});
+            const newMembers = this.state.newMembers;
+            newMembers.splice(ev.currentTarget.dataset.index,1);
+            this.setState({newMembers});
         } else {
             alert('No puede eliminar el propietario de la lista');
         }
@@ -161,39 +168,22 @@ export default class ModalTaskList extends React.Component {
      * @param {*} ev 
      */
     acceptEventHandler = () => {
-        switch (this.state.type) {
+        switch (this.props.type) {
             case 'CREATE': {
-                if (this.state.taskListName !=='' ) {
-                    this.props.onAccept(this.state.taskListName, this.state.members);
+                if (this.props.taskListName !== '') {
+                    this.props.onAccept(this.props.taskListName, this.state.newMembers);
+                    this.setState({newMembers: []});
                 }
                 break;
             }               
             case 'UPDATE': {
-                this.props.onAccept(this.state.taskListName, this.state.members);
+                this.props.onAccept(this.props.taskListName, this.state.newMembers);
+                this.setState({newMembers: []});
                 break;
             }
             default: 
                 alert('Error incontrolado');
                 break;
         }
-    }
-
-    /**
-     * Refresh Modal data 
-     * @param {String} title 
-     * @param {String} type Tipo de modal a mostrar(CREATE/UPDATE)
-     * @param {Array} members Miembros de la lista
-     * @param {Array} friends Amigos del usuarioa actual
-     * @param {User} owner Propietario de la lista
-     */
-    refreshData(type, title, taskListName, owner, members, friends){
-        this.setState({
-            type: type,
-            title: title,
-            taskListName: taskListName,
-            owner: owner,
-            members: members,
-            friends: friends
-        })
     }
 }

@@ -27,6 +27,7 @@ class SideBarContainerAux extends React.Component {
                      signOutEventHandler={this.signOutEventHandler}
                      logoffEventHandler={this.logoffEventHandler}
                      accountSettingsEventHandler={this.accountSettingsEventHandler}
+                     manageFriendsEventHandler={this.manageFriendsEventHandler}
             />
         );
     }
@@ -79,6 +80,14 @@ class SideBarContainerAux extends React.Component {
         this.props.logoff();
         this.props.history.push('/login');
     }
+
+    /**
+     * Manage our friends in the application
+     * (NOT IMPLEMENTED YET. Issue #18)
+     * @param {Event} ev 
+     */
+    manageFriendsEventHandler = () => alert('Manage friends not implemented yet');
+
 
     /**
      * Search event

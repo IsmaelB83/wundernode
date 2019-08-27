@@ -78,7 +78,7 @@ ctrl.create = async (req, res, next) => {
         taskList.description = req.body.description;
         taskList.owner = req.user.id;
         taskList.members = [req.user.id]
-        if (req.body.members) req.body.members.forEach(m => taskList.members.push(m.id));
+        if (req.body.members) req.body.members.forEach(m => taskList.members.push(m));
         await taskList.save();
         res.json({
             success: true,

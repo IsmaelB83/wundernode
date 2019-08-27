@@ -35,7 +35,7 @@ export default class NewUser extends React.Component {
                 <div className="alert alert-info small text-center" role="alert">
                     This site uses cookies for manage user session. By continuing to browse this site, you agree to this use.
                 </div>
-                <img className='logo' src={`${process.env.PUBLIC_URL}/img/nodejs.jpg`} alt='icon'></img>
+                <img className='logo' src={`${process.env.PUBLIC_URL}/img/logo.png`} alt='icon'></img>
                 <div className="login-wrapper">
                     { !this.state.created &&
                         <form className='new' action="/users/" method='POST' onSubmit={this.onCreate.bind(this)}>

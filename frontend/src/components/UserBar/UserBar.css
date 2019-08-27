@@ -32,3 +32,8 @@
     margin-right: 7px;
     color: #858383;
 }
+
+.UserBar button:focus {
+    box-shadow: none !important;
+  }
+  
