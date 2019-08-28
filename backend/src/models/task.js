@@ -14,6 +14,8 @@ const TaskSchema = new Schema(
         reminder: { type: Date },
         starred: { type: Boolean, default: false },
         completed: { type: Boolean, default: false },
+        closedAt: { type: Date },
+        closedBy: { type: Schema.Types.ObjectId, ref: 'User' },
         __v: { type: Number, select: false}
     },
     {

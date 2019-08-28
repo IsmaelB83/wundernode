@@ -107,7 +107,11 @@ ctrl.complete = async (req, res, next) => {
         // Busco la task y la actualizo (siempre y cuando el usuario sea miembro de la lista)
         const result = await TaskList.updateOne(
             { 'tasks._id': req.params.id, 'members': req.user.id },
-            { $set: { 'tasks.$.completed': req.body.completed }  }
+            { $set: { 'tasks.$.completed': req.body.completed,
+                      'tasks.$.closedAt': Date.now(),
+                      'tasks.$.closedBy': req.user.id,
+                    }  
+            }
         );
         if (result) {
             return res.json({

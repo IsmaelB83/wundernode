@@ -27,11 +27,13 @@ export default class TodoList extends Component {
                 this.props.todos.filter(t=>t.completed===this.props.completed).map((todo, index) => {
                     return <li  key={index} data-index={index}
                                 onClick={this.todoSelectedEventHandler}>
-                                <Todo   text={todo.description} 
+                                <Todo   id={todo.id}
+                                        text={todo.description} 
                                         active={this.state.selected===index?true:false} 
                                         starred={todo.starred}
                                         completed={todo.completed} 
-                                        id={todo.id}
+                                        closedBy={todo.closedBy}
+                                        closedAt={todo.closedAt}
                                         starredEventHanlder={this.props.starredEventHanlder}
                                         doneEventHandler={this.props.doneEventHandler}
                                 />

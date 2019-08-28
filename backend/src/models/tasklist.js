@@ -43,7 +43,8 @@ TaskListSchema.statics.list = function(id, description, owner, members, limit, s
         // Preparo la query
         let queryDB = TaskList.find(filter)
             .populate('members', '-_id -password -token -createdAt -updatedAt')
-            .populate('owner', '-_id -password -token -createdAt -updatedAt');
+            .populate('owner', '-_id -password -token -createdAt -updatedAt')
+            .populate('tasks.closedBy', '_id name');
         queryDB.limit(limit);
         queryDB.skip(skip);
         queryDB.select(fields);

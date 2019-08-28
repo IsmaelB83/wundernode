@@ -148,6 +148,8 @@ function charReducer(state, action) {
                         description: t.description,
                         completed: t.completed,
                         starred: t.starred,
+                        closedBy: t.closedBy,
+                        closedAt: t.closedAt
                     });
                 });
             }
@@ -167,6 +169,8 @@ function charReducer(state, action) {
                     description: t.description,
                     completed: t.completed,
                     starred: t.starred,
+                    closedBy: t.closedBy,
+                    closedAt: t.closedAt
                 });
             });        
             newState.switch = !newState.switch;
@@ -211,6 +215,10 @@ function charReducer(state, action) {
             const i = newState.selected.tasks.findIndex(t => t.id === action.payload.id);
             if (i >= 0) {
                 newState.selected.tasks[i].completed = action.payload.completed;
+                if (action.payload.completed) {
+                    newState.selected.tasks[i].closedAt = Date.now;
+                    newState.selected.tasks[i].closedBy = { _id: newState.user.id, name: newState.user.name };
+                }
             }
             // Busco la lista en el array de listas y lo sobreescribo
             const j = newState.lists.findIndex(l => l.id === newState.selected.id);
