@@ -149,7 +149,8 @@ function charReducer(state, action) {
                         completed: t.completed,
                         starred: t.starred,
                         closedBy: t.closedBy,
-                        closedAt: t.closedAt
+                        closedAt: t.closedAt,
+                        due: t.due
                     });
                 });
             }
@@ -170,7 +171,8 @@ function charReducer(state, action) {
                     completed: t.completed,
                     starred: t.starred,
                     closedBy: t.closedBy,
-                    closedAt: t.closedAt
+                    closedAt: t.closedAt,
+                    due: t.due
                 });
             });        
             newState.switch = !newState.switch;
@@ -182,7 +184,8 @@ function charReducer(state, action) {
                 id: action.payload.todo._id,
                 description: action.payload.todo.description,
                 completed: false,
-                starred: action.payload.todo.starred
+                starred: action.payload.todo.starred,
+                due: action.payload.todo.due
             });
             // Añado un todo al panel de listas
             let index = newState.lists.findIndex(l => l.id === newState.selected.id);

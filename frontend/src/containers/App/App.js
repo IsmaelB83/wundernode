@@ -177,7 +177,7 @@ class AppAux extends React.Component {
      * Añadir un todo a la lista actual
      * @param {String} description Nombre del todo a crear 
      */
-    todoAddEventHandler = async (description, starred) => {
+    todoAddEventHandler = async (description, starred, due) => {
         try {
             const result = await Axios.post(`/tasklists/tasks`, null, {
                 headers: { 'Authorization': 'bearer ' + this.props.user.token },
@@ -185,6 +185,7 @@ class AppAux extends React.Component {
                     id: this.props.selected.id,
                     description,
                     starred,
+                    due
                 }
             });
             if (result.status === 200) {

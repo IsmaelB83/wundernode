@@ -34,6 +34,7 @@ export default class TodoList extends Component {
                                         completed={todo.completed} 
                                         closedBy={todo.closedBy}
                                         closedAt={todo.closedAt}
+                                        due={todo.due}
                                         starredEventHanlder={this.props.starredEventHanlder}
                                         doneEventHandler={this.props.doneEventHandler}
                                 />

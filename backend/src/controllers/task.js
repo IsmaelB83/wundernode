@@ -80,7 +80,7 @@ ctrl.get = async (req, res, next) => {
 ctrl.create = async (req, res, next) => {
     try {
         // Añado un task a la lista indicada
-        const task = { description: req.body.description, starred: req.body.starred };
+        const task = { description: req.body.description, starred: req.body.starred, due: req.body.due};
         const result = await TaskList.findOneAndUpdate(
             { _id: req.body.id, 'members': req.user.id },
             { $push: { tasks: task } },
