@@ -24,7 +24,6 @@ export default class UserBar extends React.Component {
     render() {
         return (
             <div className='UserBar'>
-                {console.log(this.props.syncAt)}
                 <Dropdown isOpen={this.state.dropDownOpen} toggle={this.toggleEventHandler}>
                     <DropdownToggle className='UserBar-caret' caret>
                         <img src={this.props.avatar} alt="avatar"></img>
