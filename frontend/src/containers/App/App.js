@@ -3,12 +3,9 @@ import { connect } from 'react-redux';
 import React from 'react';
 import Axios from 'axios';
 /* Import own modules */
-import ButtonHeading from '../../components/Buttons/ButtonHeading/ButtonHeading';
-import TodoBar from '../../components/TodoBar/TodoBar';
-import ToolBar from '../../components/ToolBar/ToolBar';
 import ModalTaskList from '../ModalTaskList/ModalTaskList';
-import TodoListContainer from '../TodoListContainer/TodoListContainer';
 import SideBarContainer from '../SideBarContainer/SideBarContainer';
+import TodoSectionContainer from '../TodoSectionContainer/TodoSectionContainer';
 import { actions } from '../../store/Store';
 /* Import css */
 import './App.css';
@@ -25,8 +22,6 @@ class AppAux extends React.Component {
      */
     constructor(props){
         super(props);
-        this.modal = React.createRef();
-        this.listCompleted = React.createRef();
         this.state = {
             modalTask: false,
             modalType: null,
@@ -39,12 +34,10 @@ class AppAux extends React.Component {
      */
     componentDidMount() {
         try {
+            // Resize de la aplicación
+            window.addEventListener("resize", this.resizeEventHandler);
             // Detectar el ESC para cerrar el import
-            document.addEventListener("keydown", (ev) => { 
-                if (ev.keyCode === 27 && this.state.modalTask) {
-                    this.setState({modalTask: !this.state.modalTask});
-                }
-            } , false);
+            document.addEventListener("keydown", this.keyDownEventHandler);
             // Si no hay usuario logueado redirigo al login
             if (!this.props.user.id) {
                 return this.props.history.push('/login');
@@ -67,47 +60,57 @@ class AppAux extends React.Component {
     render() {
         return (
             <div className='App'> 
-                <SideBarContainer createTaskListEventHandler={this.createTaskListEventHandler} />
-                <div className='App-main'>
-                    <ToolBar id='toolBar' description={this.props.selected.description} 
-                        shareEventHandler={this.shareTaskListClick}
-                        sortEventHandler={this.sortEventHandler}
-                        moreEventHandler={this.moreEventHandler}
-                        />
-                    <div className='App-main_wrapper'>
-                        <TodoBar id='todoBar' todoAddEventHandler={this.todoAddEventHandler}/>
-                        <div className='MainContainer-todos'>
-                            <TodoListContainer id='todosPending' completed={false}/>
-                            <ButtonHeading text='Show completed to-dos' onClick={ev=>this.setState({showCompleted: !this.state.showCompleted})}/>
-                            <TodoListContainer id='todosDone' completed={true} showCompleted={this.state.showCompleted}/>
-                        </div>
-                    </div>
-                    { this.props.user.email &&
-                        <ModalTaskList ref={this.modal}
-                                visible={this.state.modalTask}
-                                type={this.state.modalType}
-                                title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
-                                taskListName={this.state.modalType==='UPDATE'?this.props.selected.description:''}
-                                friends={this.props.user.friends} 
-                                members={this.state.modalType==='UPDATE'?this.props.selected.members:[{
-                                        id: this.props.user.id, 
-                                        name: this.props.user.name,
-                                        email: this.props.user.email, 
-                                        avatar: this.props.user.avatar}]
-                                }
-                                owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
-                                onClose={() => this.setState({modalTask: false, modalType: null})} 
-                                onAccept={this.modalTaskListAccept}/>
-                    }
-                </div>
+                <SideBarContainer       user={this.props.user} 
+                                        createTaskListEventHandler={this.createTaskListEventHandler} 
+                />
+                <TodoSectionContainer   user={this.props.user}
+                                        shareTaskListEventHandler={this.shareTaskListEventHandler}
+                />
+                { this.props.user.email &&
+                    <ModalTaskList  ref={this.modal}
+                                    visible={this.state.modalTask}
+                                    type={this.state.modalType}
+                                    title={this.state.modalType==='UPDATE'?'Share TaskList with your friends':'Create a new TaskList'}
+                                    taskListName={this.state.modalType==='UPDATE'?this.props.selected.description:''}
+                                    friends={this.props.user.friends} 
+                                    members={this.state.modalType==='UPDATE'?this.props.selected.members:[{
+                                            id: this.props.user.id, 
+                                            name: this.props.user.name,
+                                            email: this.props.user.email, 
+                                            avatar: this.props.user.avatar}]
+                                    }
+                                    owner={this.state.modalType==='UPDATE'?this.props.selected.owner:this.props.user}
+                                    onClose={() => this.setState({modalTask: false, modalType: null})} 
+                                    onAccept={this.modalTaskListAccept}/>
+                }
             </div>
         );
     }
 
     /**
+     * Resize de la app
+     */
+    resizeEventHandler = () => {
+        if (window.innerWidth < 750 && !this.props.collapsed) {
+            this.props.collapseSideBar();
+        } else if (window.innerWidth >= 750 && this.props.collapsed) {
+            this.props.collapseSideBar();
+        }
+    }
+
+    /**
+     * Close modal
+     */
+    keyDownEventHandler = (ev) => {
+        if (ev.keyCode === 27 && this.state.modalTask) {
+            this.setState({modalTask: !this.state.modalTask});
+        }
+    }
+
+    /**
      * Click en compartir task list
      */
-    shareTaskListClick = () => {
+    shareTaskListEventHandler = () => {
         // Sólo se permite modificar una tarea de la que seas propietario
         if(this.props.selected.owner && this.props.selected.owner.email === this.props.user.email) {
             this.setState({modalTask: true, modalType: 'UPDATE'});
@@ -146,7 +149,7 @@ class AppAux extends React.Component {
                         this.props.addTaskList(result.data.result);
                         this.setState({modalTask: false});
                     }
-                    break;      
+                    break;
                 }      
                 // Actualizo la lista       
                 case 'UPDATE': {
@@ -174,39 +177,10 @@ class AppAux extends React.Component {
     }
   
     /**
-     * Añadir un todo a la lista actual
-     * @param {String} description Nombre del todo a crear 
-     */
-    todoAddEventHandler = async (description, starred, due) => {
-        try {
-            const result = await Axios.post(`/tasklists/tasks`, null, {
-                headers: { 'Authorization': 'bearer ' + this.props.user.token },
-                data: {
-                    id: this.props.selected.id,
-                    description,
-                    starred,
-                    due
-                }
-            });
-            if (result.status === 200) {
-                this.props.addTodo(result.data.result);
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    /**
      * Sort To-Dos
      * (NOT IMPLEMENTED YET. Issue #5 )
      */
-    sortEventHandler = () => alert('Sort todos not implemented yet');
-
-    /**
-     * More options event
-     * (NOT IMPLEMENTED YET. Issue #5 )
-     */
-    moreEventHandler = () => alert('More options not implemented yet');
+    sortTodosEventHandler = () => alert('Sort todos not implemented yet');
 }
 
 // React-Redux
@@ -215,16 +189,16 @@ const mapState = (state) => {
         user: state.user, 
         lists: state.lists,
         selected: state.selected,
-        switch: state.switch
+        switch: state.switch,
+        collapsed: state.collapsed,
     };
 };
 
 const mapActions = {
-    loadList: actions.loadList,
     loadLists: actions.loadLists,
     addTaskList: actions.addTaskList,
-    addTodo: actions.addTodo,
     addMembers: actions.addMembers,
+    collapseSideBar: actions.collapseSideBar,
 }
 
 const App = connect(mapState, mapActions)(AppAux);

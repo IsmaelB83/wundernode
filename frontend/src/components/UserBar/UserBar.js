@@ -33,6 +33,7 @@ export default class UserBar extends React.Component {
                         <DropdownItem disabled>{this.props.email}</DropdownItem>
                         <DropdownItem onClick={this.props.syncNowEventHandler}><i className="fas fa-sync"></i>Sync now</DropdownItem>
                         <DropdownItem divider />
+                        <DropdownItem onClick={this.props.createTaskListEventHandler}><i className="fa fa-tasks"></i>Create Task List</DropdownItem>
                         <DropdownItem onClick={this.props.manageFriendsEventHandler}><i className="fas fa-user-friends"></i>Manage friends</DropdownItem>
                         <DropdownItem onClick={this.props.accountSettingsEventHandler}><i className="fas fa-user-circle"></i>Account Settings</DropdownItem>
                         <DropdownItem onClick={this.props.signOutEventHandler}><i className="fas fa-sign-out-alt"></i>Sign Out</DropdownItem>

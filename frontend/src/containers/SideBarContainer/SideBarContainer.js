@@ -4,8 +4,12 @@ import { withRouter } from 'react-router-dom';
 import React from 'react';
 import Axios from 'axios';
 /* Import own modules */
-import SideBar from '../../components/SideBar/SideBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import UserBar from '../../components/UserBar/UserBar';
+import TaskListPanel from '../../components/TaskListPanel/TaskListPanel';
 import { actions } from '../../store/Store';
+/* Import css */
+import './SideBarContainer.css';
 
 
 /**
@@ -18,17 +22,27 @@ class SideBarContainerAux extends React.Component {
      */
     render() {
         return (
-            <SideBar name={this.props.user.name} email={this.props.user.email} avatar={this.props.user.avatar}
-                     lists={this.props.lists}
-                     searchEventHandler={this.searchEventHandler}
-                     createTaskListEventHandler={this.props.createTaskListEventHandler} 
-                     taskListSelectedEventHandler={this.taskListSelectedEventHandler}
-                     syncNowEventHandler={this.syncNowEventHandler}
-                     signOutEventHandler={this.signOutEventHandler}
-                     logoffEventHandler={this.logoffEventHandler}
-                     accountSettingsEventHandler={this.accountSettingsEventHandler}
-                     manageFriendsEventHandler={this.manageFriendsEventHandler}
-            />
+            <aside className={`SideBar ${this.props.collapsed?'SideBar--collapsed':''}`} role="navigation">
+                <div className={`SideBar-SearchBar ${this.props.collapsed?'hidden':''}`}>
+                    <SearchBar searchEventHandler={this.searchEventHandler} collapseEventHandler={this.collapseEventHandler}/>
+                </div>
+                <div className={`SideBar-UserBar ${this.props.collapsed?'hidden':''}`}>
+                    <UserBar name={this.props.user.name} email={this.props.user.email} avatar={this.props.user.avatar}
+                             syncNowEventHandler={this.syncNowEventHandler}
+                             accountSettingsEventHandler={this.accountSettingsEventHandler}
+                             signOutEventHandler={this.signOutEventHandler}
+                             manageFriendsEventHandler={this.manageFriendsEventHandler}
+                             createTaskListEventHandler={this.props.createTaskListEventHandler}
+                    />
+                </div>
+                <div className={`SideBar-TaskList ${this.props.collapsed?'hidden':''}`}>
+                    <TaskListPanel lists={this.props.lists} 
+                                   taskListSelectedEventHandler={this.taskListSelectedEventHandler}/>
+                </div>
+                <div className={`SideBar-ButtonCreate ${this.props.collapsed?'hidden':''}`}>
+                    <button onClick={this.props.createTaskListEventHandler}><i className='fa fa-tasks'></i>Create List</button>  
+                </div>                
+            </aside>
         );
     }
 
@@ -42,6 +56,9 @@ class SideBarContainerAux extends React.Component {
             const response = await Axios.get(`/tasklists/${id}`, { headers: { 'Authorization': 'bearer ' + this.props.user.token } });
             if (response.status === 200) {
                 this.props.loadList(response.data.result);
+                if (window.innerWidth<750) {
+                    this.props.collapseSideBar();
+                }
             }               
         } catch (error) {
             console.log(error);
@@ -81,6 +98,11 @@ class SideBarContainerAux extends React.Component {
         this.props.history.push('/login');
     }
 
+     /**
+     * Controla el estado de visualización del sidebar (collapsed o full)
+     */
+    collapseEventHandler = () => this.props.collapseSideBar();
+
     /**
      * Manage our friends in the application
      * (NOT IMPLEMENTED YET. Issue #18)
@@ -105,9 +127,9 @@ class SideBarContainerAux extends React.Component {
 // React-Redux
 const mapState = (state) => { 
     return {
-        user: state.user, 
         lists: state.lists,
-        switch: state.switch
+        switch: state.switch,
+        collapsed: state.collapsed,
     };
 };
 
@@ -116,6 +138,7 @@ const mapActions = {
     loadList: actions.loadList,
     loadLists: actions.loadLists,
     addTaskList: actions.addTaskList,
+    collapseSideBar: actions.collapseSideBar,
 }
 
 const SideBarContainer = connect(mapState, mapActions)(SideBarContainerAux);

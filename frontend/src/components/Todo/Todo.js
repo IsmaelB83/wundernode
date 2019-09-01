@@ -25,7 +25,10 @@ export default class Todo extends React.Component {
                             <Moment fromNow>{this.props.closedAt}</Moment> by {this.props.closedBy.name || 'error'}
                     </small> }
                 </div>
-                { !this.props.completed && this.props.due && <span className='Todo-due'><Moment fromNow>{this.props.due}</Moment></span> }
+                { !this.props.completed && this.props.due && 
+                    <span className={`Todo-due ${Date.parse(this.props.due)<Date.now()?'Todo-due--overdue':''}`}>
+                        <Moment fromNow>{this.props.due}</Moment>
+                    </span> }
                 <div className={`Todo-star ${this.props.starred?'Todo-star--starred':''}`}>
                     <a href='/' onClick={this.starredEventHanlder}>
                         <img className='starImg' src={`${process.env.PUBLIC_URL}/img/star.png`} alt='star'></img>
@@ -42,7 +45,7 @@ export default class Todo extends React.Component {
     starredEventHanlder = (ev) => {
         ev.preventDefault();
         if (!this.props.completed) {
-            this.props.starredEventHanlder(this.props.id, !this.props.starred);
+            this.props.todoStarredEventHanlder(this.props.id, !this.props.starred);
         }
     }
 
@@ -52,6 +55,6 @@ export default class Todo extends React.Component {
      */
     doneEventHandler = (ev) => {
         ev.preventDefault();
-        this.props.doneEventHandler(this.props.id, !this.props.completed, this.props.starred);
+        this.props.todoCompleteEventHandler(this.props.id, !this.props.completed, this.props.starred);
     }
 }

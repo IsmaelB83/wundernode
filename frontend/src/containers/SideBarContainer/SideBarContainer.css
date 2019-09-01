@@ -1,0 +1,39 @@
+.SideBar {
+    background-color: #F7F7F7;
+    overflow: hidden;
+}
+
+.SideBar-UserBar {
+    margin: 2px 0;
+}
+
+.SideBar-TaskList {
+    height: 100%;
+    overflow: auto;
+}
+
+.SideBar-ButtonCreate {
+    border-top: 2px solid rgba(0,0,0,0.1);
+}
+
+.SideBar-ButtonCreate button {
+    width: 100%;
+    padding: 10px 20px;
+    text-align: left;
+    color: #328ad6;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    background-color: transparent;
+    transition: all .1s ease-in;
+}
+
+.SideBar-ButtonCreate button:hover {
+    background-color: #E0EEFA;
+    color: #0056b3;
+}
+
+.SideBar-ButtonCreate button i {
+    margin-right: 10px;
+}
+

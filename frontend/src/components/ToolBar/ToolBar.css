@@ -1,16 +1,16 @@
 /* List header */
-.list-toolbar {
+.ToolBar {
     background-color: #2F6676;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 45px;
+    min-height: 45px;
     overflow: hidden;
     padding: 0 20px;
 }
 
 /* Toolbar in top */
-.list-title {
+.ToolBar-title {
     font-size: 20px;
     color: #fff;
     font-weight: 300;
@@ -19,12 +19,12 @@
     margin: 0;
 }
 
-.list-actions {
+.ToolBar-actions {
     display: flex;
     flex-direction: row;
 }
 
-.list-actions i {
+.ToolBar-actions i {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -32,7 +32,7 @@
     margin: 0 5px;
 }
 
-.list-actions i span {
+.ToolBar-actions i span {
     margin-top: 4px;
     font-weight: 400;
     font-size: 10px;

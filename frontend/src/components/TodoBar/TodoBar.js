@@ -39,7 +39,7 @@ export default class TodoBar extends React.Component {
                 </div>
                 <input  type='text'
                         className='TodoBar-input' 
-                        placeholder={`Add a to-do to ${this.props.taskList}`}
+                        placeholder={`Add a to-do to...`}
                         value={this.state.input}
                         onChange={ev => { this.setState({input: ev.currentTarget.value})}}
                         onKeyPress={ev => { if(ev.key==='Enter') { this.addTodoEventHandler() }}}

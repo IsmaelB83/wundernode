@@ -23,6 +23,7 @@ export default class ModalTaskList extends React.Component {
         super(props);
         // Estado
         this.state = {
+            taskListName: this.props.taskListName,
             newMembers: [],
             value: '',
             suggestions: []
@@ -67,7 +68,7 @@ export default class ModalTaskList extends React.Component {
                         <input className='popup-input popup-input--block' placeholder='List Name'
                             onChange={ev=>this.setState({taskListName: ev.currentTarget.value})}
                             onKeyPress={(ev) => { if(ev.key==='Enter') { this.acceptEventHandler() }}}
-                            value={this.props.taskListName} disabled={this.props.type!=='CREATE'}/>
+                            value={this.state.taskListName} disabled={this.props.type!=='CREATE'}/>
                     </div>
                     <div className='popup-body'>
                         <div className='tab-panel'>
@@ -108,7 +109,7 @@ export default class ModalTaskList extends React.Component {
                             }
                             </ol>
                         </div>
-                        { this.props.type === 'UPDATE' && this.state.newMembers.length > 0 &&
+                        { this.state.newMembers.length > 0 &&
                             <div className='tab-panel p-0'>
                                 <div className='tab-options'>
                                     <span>New members</span>
@@ -135,16 +136,18 @@ export default class ModalTaskList extends React.Component {
        
     /**
      * Añadir un miembro a la lista
-     * @param {Event} ev Evento generado
      */
-    addMemberEventHandler = (ev) => {
+    addMemberEventHandler = () => {
         if (this.state.value !== '') {
             const friend =  this.props.friends.find(m => m.email === this.state.value);
             const alreadyMember = this.props.members && this.props.members.find(m => m.email === this.state.value);
-            if(friend && !alreadyMember) {
+            const alreadyNewMember = this.state.newMembers && this.state.newMembers.find(m => m.email === this.state.value);
+            if(friend && !alreadyMember && !alreadyNewMember) {
                 const newMembers = this.state.newMembers;
                 newMembers.push({...friend, newMember: true});
                 this.setState({newMembers, value: ''});
+            } else {
+                alert('Usuario no encontrado o ya incluido en la lista');
             }
         }
     }
@@ -170,15 +173,23 @@ export default class ModalTaskList extends React.Component {
     acceptEventHandler = () => {
         switch (this.props.type) {
             case 'CREATE': {
-                if (this.props.taskListName !== '') {
-                    this.props.onAccept(this.props.taskListName, this.state.newMembers);
-                    this.setState({newMembers: []});
+                if (this.state.taskListName !== '') {
+                    this.props.onAccept(this.state.taskListName, this.state.newMembers);
+                    this.setState({
+                        taskListName: '',
+                        value: '',
+                        newMembers: []
+                    });
                 }
                 break;
             }               
             case 'UPDATE': {
-                this.props.onAccept(this.props.taskListName, this.state.newMembers);
-                this.setState({newMembers: []});
+                this.props.onAccept(this.state.taskListName, this.state.newMembers);
+                this.setState({
+                    taskListName: '',
+                    value: '',
+                    newMembers: []
+                });
                 break;
             }
             default: 

@@ -23,20 +23,19 @@ export default class TodoList extends Component {
         return (
             <ol className={`TodoList ${this.props.completed?'TodoList--done':''}`}>
             { this.props.todos && 
-                ( ( this.props.completed && this.props.showCompleted ) || !this.props.completed ) && 
-                this.props.todos.filter(t=>t.completed===this.props.completed).map((todo, index) => {
-                    return <li  key={index} data-index={index}
-                                onClick={this.todoSelectedEventHandler}>
-                                <Todo   id={todo.id}
-                                        text={todo.description} 
+                ( !this.props.completed || ( this.props.completed && this.props.showCompleted ) ) && 
+                this.props.todos.filter(t=>t.completed===this.props.completed).map((t, index) => {
+                    return <li key={index} data-index={index} onClick={e=>this.setState({selected: parseInt(e.currentTarget.dataset.index)})}>
+                                <Todo   id={t.id}
+                                        text={t.description} 
                                         active={this.state.selected===index?true:false} 
-                                        starred={todo.starred}
-                                        completed={todo.completed} 
-                                        closedBy={todo.closedBy}
-                                        closedAt={todo.closedAt}
-                                        due={todo.due}
-                                        starredEventHanlder={this.props.starredEventHanlder}
-                                        doneEventHandler={this.props.doneEventHandler}
+                                        starred={t.starred}
+                                        completed={t.completed} 
+                                        closedBy={t.closedBy}
+                                        closedAt={t.closedAt}
+                                        due={t.due}
+                                        todoStarredEventHanlder={this.props.todoStarredEventHanlder}
+                                        todoCompleteEventHandler={this.props.todoCompleteEventHandler}
                                 />
                             </li>
                     })
@@ -44,10 +43,4 @@ export default class TodoList extends Component {
             </ol>
         );
     };
-
-    /**
-     * Se selecciona un todo
-     * @param {Event} ev Evento que origina el click
-     */
-    todoSelectedEventHandler = (ev) => this.setState({selected: parseInt(ev.currentTarget.dataset.index)});
 }

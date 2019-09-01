@@ -8,7 +8,8 @@ const initialState = {
     user: {},
     lists: [],
     selected: {},
-    switch: false
+    switch: false,
+    collapsed: false,
 }
 
 // Actions
@@ -87,7 +88,15 @@ export const actions = {
                 members: members,
             }
         }
+    },
+    collapseSideBar: () => {
+        return {
+            type: 'COLLAPSE_SIDEBAR',
+            payload: {
+            }
+        }
     }
+
 }
     
 // Reducers: definen como cambia el estado para cada acción: estado + acción ==> acción
@@ -221,6 +230,8 @@ function charReducer(state, action) {
                 if (action.payload.completed) {
                     newState.selected.tasks[i].closedAt = Date.now;
                     newState.selected.tasks[i].closedBy = { _id: newState.user.id, name: newState.user.name };
+                    newState.selected.tasks[i].starred = false;
+                    newState.selected.tasks[i].due = null;
                 }
             }
             // Busco la lista en el array de listas y lo sobreescribo
@@ -257,6 +268,12 @@ function charReducer(state, action) {
             });
             // Forzar el render
             newState.switch = !newState.switch;
+            return newState;
+        }
+        case 'COLLAPSE_SIDEBAR': {
+            newState = {...state};
+            // Switch del flag de collapse sidebar
+            newState.collapsed = !newState.collapsed;
             return newState;
         }   
         default:

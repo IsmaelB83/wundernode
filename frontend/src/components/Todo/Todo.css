@@ -49,9 +49,13 @@
     display: block;
     width: 80px;
     font-size: 12px;
-    color: #b3312d;
+    color: black;
     margin-right: 30px;
     text-align: right;
+}
+
+.Todo-due--overdue {
+    color: #b3312d;
 }
 
 /* Estilos dependiendes de estados */

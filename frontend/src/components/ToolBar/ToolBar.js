@@ -16,12 +16,14 @@ export default class ToolBar extends React.Component {
      */
     render() {
         return (
-            <div className="list-toolbar">
-                <h1 className="list-title">{this.props.description}</h1>
-                <div className="list-actions">
-                    <ButtonLight className='button-md' color='white' icon='fas fa-user-plus' span='Share' onClick={this.props.shareEventHandler}/>
-                    <ButtonLight className='button-md' color='white' icon='fas fa-sort' span='Sort' onClick={this.props.sortEventHandler}/>
-                    <ButtonLight className='button-md' color='white' icon='fas fa-ellipsis-h' span='More' onClick={this.props.moreEventHandler}/>
+            <div className="ToolBar">
+                { this.props.collapseSideBar && 
+                    <ButtonLight icon='fas fa-bars' color='white' onClick={this.props.collapseSideBarEventHandler}/>
+                }
+                <h1 className="ToolBar-title">{this.props.description}</h1>
+                <div className="ToolBar-actions">
+                    <ButtonLight className='button-md' color='white' icon='fas fa-user-plus' span='SHARE' onClick={this.props.shareTaskListEventHandler}/>
+                    <ButtonLight className='button-md' color='white' icon='fas fa-sort' span='SORT' onClick={this.props.sortTodosEventHandler}/>
                 </div>
             </div>
         );

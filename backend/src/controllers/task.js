@@ -110,10 +110,13 @@ ctrl.complete = async (req, res, next) => {
             { $set: { 'tasks.$.completed': req.body.completed,
                       'tasks.$.closedAt': Date.now(),
                       'tasks.$.closedBy': req.user.id,
+                      'tasks.$.starred': false,
+                      'tasks.$.due': null,
                     }  
             }
         );
         if (result) {
+            console.log(result);
             return res.json({
                 success: true,
                 result: result
