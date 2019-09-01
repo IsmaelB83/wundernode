@@ -34,10 +34,6 @@ class AppAux extends React.Component {
      */
     componentDidMount() {
         try {
-            // Resize de la aplicación
-            window.addEventListener("resize", this.resizeEventHandler);
-            // Detectar el ESC para cerrar el import
-            document.addEventListener("keydown", this.keyDownEventHandler);
             // Si no hay usuario logueado redirigo al login
             if (!this.props.user.id) {
                 return this.props.history.push('/login');
@@ -49,6 +45,12 @@ class AppAux extends React.Component {
                     this.props.loadLists(response.data.results);
                 }
             })
+            // Resize de la aplicación
+            window.addEventListener("resize", this.resizeEventHandler);
+            // Detectar el ESC para cerrar el import
+            document.addEventListener("keydown", this.keyDownEventHandler);
+            // Sincronizado cada hora
+            setInterval(() => { this.syncNowEventHandler() }, 3600000);
         } catch (error) {
             console.log(error);
         }
@@ -62,6 +64,7 @@ class AppAux extends React.Component {
             <div className='App'> 
                 <SideBarContainer       user={this.props.user} 
                                         createTaskListEventHandler={this.createTaskListEventHandler} 
+                                        syncNowEventHandler={this.syncNowEventHandler}
                 />
                 <TodoSectionContainer   user={this.props.user}
                                         shareTaskListEventHandler={this.shareTaskListEventHandler}
@@ -176,6 +179,23 @@ class AppAux extends React.Component {
         }
     }
   
+    /**
+     * Sincronizar datos con la API Rest
+     */
+    syncNowEventHandler = () => {
+        try {
+            // Cargar listado de tareas
+            Axios.get('/tasklists', { headers: { 'Authorization': 'bearer ' + this.props.user.token }})
+            .then (response => {
+                if (response.status === 200) {
+                    this.props.loadLists(response.data.results);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     /**
      * Sort To-Dos
      * (NOT IMPLEMENTED YET. Issue #5 )

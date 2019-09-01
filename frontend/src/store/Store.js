@@ -10,6 +10,8 @@ const initialState = {
     selected: {},
     switch: false,
     collapsed: false,
+    syncAt: null,
+    currentTime: null,
 }
 
 // Actions
@@ -95,8 +97,14 @@ export const actions = {
             payload: {
             }
         }
+    },
+    updateTime: () => {
+        return {
+            type: 'UPDATE_TIME',
+            payload: {
+            }
+        }
     }
-
 }
     
 // Reducers: definen como cambia el estado para cada acción: estado + acción ==> acción
@@ -116,9 +124,10 @@ function charReducer(state, action) {
                 email: u.email,
                 avatar: u.avatar
             })))
-            .catch(error => alert('No se han encontrado amigos'));
+            .catch(error => alert('No se han encontrado amigos'))
             // Register user in local storage (TEMPORAL. Not secure)
             localStorage.setItem('user', JSON.stringify(newState.user));
+            newState.currentTime = Date.now();
             return newState;
         case 'LOGOFF':
             newState = {...state};
@@ -163,6 +172,7 @@ function charReducer(state, action) {
                     });
                 });
             }
+            newState.syncAt = Date.now();
             newState.switch = !newState.switch;
             return newState;
         case 'LOAD_LIST':
@@ -272,10 +282,14 @@ function charReducer(state, action) {
         }
         case 'COLLAPSE_SIDEBAR': {
             newState = {...state};
-            // Switch del flag de collapse sidebar
             newState.collapsed = !newState.collapsed;
             return newState;
-        }   
+        }  
+        case 'UPDATE_TIME': {
+            newState = {...state};
+            newState.currentTime = Date.now();
+            return newState;
+        } 
         default:
             return state;
     }

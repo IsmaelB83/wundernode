@@ -27,8 +27,11 @@ class SideBarContainerAux extends React.Component {
                     <SearchBar searchEventHandler={this.searchEventHandler} collapseEventHandler={this.collapseEventHandler}/>
                 </div>
                 <div className={`SideBar-UserBar ${this.props.collapsed?'hidden':''}`}>
-                    <UserBar name={this.props.user.name} email={this.props.user.email} avatar={this.props.user.avatar}
-                             syncNowEventHandler={this.syncNowEventHandler}
+                    <UserBar name={this.props.user.name} 
+                             email={this.props.user.email} 
+                             avatar={this.props.user.avatar}
+                             syncAt={this.props.syncAt}
+                             syncNowEventHandler={this.props.syncNowEventHandler}
                              accountSettingsEventHandler={this.accountSettingsEventHandler}
                              signOutEventHandler={this.signOutEventHandler}
                              manageFriendsEventHandler={this.manageFriendsEventHandler}
@@ -38,10 +41,7 @@ class SideBarContainerAux extends React.Component {
                 <div className={`SideBar-TaskList ${this.props.collapsed?'hidden':''}`}>
                     <TaskListPanel lists={this.props.lists} 
                                    taskListSelectedEventHandler={this.taskListSelectedEventHandler}/>
-                </div>
-                <div className={`SideBar-ButtonCreate ${this.props.collapsed?'hidden':''}`}>
-                    <button onClick={this.props.createTaskListEventHandler}><i className='fa fa-tasks'></i>Create List</button>  
-                </div>                
+                </div>              
             </aside>
         );
     }
@@ -60,23 +60,6 @@ class SideBarContainerAux extends React.Component {
                     this.props.collapseSideBar();
                 }
             }               
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    /**
-     * Sincronizar datos con la API Rest
-     */
-    syncNowEventHandler = () => {
-        try {
-            // Cargar listado de tareas
-            Axios.get('/tasklists', { headers: { 'Authorization': 'bearer ' + this.props.user.token }})
-            .then (response => {
-                if (response.status === 200) {
-                    this.props.loadLists(response.data.results);
-                }
-            })
         } catch (error) {
             console.log(error);
         }
@@ -130,14 +113,13 @@ const mapState = (state) => {
         lists: state.lists,
         switch: state.switch,
         collapsed: state.collapsed,
+        syncAt: state.syncAt,
     };
 };
 
 const mapActions = {
     logoff: actions.logoff,
     loadList: actions.loadList,
-    loadLists: actions.loadLists,
-    addTaskList: actions.addTaskList,
     collapseSideBar: actions.collapseSideBar,
 }
 

@@ -142,7 +142,7 @@ class TodoSectionContainerAux extends React.Component {
     
     /**
      * Sort To-Dos
-     * (NOT IMPLEMENTED YET. Issue #5 )
+     * (NOT IMPLEMENTED YET. Issue #13 )
      */
     sortTodosEventHandler = () => alert('Sort todos not implemented yet');
 }
