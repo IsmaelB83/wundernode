@@ -49,8 +49,8 @@ class AppAux extends React.Component {
             window.addEventListener("resize", this.resizeEventHandler);
             // Detectar el ESC para cerrar el import
             document.addEventListener("keydown", this.keyDownEventHandler);
-            // Sincronizado cada hora
-            setInterval(() => { this.syncNowEventHandler() }, 3600000);
+            // Sincronizado cada 15 segundos
+            setInterval(() => { this.syncNowEventHandler() }, 15000);
         } catch (error) {
             console.log(error);
         }
