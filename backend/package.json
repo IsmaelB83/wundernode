@@ -11,7 +11,7 @@
   "author": "Ismael",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcrypt-nodejs": "0.0.3",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
